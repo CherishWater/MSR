@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="uListTRSF" access="private" >
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1" >
+      <Parameter name="x_TRSF" type="trsf" use="reference" xsi:type="array" dimensions="1" />
+      <Parameter name="x_sTRSF" type="string" use="reference" xsi:type="array" dimensions="1" />
+    </Parameters>
+    <Locals>
+      <Local name="l_i" type="num" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+  call up:listSetSize(0,7,38,4)
+  call up:listCreate("")
+  for l_i=0 to 3
+    call ut:_trsf2String(x_TRSF[l_i],"Location p"+toString("",l_i),"",7,x_sTRSF[l_i])
+  endFor
+  call up:listAdd(x_sTRSF)
+  call up:listUpdate(0)
+end]]></Code>
+  </Program>
+</Programs>

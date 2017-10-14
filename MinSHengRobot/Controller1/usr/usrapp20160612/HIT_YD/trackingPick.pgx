@@ -1,0 +1,207 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="trackingPick" access="private" >
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1" >
+      <Parameter name="x_bPartDone" type="bool" use="reference" xsi:type="element" dimensions="1" />
+    </Parameters>
+    <Locals>
+      <Local name="l_bNoError" type="bool" xsi:type="array" size="1" />
+      <Local name="l_bSent2WaitPos" type="bool" xsi:type="array" size="1" />
+      <Local name="l_jAppro" type="joint" xsi:type="array" size="1" />
+      <Local name="l_nConvNum" type="num" xsi:type="array" size="1" />
+      <Local name="l_nDistToDown" type="num" xsi:type="array" size="1" />
+      <Local name="l_nDistToUp" type="num" xsi:type="array" size="1" />
+      <Local name="l_nEncLatchVal" type="num" xsi:type="array" size="1" />
+      <Local name="l_nError" type="num" xsi:type="array" size="1" />
+      <Local name="l_nMoveID" type="num" xsi:type="array" size="1" />
+      <Local name="l_nTrackOnID" type="num" xsi:type="array" size="1" />
+      <Local name="l_nTrackStatus" type="num" xsi:type="array" size="1" />
+      <Local name="l_pAppro" type="point" xsi:type="array" size="1" />
+      <Local name="l_sToolStatus" type="string" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+  // This program picks a part from the input conveyor.
+  // If there isn’t an object on the conveyor’s queue, the robot
+  //  moves to the home position and waits until there is an object
+  //  on the conveyor’s queue.
+  // If there is an object on the conveyor’s queue but the object is
+  //  upstream of the upstream limit, the robot moves above the
+  //  conveyor aligned in front of the object and waits until the
+  //  object crosses the upstream limit.
+  // If the object is in between the upstream and downstream limit,
+  //  the robot picks the part.
+  // If the object is downstream of the downstream limit, the object
+  //  is removed from the conveyor’s queue and the robot is sent to
+  //  the home position.
+  //
+  // Input parameters
+  //  None            :
+  //
+  // Output parameters
+  //  x_bPartDone     : A part has been picked
+  //
+  //----------------------------------------------------------------
+  //
+  l_nConvNum=0
+  x_bPartDone=false
+  l_sToolStatus=""
+  //
+  // If the overflowPick task hasn't already detect the next part to pick,
+  //  wait until an object is present in the queue
+  _sCycleStatus="Waiting for part to pick"
+  while (_nID[l_nConvNum]==-1)
+    call mot:getNextID(l_nConvNum,_nID[l_nConvNum])
+    // Send the robot to home if there isn’t a part available and if the robot hasn’t been sent to home.
+    if _nID[l_nConvNum]==-1 and !_bSentToHome
+      call goHome(l_nMoveID)
+    endIf
+    delay(0)
+  endWhile
+  _bIsPicking=true
+  _nPartID=_nID[l_nConvNum]
+  //
+  // If the overflowPick task hasn't already detect the next part to pick,
+  //  recover next point transformation from the stack
+  if pPick.trsf=={0,0,0,0,0,0}
+    call mot:getObjectData(l_nConvNum,pPick.trsf,l_nError)
+  endIf
+  pPick.trsf.z=nPartHeight
+  //若视觉发送的y坐标小于-90，停机、报警
+  if pPick.trsf.y<-100
+    aioSet(aRbAlarm,50)
+    call setAlarm(5)
+    stopMove()
+    resetMotion()
+    disablePower()
+    popUpMsg("物件y坐标错误: y="+toString("0.2",pPick.trsf.y))
+    logMsg("物件y坐标错误: y="+toString("0.2",pPick.trsf.y))
+    call OMAC_Abort()
+  endIf
+  //
+  // If the object is upstream of the upstream limit, send the robot to a
+  //  waiting position above the conveyor aligned in front of the object and
+  //  waits until the part crosses the upstream limit.
+  l_bSent2WaitPos=false
+  do
+    call mot:getDistance(l_nConvNum,pPick,0,l_nDistToUp,l_nDistToDown,l_nError)
+    _sCycleStatus="Distance to pick: "+toString("7.2",l_nDistToUp)
+    if l_nDistToUp<nWaitDistToUp[l_nConvNum,0] and !l_bSent2WaitPos
+      //
+      l_bSent2WaitPos=true
+      //
+      // Compute waiting position
+      l_pAppro=appro(pPick,{0,0,nPickAppro,180,0,0})
+      l_pAppro.trsf.x=nWaitDistToUp[0,0]+nWaitDistX
+      l_bNoError=pointToJoint(tGripper,jHome,l_pAppro,l_jAppro)
+      //
+      // Move to the waiting position
+      call mot:getTrackStatus(l_nTrackStatus)
+      if l_nTrackStatus>0
+        // Use trackOff if the robot is synchronized
+        if l_bNoError
+          call mot:trackOffJ(l_jAppro,tGripper,mUnload,l_nMoveID,l_nError)
+        else
+          call mot:trackOff(l_pAppro,tGripper,mUnload,l_nMoveID,l_nError)
+        endIf
+      else
+        // Use movej if the robot is not synchronized
+        if l_bNoError
+          l_nMoveID=movej(l_jAppro,tGripper,mNomSpeed)
+        else
+          l_nMoveID=movej(l_pAppro,tGripper,mNomSpeed)
+        endIf
+      endIf
+      //
+    endIf
+    delay(0)
+  until (l_nDistToUp>=nWaitDistToUp[l_nConvNum,0])
+  //
+  // Send the robot to pick the part if the part hasn’t cross the downstream limit,
+  //  otherwise remove the part and send the robot to the home position.
+  if (l_nDistToUp<nWaitDistToUp[l_nConvNum,1] and !bSetConvSpeed[l_nConvNum]) or (l_nDistToDown<nWaitDistToDown[l_nConvNum] and bSetConvSpeed[l_nConvNum])
+    //
+    _bSentToHome=false
+    //
+    // Turn the Z of the point upside down
+    pPick=appro(pPick,{0,0,0,180,0,0})
+    //
+    // Compute approach location
+    l_pAppro=appro(pPick,{0,0,-nPickAppro,0,0,0})
+    // 
+    // Move to the part
+    if l_bSent2WaitPos
+      call mot:trackOn(l_nConvNum,l_pAppro,tGripper,mNomSpeed,l_nTrackOnID,l_nError)
+    else
+      call mot:trackOnJ(l_nConvNum,l_pAppro,tGripper,jHome,mUnload,l_nTrackOnID,l_nError)
+    endIf
+
+    // vacuum
+    wait(getMoveId()>l_nTrackOnID+nVacuumID)
+    dBlow=false
+    dVacuum=true
+    call mot:trackOn(l_nConvNum,pPick,tGripper,mPickDown,l_nMoveID,l_nError)
+    //    waitEndMove()
+    // Compute depart location
+    l_pAppro=appro(pPick,{0,0,-nPickAppro,0,0,0})
+    //
+    // Move up
+    call mot:trackOn(l_nConvNum,l_pAppro,tGripper,mPickup,l_nMoveID,l_nError)
+    //
+    // Wait for the robot to get slightly away from the picking point
+    //  and check if the part was taken
+    if bPickDetection
+      wait(getMoveId()>l_nMoveID+0.5)
+      call getToolStatus(l_sToolStatus)
+    else
+      // Wait until the robot is synchronized with the conveyor to
+      //  avoid that the next place routine is executed before the
+      //  movements of this pick routine are started.
+      wait(getMoveId()>l_nMoveID-0.3)
+      _bPartInTool=true
+    endIf
+
+    // Remove object from conveyor's queue
+    call mot:removePart(l_nConvNum)
+    //
+    // A part has been picked
+    x_bPartDone=true
+    _nCntPartsDone[l_nConvNum]=_nCntPartsDone[l_nConvNum]+1
+    //
+    // Measure Cycle Time
+    if _nTimer!=0
+      _nCycleTime[_nCycleTimeIndx]=clock()-_nTimer
+      _nCycleTimeIndx=(_nCycleTimeIndx+1)%size(_nCycleTime)
+    endIf
+    //
+    _nTimer=clock()
+    //
+    // Reset bypass counter
+    _nCntBypassed[l_nConvNum]=0
+    //
+
+    //
+  else
+    // Send the robot to home if the robot hasn’t been sent to home.
+    if !_bSentToHome
+      call goHome(l_nMoveID)
+    endIf
+    //
+    // Send part to the next robot
+    if bTransferData[l_nConvNum]
+      call mot:getObjectLatch(l_nConvNum,l_nEncLatchVal,l_nError)
+      call send2NextRob(l_nConvNum,_nID[l_nConvNum],pPick.trsf,l_nEncLatchVal)
+    endIf
+    //
+    // Remove object from conveyor's queue
+    call mot:removePart(l_nConvNum)
+    //
+    _nCntTransfered[l_nConvNum]=_nCntTransfered[l_nConvNum]+1
+  endIf
+  //
+  _nID[l_nConvNum]=-1
+  pPick.trsf={0,0,0,0,0,0}
+  _bIsPicking=false
+  //
+end]]></Code>
+  </Program>
+</Programs>

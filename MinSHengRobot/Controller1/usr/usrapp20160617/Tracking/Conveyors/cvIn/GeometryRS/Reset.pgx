@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="Reset" access="public" >
+    <Code><![CDATA[begin
+  // This program set the default value of the variables
+  // used in the librairy
+  //
+  //***********************************
+  //*****   Conveyor locations    *****
+  //***********************************
+  //--- Upstream end of the tracking window
+  pWinUp[0].trsf={0,0,0,0,0,0}
+  pWinUp[1].trsf={0,0,0,0,0,0}
+  //
+  //--- Donwstream End of the tracking Window
+  pWinDown[0].trsf={0,0,0,0,0,0}
+  pWinDown[1].trsf={0,0,0,0,0,0}
+  //
+  //*****************************
+  //*****     Numerics      *****
+  //*****************************
+  //---
+  //--- Distance for sync/desync criteria
+  nSyncDist=0
+end]]></Code>
+  </Program>
+</Programs>

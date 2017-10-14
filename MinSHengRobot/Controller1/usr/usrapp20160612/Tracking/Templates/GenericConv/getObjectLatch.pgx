@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="getObjectLatch" access="public">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_nLatchedValue" type="num" xsi:type="array" use="reference" />
+      <Parameter name="x_nError" type="num" xsi:type="array" use="reference" />
+    </Parameters>
+    <Locals>
+      <Local name="l_pPoint" type="point" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[
+begin
+  // This program returns the encoder latched value of the object
+  // that have been pushed into the buffer by the detection lib.
+  //
+  // Input Param
+  //  none
+  //
+  // Output Param
+  //  x_nLatchedValue  : encoder latched value of the object
+  //  x_nError         : Error code
+  //    0 : No error
+  //    1 : No data available
+  //
+  //----------------------------------------------------------------
+  //
+  x_nError=0
+  if nNumbOfUser[nIdxPull]!=0
+    x_nLatchedValue=nEncLatchedVal[nIdxPull]
+  else
+    //* No Object requested
+    x_nError=1
+    if cfg:bLog==true
+      nErrVal[0]=nIdxPull
+      call ut:addNumToString(sConvNum+"(getObjectLatch)>>"+sErrMsgList[x_nError],sMsg,"*",nErrVal)
+      logMsg(sMsg)
+    endIf
+  endIf
+end
+]]></Code>
+  </Program>
+</Programs>

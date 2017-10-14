@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="readMe">
+    <Code><![CDATA[
+begin
+  // Possible value for the variable sTxtBoxType
+  // A : Alphanumerical value
+  // N : Numerical value
+  // B : Boolean
+  // L : List
+  // D : Display only (cannot be edited)
+  // The coordinate (variable sTxtBoxPos) of the items are relative to the upper left corner
+end
+]]></Code>
+  </Program>
+</Programs>

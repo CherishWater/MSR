@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="coord2Cell">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="col_" type="num" xsi:type="element" />
+      <Parameter name="row_" type="num" xsi:type="element" />
+      <Parameter name="x_sCellNumber" type="string" xsi:type="array" use="reference" />
+    </Parameters>
+    <Locals>
+      <Local name="strRow" type="string" xsi:type="array" size="1" />
+      <Local name="strCol" type="string" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[
+begin
+  // transform row and column number to cell address string of camera
+  // f.i. row = 2, col = 3 returns "C002"
+  strRow=toString("0.0",row_)
+  if row_<10
+    strRow="0"+strRow
+  endIf
+  if row_<100
+    strRow="0"+strRow
+  endIf
+  strCol=chr(col_+96)
+  //
+  x_sCellNumber=strCol+strRow
+end
+]]></Code>
+  </Program>
+</Programs>

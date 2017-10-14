@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="_decode" access="public">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_sInString" type="string" xsi:type="element" />
+      <Parameter name="x_sOutString" type="string" xsi:type="array" use="reference" />
+      <Parameter name="x_sBreakChar" type="string" xsi:type="element" />
+      <Parameter name="x_nMode" type="num" xsi:type="element" />
+    </Parameters>
+    <Code><![CDATA[
+begin
+  // ABSTRACT:
+  // Extract part of a string as delimited by break characters
+  //
+  // INPUT PARMS:
+  //  x_sInString    : Input string that will be scanned.
+  //  x_sBreakChar   : Break character which are to be considered
+  //  x_nValue[]     : Real value to be inserted into the input string
+  //  x_nMode        : Control the operation performed by the function
+  //      = 0 -->    : Returns the input string in which the characters up to the
+  //                 nFirst break character are removed.
+  //      = 1 -->  Characters up to the nFirst NONbreak character are removed from the
+  //               input string and returned in the outputString
+  //
+  // OUTPUT PARMS:
+  // x_sOutString    : Output String
+  //
+  //Created 21/12/05                              C.CURRIVAND
+  //--------------------------------------------------------------
+  // Set default value for break character
+  if x_sBreakChar==""
+    x_sBreakChar=" "
+  endIf
+  switch x_nMode
+    case 0
+      while (mid(x_sInString,1,0)!=x_sBreakChar)
+        x_sInString=delete(x_sInString,1,0)
+        //? x_sInString
+      endWhile
+      // remove break character
+      x_sOutString=delete(x_sInString,1,0)
+    break
+    case 1
+      while mid(x_sInString,1,0)==x_sBreakChar
+        x_sInString=delete(x_sInString,1,0)
+        //? x_sInString
+      endWhile
+      x_sOutString=x_sInString
+    break
+  endSwitch
+end
+]]></Code>
+  </Program>
+</Programs>

@@ -1,0 +1,1182 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Database xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Data/2">
+  <Datas>
+    <Data name="aConvSpeed" access="private" xsi:type="array" type="aio" size="1">
+      <Value key="0" link="ModbusSrv-0\Modbus-Word\ao[3]" />
+    </Data>
+    <Data name="aPlcCmd" access="private" xsi:type="array" type="aio" size="1">
+      <Value key="0" link="ModbusSrv-0\Modbus-Word\ai[0]" />
+    </Data>
+    <Data name="aRbAlarm" access="private" xsi:type="array" type="aio" size="1">
+      <Value key="0" link="ModbusSrv-0\Modbus-Word\ao[0]" />
+    </Data>
+    <Data name="aRbStatus" access="private" xsi:type="array" type="aio" size="1">
+      <Value key="0" link="ModbusSrv-0\Modbus-Word\ao[1]" />
+    </Data>
+    <Data name="_bConvExist" access="private" xsi:type="array" type="bool" size="1">
+    </Data>
+    <Data name="_bEndCycle" access="private" xsi:type="array" type="bool" size="1">
+    </Data>
+    <Data name="_bIsPicking" access="private" xsi:type="array" type="bool" size="1">
+    </Data>
+    <Data name="_bIsPlacing" access="private" xsi:type="array" type="bool" size="1">
+    </Data>
+    <Data name="_bMutexCnvQueue" access="private" xsi:type="array" type="bool" size="1">
+      <Value key="0" value="true" />
+    </Data>
+    <Data name="_bOverflowed" access="private" xsi:type="array" type="bool" size="1">
+      <Value key="0" value="true" />
+    </Data>
+    <Data name="_bPartInTool" access="private" xsi:type="array" type="bool" size="1">
+      <Value key="0" value="true" />
+    </Data>
+    <Data name="_bSentToHome" access="private" xsi:type="array" type="bool" size="1">
+      <Value key="0" value="true" />
+    </Data>
+    <Data name="bIsConnectPC" access="private" xsi:type="array" type="bool" size="1">
+    </Data>
+    <Data name="bLockPage" access="private" xsi:type="array" type="bool" size="1">
+    </Data>
+    <Data name="bPickDetection" access="private" xsi:type="array" type="bool" size="1">
+    </Data>
+    <Data name="bSetConvSpeed" access="private" xsi:type="array" type="bool" size="1">
+    </Data>
+    <Data name="bSyn" access="private" xsi:type="array" type="bool" size="1">
+    </Data>
+    <Data name="bTransferData" access="private" xsi:type="array" type="bool" size="1">
+      <Value key="0" value="true" />
+    </Data>
+    <Data name="dAlarm" access="private" xsi:type="array" type="dio" size="8">
+      <Value key="0" link="ModbusSrv-0\Modbus-Bit\do[8]" />
+      <Value key="1" link="ModbusSrv-0\Modbus-Bit\do[9]" />
+      <Value key="2" link="ModbusSrv-0\Modbus-Bit\do[10]" />
+      <Value key="3" link="ModbusSrv-0\Modbus-Bit\do[11]" />
+      <Value key="4" link="ModbusSrv-0\Modbus-Bit\do[12]" />
+      <Value key="5" link="ModbusSrv-0\Modbus-Bit\do[13]" />
+      <Value key="6" link="ModbusSrv-0\Modbus-Bit\do[14]" />
+      <Value key="7" link="ModbusSrv-0\Modbus-Bit\do[15]" />
+    </Data>
+    <Data name="dBlow" access="private" xsi:type="array" type="dio" size="1">
+      <Value key="0" link="BasicIO-1\%Q5" />
+    </Data>
+    <Data name="dConvControl" access="private" xsi:type="array" type="dio" size="2">
+      <Value key="0" link="BasicIO-1\%I4" />
+      <Value key="1" link="BasicIO-1\%Q6" />
+    </Data>
+    <Data name="dPartInTool" access="private" xsi:type="array" type="dio" size="1">
+      <Value key="0" link="fIn0" />
+    </Data>
+    <Data name="dPermitPlace" access="private" xsi:type="array" type="dio" size="4">
+      <Value key="0" link="BasicIO-1\%I3" />
+      <Value key="1" link="BasicIO-1\%I2" />
+      <Value key="2" link="BasicIO-1\%I1" />
+      <Value key="3" link="BasicIO-1\%I0" />
+    </Data>
+    <Data name="dPlaceDone" access="private" xsi:type="array" type="dio" size="4">
+      <Value key="0" link="BasicIO-1\%Q11" />
+      <Value key="1" link="BasicIO-1\%Q10" />
+      <Value key="2" link="BasicIO-1\%Q9" />
+      <Value key="3" link="BasicIO-1\%Q8" />
+    </Data>
+    <Data name="dStartControl" access="private" xsi:type="array" type="dio" size="4">
+      <Value key="0" link="ModbusSrv-0\Modbus-Bit\di[4]" />
+      <Value key="1" link="ModbusSrv-0\Modbus-Bit\di[5]" />
+      <Value key="2" link="ModbusSrv-0\Modbus-Bit\di[6]" />
+      <Value key="3" link="ModbusSrv-0\Modbus-Bit\di[7]" />
+    </Data>
+    <Data name="dStartState" access="private" xsi:type="array" type="dio" size="4">
+      <Value key="0" link="ModbusSrv-0\Modbus-Bit\do[4]" />
+      <Value key="1" link="ModbusSrv-0\Modbus-Bit\do[5]" />
+      <Value key="2" link="ModbusSrv-0\Modbus-Bit\do[6]" />
+      <Value key="3" link="ModbusSrv-0\Modbus-Bit\do[7]" />
+    </Data>
+    <Data name="dVacuum" access="private" xsi:type="array" type="dio" size="1">
+      <Value key="0" link="BasicIO-1\%Q4" />
+    </Data>
+    <Data name="fConveyor" access="private" xsi:type="array" type="frame" size="1">
+      <Value key="0" x="365.904087" y="326.91934" z="-82.602337" rx="-0.010861" ry="-0.059106" rz="0.004608" fatherId="world[0]" />
+    </Data>
+    <Data name="fDetection" access="private" xsi:type="array" type="frame" size="1">
+      <Value key="0" x="392.598601" y="461.346273" z="-82.976862" rx="0.205045" ry="0.617271" rz="0.011036" fatherId="world[0]" />
+    </Data>
+    <Data name="jDropPart" access="private" xsi:type="array" type="jointRs" size="1">
+      <Value key="0" j1="102.785955" j2="-95.43121" j3="69.578977" j4="134.260732" />
+    </Data>
+    <Data name="jHome" access="private" xsi:type="array" type="jointRs" size="1">
+      <Value key="0" j1="102.785955" j2="-95.43121" j3="69.578977" j4="134.260732" />
+    </Data>
+    <Data name="jPark" access="private" xsi:type="array" type="jointRs" size="1">
+      <Value key="0" j1="102.785955" j2="-95.43121" j3="69.578977" j4="134.260732" />
+    </Data>
+    <Data name="_mLoad" access="private" xsi:type="array" type="mdesc" size="1">
+      <Value key="0" accel="146.41" vel="121" decel="146.41" />
+    </Data>
+    <Data name="mLoad" access="private" xsi:type="array" type="mdesc" size="1">
+      <Value key="0" accel="121" vel="110" decel="121" />
+    </Data>
+    <Data name="mNomSpeed" access="private" xsi:type="array" type="mdesc" size="1">
+      <Value key="0" accel="144" vel="120" decel="144" leave="20" reach="20" />
+    </Data>
+    <Data name="mPickDown" access="private" xsi:type="array" type="mdesc" size="1">
+      <Value key="0" accel="169" vel="130" decel="169" blend="off" leave="10" reach="10" />
+    </Data>
+    <Data name="mPickup" access="private" xsi:type="array" type="mdesc" size="1">
+      <Value key="0" accel="121" vel="110" decel="121" leave="40" reach="40" />
+    </Data>
+    <Data name="mPlaceDown" access="private" xsi:type="array" type="mdesc" size="1">
+      <Value key="0" accel="144" vel="120" decel="144" blend="off" leave="15" reach="15" />
+    </Data>
+    <Data name="mPlaceUp" access="private" xsi:type="array" type="mdesc" size="1">
+      <Value key="0" accel="144" vel="120" decel="144" blend="cartesian" leave="20" reach="20" />
+    </Data>
+    <Data name="mSlow" access="private" xsi:type="array" type="mdesc" size="1">
+      <Value key="0" accel="1" vel="10" decel="1" leave="10" reach="10" />
+    </Data>
+    <Data name="mUnload" access="private" xsi:type="array" type="mdesc" size="1">
+      <Value key="0" accel="144" vel="120" decel="144" leave="40" reach="40" />
+    </Data>
+    <Data name="_nBlowDelay" access="private" xsi:type="array" type="num" size="1">
+    </Data>
+    <Data name="_nCntBypassed" access="private" xsi:type="array" type="num" size="1">
+    </Data>
+    <Data name="_nCntPartsDone" access="private" xsi:type="array" type="num" size="2">
+      <Value key="0" value="73196" />
+      <Value key="1" value="73161" />
+    </Data>
+    <Data name="_nCntTransfered" access="private" xsi:type="array" type="num" size="1">
+    </Data>
+    <Data name="_nConvSpd" access="private" xsi:type="array" type="num" size="1">
+      <Value key="0" value="507.887247" />
+    </Data>
+    <Data name="_nCycleTime" access="private" xsi:type="array" type="num" size="4">
+    </Data>
+    <Data name="_nCycleTimeIndx" access="private" xsi:type="array" type="num" size="1">
+    </Data>
+    <Data name="_nID" access="private" xsi:type="array" type="num" size="1">
+      <Value key="0" value="-1" />
+    </Data>
+    <Data name="_nLastStateCMD" access="private" xsi:type="array" type="num" size="1">
+      <Value key="0" value="2" />
+    </Data>
+    <Data name="_nOmacStat" access="private" xsi:type="array" type="num" size="1">
+      <Value key="0" value="9" />
+    </Data>
+    <Data name="_nPartID" access="private" xsi:type="array" type="num" size="1">
+      <Value key="0" value="1" />
+    </Data>
+    <Data name="_nPlaceCurItem" access="private" xsi:type="array" type="num" size="2">
+    </Data>
+    <Data name="_nPullIndexTQ" access="private" xsi:type="array" type="num" size="1">
+    </Data>
+    <Data name="_nPushIndexTQ" access="private" xsi:type="array" type="num" size="1">
+    </Data>
+    <Data name="_nStateCMD" access="private" xsi:type="array" type="num" size="1">
+      <Value key="0" value="2" />
+    </Data>
+    <Data name="_nTimer" access="private" xsi:type="array" type="num" size="1">
+    </Data>
+    <Data name="_nTrackErr" access="private" xsi:type="array" type="num" size="1">
+      <Value key="0" value="304" />
+    </Data>
+    <Data name="nBlowID" access="private" xsi:type="array" type="num" size="1">
+      <Value key="0" value="0.3" />
+    </Data>
+    <Data name="nBypass" access="private" xsi:type="array" type="num" size="1">
+      <Value key="0" value="1" />
+    </Data>
+    <Data name="nLoadRatio" access="private" xsi:type="array" type="num" size="4">
+      <Value key="0" value="0.7" />
+      <Value key="1" value="0.85" />
+      <Value key="2" value="0.95" />
+      <Value key="3" value="1.1" />
+    </Data>
+    <Data name="nNomConvSpeed" access="private" xsi:type="array" type="num" size="1">
+      <Value key="0" value="100" />
+    </Data>
+    <Data name="nPartHeight" access="private" xsi:type="array" type="num" size="1">
+      <Value key="0" value="8" />
+    </Data>
+    <Data name="nPickAppro" access="private" xsi:type="array" type="num" size="1">
+      <Value key="0" value="65" />
+    </Data>
+    <Data name="nPickOS_X" access="private" xsi:type="array" type="num" size="1">
+      <Value key="0" value="-3" />
+    </Data>
+    <Data name="nPickOS_Y" access="private" xsi:type="array" type="num" size="1">
+    </Data>
+    <Data name="nPlaceAppro" access="private" xsi:type="array" type="num" size="1">
+      <Value key="0" value="60" />
+    </Data>
+    <Data name="nPlaceNum" access="public" xsi:type="array" type="num" size="1">
+      <Value key="0" value="3" />
+    </Data>
+    <Data name="nSafeMaxX" access="private" xsi:type="array" type="num" size="1">
+      <Value key="0" value="850" />
+    </Data>
+    <Data name="nSafeMaxY" access="private" xsi:type="array" type="num" size="1">
+      <Value key="0" value="650" />
+    </Data>
+    <Data name="nSafeMinX" access="private" xsi:type="array" type="num" size="1">
+    </Data>
+    <Data name="nSafeMinY" access="private" xsi:type="array" type="num" size="1">
+    </Data>
+    <Data name="nStopTime" access="private" xsi:type="array" type="num" size="1">
+      <Value key="0" value="0.02" />
+    </Data>
+    <Data name="nTestData" access="private" xsi:type="array" type="num" size="5">
+      <Value key="0" value="6" />
+      <Value key="1" value="-49" />
+      <Value key="2" value="55" />
+      <Value key="4" value="22460" />
+    </Data>
+    <Data name="nVacuumID" access="private" xsi:type="array" type="num" size="1">
+    </Data>
+    <Data name="nWaitDist2Up4BP" access="private" xsi:type="array" type="num" size="1">
+      <Value key="0" value="-300" />
+    </Data>
+    <Data name="nWaitDistToDown" access="private" xsi:type="array" type="num" size="1">
+      <Value key="0" value="50" />
+    </Data>
+    <Data name="nWaitDistToUp" access="private" xsi:type="array" type="num" size="1 3">
+      <Value key="0,0" value="-80" />
+      <Value key="0,1" value="120" />
+      <Value key="0,2" value="400" />
+    </Data>
+    <Data name="nWaitDistX" access="private" xsi:type="array" type="num" size="1">
+    </Data>
+    <Data name="_oTransferQueue" access="private" xsi:type="array" type="object" size="1 100">
+      <Value key="0,0">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,1">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,2">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,3">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,4">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,5">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,6">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,7">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,8">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,9">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,10">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,11">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,12">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,13">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,14">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,15">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,16">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,17">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,18">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,19">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,20">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,21">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,22">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,23">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,24">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,25">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,26">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,27">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,28">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,29">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,30">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,31">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,32">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,33">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,34">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,35">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,36">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,37">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,38">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,39">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,40">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,41">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,42">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,43">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,44">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,45">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,46">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,47">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,48">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,49">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,50">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,51">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,52">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,53">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,54">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,55">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,56">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,57">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,58">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,59">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,60">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,61">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,62">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,63">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,64">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,65">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,66">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,67">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,68">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,69">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,70">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,71">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,72">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,73">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,74">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,75">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,76">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,77">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,78">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,79">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,80">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,81">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,82">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,83">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,84">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,85">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,86">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,87">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,88">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,89">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,90">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,91">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,92">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,93">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,94">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,95">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,96">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,97">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,98">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+      <Value key="0,99">
+        <Field name="nID" xsi:type="array" type="num" size="1">
+          <Value key="0" value="-1" />
+        </Field>
+        <Field name="nLatchedValue" xsi:type="array" type="num" size="1">
+        </Field>
+        <Field name="trTrsf" xsi:type="array" type="trsf" size="1">
+        </Field>
+      </Value>
+    </Data>
+    <Data name="pPick" access="private" xsi:type="array" type="pointRs" size="1">
+      <Value key="0" shoulder="lefty" fatherId="fDetection[0]" />
+    </Data>
+    <Data name="pPlace" access="private" xsi:type="array" type="pointRs" size="4">
+      <Value key="0" x="356.46" y="115" z="-70.81" rx="180" rz="-98.019983" shoulder="lefty" fatherId="world[0]" />
+      <Value key="1" x="486.131736" y="115" z="-70.81" rx="180" rz="-98.021161" shoulder="lefty" fatherId="world[0]" />
+      <Value key="2" x="630" y="105" z="-70.81" rx="180" rz="-98.02183" shoulder="lefty" fatherId="world[0]" />
+      <Value key="3" x="770" y="105" z="-70.8" rx="180" rz="-98.02084" shoulder="lefty" fatherId="world[0]" />
+    </Data>
+    <Data name="skToRobot" access="private" xsi:type="array" type="sio" size="1">
+      <Value key="0" link="Socket\toRobot_sk1" />
+    </Data>
+    <Data name="sktoPC" access="private" xsi:type="array" type="sio" size="1">
+      <Value key="0" link="Socket\toPC" />
+    </Data>
+    <Data name="synServer" access="private" xsi:type="array" type="sio" size="1">
+      <Value key="0" link="Socket\synRobot1" />
+    </Data>
+    <Data name="_sCycleStatus" access="private" xsi:type="array" type="string" size="1">
+    </Data>
+    <Data name="sConveyorList" access="private" xsi:type="array" type="string" size="1">
+      <Value key="0" value="cvIn" />
+    </Data>
+    <Data name="sDataPC" access="private" xsi:type="array" type="string" size="1">
+      <Value key="0" value="alarm0" />
+    </Data>
+    <Data name="sString" access="private" xsi:type="array" type="string" size="1">
+      <Value key="0" value="done" />
+    </Data>
+    <Data name="tGripper" access="private" xsi:type="array" type="tool" size="1">
+      <Value key="0" z="85" rz="45" fatherId="flange[0]" ioLink="valve1" />
+    </Data>
+  </Datas>
+</Database>

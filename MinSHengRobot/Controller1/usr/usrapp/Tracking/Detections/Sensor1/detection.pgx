@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="detection">
+    <Locals>
+      <Local name="l_i" type="num" xsi:type="array" size="1" />
+      <Local name="l_nNumOfPart" type="num" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[
+begin
+  // This program defines the ID and the transformation of the parts
+  //  detected by the encoder library.
+  //
+  // Input Param
+  //  none       : 
+  //
+  // Output Param
+  //  none       : 
+  //
+  //----------------------------------------------------------------
+  //
+  // Number of parts detected per cycle
+  l_nNumOfPart=1
+  // If the local variable "number of parts" is bigger than the global
+  //  variable, set the local variable to the size of the global variable.
+  l_nNumOfPart=sel(l_nNumOfPart>nMaxNumOfObject,nMaxNumOfObject,l_nNumOfPart)
+  //
+  // detection task running : unlock the task's conveyor when valtrack  begins
+  bTaskDetOK=true
+  //
+  do
+    //
+    for l_i=0 to l_nNumOfPart-1
+      nObjectID[l_i]=-1
+      trObjectPos[l_i]={0,0,0,0,0,0}
+    endFor
+    nObjectID[0]=1
+    //
+    // Set number of detected parts.
+    // nNumOfPart is watched by the conveyor library.
+    // Once nNumOfPart is set, the conveyor library will access
+    //  the variables nObjectID[] and trObjectPos[].
+    //  They must be fully updated before nNumOfPart is set.
+    nNumOfPart=l_nNumOfPart
+    //
+    // Once data have been read by conveyor library
+    // nNumOfPart is reset
+    wait(nNumOfPart==-1)
+    //
+    delay(0)
+  until false
+end
+]]></Code>
+  </Program>
+</Programs>

@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://www.staubli.com/robotics/VAL3/Project/3">
+  <Parameters version="s7.0" stackSize="5000" millimeterUnit="true" />
+  <Programs>
+    <Program file="_incrementCol.pgx" />
+    <Program file="_toString.pgx" />
+    <Program file="CheckCellFormat.pgx" />
+    <Program file="checkColValue.pgx" />
+    <Program file="coord2Cell.pgx" />
+    <Program file="getActiveJob.pgx" />
+    <Program file="getErrorCode.pgx" />
+    <Program file="getErrorMessage.pgx" />
+    <Program file="getLibVersion.pgx" />
+    <Program file="getOnline.pgx" />
+    <Program file="init.pgx" />
+    <Program file="loadJob.pgx" />
+    <Program file="login.pgx" />
+    <Program file="readErrorTable.pgx" />
+    <Program file="readLogin.pgx" />
+    <Program file="readme.pgx" />
+    <Program file="readNumValue.pgx" />
+    <Program file="readRect.pgx" />
+    <Program file="readSocket.pgx" />
+    <Program file="readStrValue.pgx" />
+    <Program file="readTrsf.pgx" />
+    <Program file="saveJob.pgx" />
+    <Program file="sendCommand.pgx" />
+    <Program file="setEventAndWait.pgx" />
+    <Program file="setEventNoWait.pgx" />
+    <Program file="setOnline.pgx" />
+    <Program file="start.pgx" />
+    <Program file="stop.pgx" />
+    <Program file="trigger.pgx" />
+    <Program file="writeFloatValue.pgx" />
+    <Program file="writeIntValue.pgx" />
+    <Program file="writeSocket.pgx" />
+    <Program file="writeStrValue.pgx" />
+  </Programs>
+  <Database>
+    <Data file="cognexComm.dtx" />
+  </Database>
+  <Libraries />
+</Project>

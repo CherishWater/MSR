@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="getObjectData" access="public" >
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1" >
+      <Parameter name="x_nIdx" type="num" use="value" xsi:type="element" dimensions="1" />
+      <Parameter name="x_nObjectID" type="num" use="reference" xsi:type="array" dimensions="1" />
+      <Parameter name="x_trObject" type="trsf" use="reference" xsi:type="array" dimensions="1" />
+    </Parameters>
+    <Code><![CDATA[begin
+  // This program returns the ID number and the coordinates
+  // of the detected object.
+  //
+  // Input param
+  // x_nIdx     : Position of the object in the queue
+  //
+  // Output param
+  // x_nObjectID
+  // x_trObject   : Coordinates of the object
+  //
+  // Created 23-02-05                                   C.CURRIVAND
+  //----------------------------------------------------------------
+  //
+  x_nObjectID=nObjectID[x_nIdx]
+  x_trObject=trObjectPos[x_nIdx]
+end]]></Code>
+  </Program>
+</Programs>

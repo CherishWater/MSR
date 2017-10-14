@@ -1,0 +1,227 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="init" access="public">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_nConvNum" type="num" xsi:type="element" />
+      <Parameter name="x_nError" type="num" xsi:type="element" use="reference" />
+    </Parameters>
+    <Locals>
+      <Local name="l_i" type="num" xsi:type="array" size="1" />
+      <Local name="l_bSigClockOk" type="bool" xsi:type="array" size="1" />
+      <Local name="l_bQuit" type="bool" xsi:type="array" size="1" />
+      <Local name="l_tfCenter" type="trsf" xsi:type="array" size="1" />
+      <Local name="l_tfConveyor" type="trsf" xsi:type="array" size="1" />
+      <Local name="l_nError" type="num" xsi:type="array" size="1" />
+      <Local name="l_nStep" type="num" xsi:type="array" size="1" />
+      <Local name="l_sFileToLoad" type="string" xsi:type="array" size="1" />
+      <Local name="l_TRSF" type="trsf" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[
+begin
+  // This program initializes the conveyor library
+  //
+  // Input param
+  //  x_nConvNum : Conveyor number
+  //
+  // Output param
+  //  x_nError : Error code
+  //        =0 : No error
+  //        =33: Error while loading geometry library
+  //        =31: Error while loading encoder library
+  //        =32: Error while loading detection library
+  //
+  //----------------------------------------------------------------
+  //
+  //
+  bInit=false
+  l_bQuit=false
+  x_nError=0
+  nStatus=0
+  sConvNum="CNV"+toString("",x_nConvNum)
+  //***************************
+  //*****   Constant values ***
+  //***************************
+  nSysCycleTime=$getCycleTime()
+  nFirDelay=nSysCycleTime*2
+  nFirTime=nSysCycleTime*nFirOrdre
+  nPUSH_NEGATIVE=10
+  nDETECT_OVR=11
+  //***************************
+  //*****   Libraries   *******
+  //***************************
+  do
+    switch l_nStep
+      // --- Load Geometry library
+      case 0
+        l_sFileToLoad=cfg:sPATHCONVEYOR+sConveyorName+"\"+sGeometryLib
+        l_nError=geometry:libLoad(l_sFileToLoad)
+        if l_nError!=0
+          x_nError=33
+          if bAnd(cfg:nLog,cfg:nLOGMISC)==cfg:nLOGMISC
+            ? sConvNum+"(init)>>Loading geometry library "+l_sFileToLoad+", status "+toString("0",l_nError)
+          endIf
+          l_bQuit=true
+        else
+          l_nStep=10
+        endIf
+      break
+      // --- Load Encoder library
+      case 10
+        l_sFileToLoad=cfg:sPATHENCODER+sEncoderLib
+        l_nError=enc:libLoad(l_sFileToLoad)
+        if l_nError!=0
+          x_nError=31
+          if bAnd(cfg:nLog,cfg:nLOGMISC)==cfg:nLOGMISC
+            ? sConvNum+"(init)>>Loading encoder library "+l_sFileToLoad+", status:"+toString("0",l_nError)
+          endIf
+          l_bQuit=true
+        else
+          l_nStep=20
+        endIf
+      break
+      // --- Load Detection library
+      case 20
+        l_sFileToLoad=cfg:sPATHDETECTION+sDetectionLib
+        l_nError=det:libLoad(l_sFileToLoad)
+        if l_nError!=0
+          x_nError=32
+          if bAnd(cfg:nLog,cfg:nLOGMISC)==cfg:nLOGMISC
+            ? sConvNum+"(init)>>Loading detection library "+l_sFileToLoad+", status:"+toString("0",l_nError)
+          endIf
+        endIf
+        l_bQuit=true
+      break
+    endSwitch
+    delay(0)
+  until (l_bQuit==true)
+  //
+  // If error while loading libraries, prepare clear text
+  // else continue with initialisations
+  if x_nError!=0
+    // Prepare clear text error message
+    call ut:addStrToString(lang:sListOfMessage[x_nError],sErrorMessage,"",l_sFileToLoad)
+    call ut:addNumToString(sErrorMessage,sErrorMessage,"*",l_nError)
+  else
+    //******************************
+    //*****  Tracking Queues  ******
+    //******************************
+    // --- Resize arrays according to nBufferSize
+    resize(nEncLatchedVal,1,nBufferSize)
+    resize(nQueueID,1,nBufferSize)
+    resize(nNumbOfUser,1,nBufferSize)
+    resize(trDetectedCoord,1,nBufferSize)
+    //
+    // -- Resize temporarily buffers
+    resize(nTmpID,1,det:nMaxNumOfObject)
+    resize(nTmpEncLatched,1,det:nMaxNumOfObject)
+    resize(trTmp,1,det:nMaxNumOfObject)
+    //
+    // --- Initialize tracking queues
+    for l_i=0 to (nBufferSize-1)
+      nEncLatchedVal[l_i]=0
+      trDetectedCoord[l_i]=trDEFAULT
+      nQueueID[l_i]=nDEFAULTID
+      nNumbOfUser[l_i]=0
+    endFor
+    //
+    //***************************
+    //*****   Locations    ******
+    //***************************
+    //
+    call geometry:GetPoint(1)
+    //
+    //***************************
+    //*****   Frames       ******
+    //***************************
+    call geometry:BuildFrame("conveyor",fConveyor,l_nError)
+    if l_nError!=0
+      logMsg(sConvNum+"(init)>>Cannot compute conveyor frame : "+toString("0",l_nError))
+    endIf
+    call geometry:BuildFrame("vision",fDetection,l_nError)
+    if l_nError!=0
+      logMsg(sConvNum+"(init)>>Warning,cannot compute vision frame : "+toString("0",l_nError))
+    endIf
+    //
+    if bUseUserCenter
+      l_tfConveyor=fConveyor.trsf
+      l_tfCenter=swap:trWinCenter
+      l_tfConveyor.x=l_tfCenter.x
+      l_tfConveyor.y=l_tfCenter.y
+      l_tfConveyor.z=l_tfCenter.z
+      fConveyor.trsf=l_tfConveyor
+    endIf
+    //***************************
+    //***** Digital output ******
+    //***************************
+    // The conveyor library is able to deliver a clock signal depending on
+    // the advance of the conveyor .
+    //-- Clock signal to trigger detection device
+    l_nError=getData("out:"+sClockSigName,doClock)
+    l_bSigClockOk=(ioStatus(doClock)>=0) and l_nError!=-1
+    //
+    //***************************
+    //*****   Booleans     ******
+    //***************************
+    //
+    det:bTaskDetOK=false
+    bInit=true
+    bResetConv=false
+    //
+    bLinear=geometry:bLinear
+    // Mutex boolean for accessing the object queue
+    bLockQueueAcces=false
+    //--- Evaluate if clock feature is enabled
+    bClockEnabled=(nClockPeriod>0) and (l_bSigClockOk==true)
+    //
+    //Enable queuing of the detected objects
+    call enableQueue()
+    //
+    //***************************
+    //*****   Numerics     ******
+    //***************************
+    //
+    nIdxPush=0
+    nIdxPull=0
+    nAddedToQueue=0
+    //--- Select robot's working area boundaries
+    if bLinear
+      trBoundaryUp[0]=!fConveyor.trsf*swap:trWinUp[0]
+      trBoundaryUp[1]=!fConveyor.trsf*swap:trWinUp[1]
+      trBoundaryDwn[0]=!fConveyor.trsf*swap:trWinDown[0]
+      trBoundaryDwn[1]=!fConveyor.trsf*swap:trWinDown[1]
+      // Make volume a trapezoidal shape. Alternatively compute equation of the edge (more complex)
+      trBoundaryDwn[0].y=trBoundaryUp[0].y
+      trBoundaryDwn[1].y=trBoundaryUp[1].y
+      //
+      // Compute equation of upstream boundary in conveyor frame
+      if abs((trBoundaryUp[1].x-trBoundaryUp[0].x))>0.001
+        nA1=(trBoundaryUp[1].y-trBoundaryUp[0].y)/(trBoundaryUp[1].x-trBoundaryUp[0].x)
+      else
+        nA1=0
+      endIf
+      nB1=-nA1*trBoundaryUp[0].x
+      // Compute equation of downstream boundary in conveyor frame
+      if abs((trBoundaryDwn[1].x-trBoundaryDwn[0].x))>0.001
+        nA2=(trBoundaryDwn[1].y-trBoundaryDwn[0].y)/(trBoundaryDwn[1].x-trBoundaryDwn[0].x)
+      else
+        nA2=0
+      endIf
+      nB2=-nA2*trBoundaryDwn[0].x
+    else
+      l_TRSF=!fConveyor.trsf*swap:trWinDown[0]
+      nBoundaryDwn=atan(l_TRSF.y/l_TRSF.x)
+      l_TRSF=!fConveyor.trsf*swap:trWinUp[0]
+      nBoundaryUp=atan(l_TRSF.y/l_TRSF.x)
+    endIf
+    // Override limits with user limits
+    if bUseUserLimit==true
+      //      trBoundaryDwn={nWinDownStream,0,0,0,0,0}
+      //      trBoundaryUp={nWinUpStream,0,0,0,0,0}
+    endIf
+    //
+  endIf
+  //
+end
+]]></Code>
+  </Program>
+</Programs>

@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="create" access="public" >
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1" >
+      <Parameter name="x_sConveyorList" type="string" use="reference" xsi:type="array" dimensions="1" />
+    </Parameters>
+    <Locals>
+      <Local name="l_i" type="num" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+  // Initialize and start conveyor libraries
+  //
+  // Input Param
+  //  x_sConveyorList  : List of conveyors to be created
+  //
+  // Output param
+  //  none       :
+  //
+  //----------------------------------------------------------------
+  //
+  call init(x_sConveyorList,nStatus)
+  if nStatus==0
+    taskCreate sTASK,100,tracking()
+  else
+    if bAnd(cfg:nLog,cfg:nLOGMISC)==cfg:nLOGMISC
+      logMsg(sErrorMessage)
+    endIf
+    popUpMsg(sErrorMessage)
+  endIf
+end]]></Code>
+  </Program>
+</Programs>

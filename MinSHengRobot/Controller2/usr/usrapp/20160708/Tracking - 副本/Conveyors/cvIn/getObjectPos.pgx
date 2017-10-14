@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="getObjectPos" access="public" >
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1" >
+      <Parameter name="x_nIdx" type="num" use="value" xsi:type="element" dimensions="1" />
+      <Parameter name="x_pOrigin" type="point" use="value" xsi:type="element" dimensions="1" />
+      <Parameter name="x_pObject" type="point" use="reference" xsi:type="array" dimensions="1" />
+      <Parameter name="x_nError" type="num" use="reference" xsi:type="array" dimensions="1" />
+    </Parameters>
+    <Locals>
+      <Local name="l_TRSF" type="trsf" xsi:type="array" size="1" />
+      <Local name="l_nObjectOffset" type="num" xsi:type="array" size="1" />
+      <Local name="l_trPoint" type="trsf" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+  // This program returns the instantaneous position of the object
+  // on the conveyor
+  //
+  // Input param
+  //  x_nIdx      : Index of the object in the queue
+  //  x_pOrigin   : Static position of the object (has been taught)
+  //
+  // Output param
+  //  x_pObject  : Position of object in conveyor frame
+  //  x_nError   : Error code
+  //    0 : No error
+  //    1 : No ID available
+  //
+  // Comments
+  // getNextID method must have been invoked
+  // -------------------------------------------------------
+  //
+  x_nError=0
+  if nNumbOfUser[x_nIdx]!=0
+    //
+    call getObjectOffset(x_nIdx,l_nObjectOffset,x_nError)
+    //
+    if x_nError==0
+      l_trPoint=position(x_pOrigin,world)
+      if bLinear
+        l_TRSF={l_nObjectOffset,0,0,0,0,0}
+        //*** Compute instantaneous object position
+        x_pObject.trsf=fConveyor.trsf*l_TRSF*!fConveyor.trsf*l_trPoint
+      else
+        l_TRSF={0,0,0,0,0,l_nObjectOffset}
+        //*** Compute instantaneous object position
+        // NOT TESTED YET
+        x_pObject.trsf=fConveyor.trsf*l_TRSF*!fConveyor.trsf*l_trPoint*!l_TRSF
+      endIf
+    endIf
+  else
+    x_nError=1
+    if cfg:bLog==true
+      nErrVal[0]=x_nIdx
+      call ut:addNumToString(sConvNum+"(getObjectPos)>>"+sErrMsgList[x_nError],sMsg,"*",nErrVal)
+      logMsg(sMsg)
+    endIf
+  endIf
+end]]></Code>
+  </Program>
+</Programs>

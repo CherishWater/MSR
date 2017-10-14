@@ -1,0 +1,154 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="writeCNV" access="private" >
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1" >
+      <Parameter name="x_nError" type="num" use="reference" xsi:type="array" dimensions="1" />
+    </Parameters>
+    <Locals>
+      <Local name="l_bQuit" type="bool" xsi:type="array" size="1" />
+      <Local name="l_bResult" type="bool" xsi:type="array" size="1" />
+      <Local name="l_nError" type="num" xsi:type="array" size="1" />
+      <Local name="l_nStep" type="num" xsi:type="array" size="1" />
+      <Local name="l_nValue" type="num" xsi:type="array" size="1" />
+      <Local name="l_sErrorMsg" type="string" xsi:type="array" size="1" />
+      <Local name="l_sSubString" type="string" xsi:type="array" size="1" />
+      <Local name="l_sValue" type="string" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+  // This program initializes the parameters of the conveyor library
+  // according to the values of the conveyor page in the settings menu
+  // of the wizard.
+  //
+  //----------------------------------------------------------------
+  x_nError=0
+  l_nStep=0
+  // Update variables of the conveyor library
+  resize(sCaption,1,pg:nNumOfTxtBox)
+  call pg:getCaption(sCaption)
+  //
+  l_bQuit=false
+  do
+    switch l_nStep
+      //*** FIELD ENCODER LIBRARY
+      case 0
+        // Name of the encoder library
+        call pg:getFieldValue(sCaption[0],l_sValue,l_nError)
+        // checks if encoder library is loadable
+        l_nError=enc:libLoad(cfg:sPATHENCODER+l_sValue)
+        if l_nError==0
+          cnv:sEncoderLib=l_sValue
+          l_nStep=10
+        else
+          x_nError=31
+          l_sSubString=cfg:sPATHENCODER+l_sValue
+          call ut:addStrToString(lang:sListOfMessage[x_nError],l_sErrorMsg,"",l_sSubString)
+          call ut:addNumToString(l_sErrorMsg,l_sErrorMsg,"",l_nError)
+          popUpMsg(l_sErrorMsg)
+          l_bQuit=true
+        endIf
+      break
+      //*** FIELD DETECTION LIBRARY
+      case 10
+        // Name of the detection library
+        call pg:getFieldValue(sCaption[1],l_sValue,l_nError)
+        // checks if detection library is loadable
+        l_nError=det:libLoad(cfg:sPATHDETECTION+l_sValue)
+        if l_nError==0
+          cnv:sDetectionLib=l_sValue
+          l_nStep=20
+        else
+          x_nError=32
+          l_sSubString=cfg:sPATHENCODER+l_sValue
+          call ut:addStrToString(lang:sListOfMessage[x_nError],l_sErrorMsg,"",l_sSubString)
+          call ut:addNumToString(l_sErrorMsg,l_sErrorMsg,"",l_nError)
+          popUpMsg(l_sErrorMsg)
+          l_bQuit=true
+        endIf
+      break
+      //*** FIELD ThruUpLim
+      case 20
+        call pg:getFieldValue(sCaption[5],l_sValue,l_nError)
+        if l_sValue!=lang:sNONE
+          if out:libExist(l_sValue)
+            cnv:sUpLimSigName=l_sValue
+          else
+            x_nError=27
+            l_sErrorMsg=lang:sListOfMessage[x_nError]
+            popUpMsg(l_sErrorMsg)
+            l_bQuit=true
+          endIf
+        else
+          cnv:sUpLimSigName=lang:sNONE
+        endIf
+        l_nStep=30
+      break
+      //*** FIELD ThruDwnLim
+      case 30
+        call pg:getFieldValue(sCaption[6],l_sValue,l_nError)
+        if l_sValue!=lang:sNONE
+          if out:libExist(l_sValue)
+            cnv:sDwnLimSigName=l_sValue
+          else
+            x_nError=28
+            l_sErrorMsg=lang:sListOfMessage[x_nError]
+            popUpMsg(l_sErrorMsg)
+            l_bQuit=true
+          endIf
+        else
+          cnv:sDwnLimSigName=lang:sNONE
+        endIf
+        l_nStep=40
+      break
+      //*** FIELD Event logging
+      case 40
+        call pg:getFieldValue(sCaption[11],l_sValue,l_nError)
+        if l_sValue=="TRUE"
+          cnv:bLOG=true
+        else
+          cnv:bLOG=false
+        endIf
+        l_nStep=50
+      break
+      //
+      case 50
+        // height of the tracking window
+        call pg:getFieldValue(sCaption[4],l_sValue,l_nError)
+        toNum(l_sValue,cnv:nTrackWinHeight,l_bResult)
+        // Buffersize
+        call pg:getFieldValue(sCaption[2],l_sValue,l_nError)
+        toNum(l_sValue,cnv:nBufferSize,l_bResult)
+        // Scale factor
+        call pg:getFieldValue(sCaption[3],l_sValue,l_nError)
+        toNum(l_sValue,cnv:nENCSCALEFACTOR,l_bResult)
+        // Matching tolerance
+        call pg:getFieldValue(sCaption[7],l_sValue,l_nError)
+        toNum(l_sValue,cnv:nPosMatchTol,l_bResult)
+        //  Clock Signal
+        call pg:getFieldValue(sCaption[8],l_sValue,l_nError)
+        // If an IO name is set for ClockSignal,Check if is a digital IO
+        if l_sValue!=lang:sNONE
+          getData("out:"+l_sValue,doClock)
+          if ioStatus(doClock)>=0
+            cnv:sClockSigName=l_sValue
+          else
+            x_nError=26
+            l_sErrorMsg=lang:sListOfMessage[x_nError]
+            popUpMsg(l_sErrorMsg)
+          endIf
+        else
+          cnv:sClockSigName=lang:sNONE
+        endIf
+        //
+        // Clock Period
+        call pg:getFieldValue(sCaption[9],l_sValue,l_nError)
+        toNum(l_sValue,cnv:nClockPeriod,l_bResult)
+        // latch lock distance
+        call pg:getFieldValue(sCaption[10],l_sValue,l_nError)
+        toNum(l_sValue,cnv:nLatchLockDist,l_bResult)
+        l_bQuit=true
+      break
+    endSwitch
+  until (l_bQuit==true)
+end]]></Code>
+  </Program>
+</Programs>

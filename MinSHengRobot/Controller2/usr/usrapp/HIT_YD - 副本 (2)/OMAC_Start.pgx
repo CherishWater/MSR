@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="OMAC_Start" access="private" >
+    <Locals>
+      <Local name="l_pHere" type="point" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+
+  //OMAC进程:Starting
+  _nOmacStat=2
+  logMsg("上位机手动操作：启动")
+  // Task for cell manager
+  if taskStatus("cellManager")>=0
+    taskKill("cellManager")
+  endIf
+  wait(taskStatus("cellManager")<0)
+  taskCreate "cellManager",100,cellManager()
+  wait(taskStatus("cellManager")==1)
+
+  delay(0)
+end]]></Code>
+  </Program>
+</Programs>

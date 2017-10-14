@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="getRobotArea" access="public" >
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1" >
+      <Parameter name="x_nConvNum" type="num" use="value" xsi:type="element" dimensions="1" />
+      <Parameter name="x_nAreaNumber" type="num" use="reference" xsi:type="array" dimensions="1" />
+    </Parameters>
+    <Code><![CDATA[begin
+  // This program returns in which area number is currently located
+  //
+  // Input Param
+  // x_nConvNum    : Conveyor number
+  //
+  // Output param
+  // x_nAreNumber  : Number of the area in hich is the robot
+  //           --> -1: Invalid parameter
+  //           --> 0 : robot is beside or above the conveyor
+  //           --> 1 : Robot is upstream of the upstream end of the tracking window
+  //           --> 2 : Robot is within tracking window
+  //           --> 3 : Robot is downstream of the downstream end of the tracking window
+  //
+  //----------------------------------------------------------------
+  //
+  if (x_nConvNum>0) and (x_nConvNum<=size(nTrackingZone)-1)
+    x_nAreaNumber=nTrackingZone[x_nConvNum]
+  else
+    x_nAreaNumber=-1
+  endIf
+end]]></Code>
+  </Program>
+</Programs>

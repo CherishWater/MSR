@@ -1,0 +1,410 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="DefineVisFrame" access="private" >
+    <Locals>
+      <Local name="l_bForceRefresh" type="bool" xsi:type="array" size="1" />
+      <Local name="l_bLock" type="bool" xsi:type="array" size="1" />
+      <Local name="l_bQuit" type="bool" xsi:type="array" size="1" />
+      <Local name="l_bRefresh" type="bool" xsi:type="array" size="1" />
+      <Local name="l_nCustomCod" type="num" xsi:type="array" size="1" />
+      <Local name="l_nDummy" type="num" xsi:type="array" size="1" />
+      <Local name="l_nEncVal" type="num" xsi:type="array" size="2" />
+      <Local name="l_nError" type="num" xsi:type="array" size="1" />
+      <Local name="l_nFlagStep" type="num" xsi:type="array" size="1" />
+      <Local name="l_nFlagWrkMode" type="num" xsi:type="array" size="1" />
+      <Local name="l_nKeyPressed" type="num" xsi:type="array" size="1" />
+      <Local name="l_nStep" type="num" xsi:type="array" size="1" />
+      <Local name="l_nValue" type="num" xsi:type="array" size="2" />
+      <Local name="l_nWrkMode" type="num" xsi:type="array" size="1" />
+      <Local name="l_pLoc" type="point" xsi:type="array" size="1" />
+      <Local name="l_sCustomTxt" type="string" xsi:type="array" size="2" />
+      <Local name="l_sEmpty" type="string" xsi:type="array" size="1" />
+      <Local name="l_sFileName" type="string" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+  //Program used to compute the distance between the frame associated to
+  // the detection device and the conveyor's frame
+  //
+  // Created 23-02-05                                   C.CURRIVAND
+  //----------------------------------------------------------------
+  l_bQuit=false
+  l_nStep=0
+  l_bLock=false
+  l_bForceRefresh=false
+  l_bRefresh=true
+  l_nKeyPressed=-1
+  l_pLoc=here(tPointer,world)
+  l_sEmpty=""
+  $jogContext(tPointer,cnv:fConveyor,0)
+  // start encoder task
+  call enc:create(0,"encoder")
+  do
+    // Check Workingmode from manual to 'other'
+    // or from 'other' to manual
+    l_nWrkMode=workingMode()
+    if l_nWrkMode!=l_nFlagWrkMode
+      if l_nWrkMode==1
+        l_bRefresh=true
+      else
+        if l_nFlagWrkMode==1
+          l_bRefresh=true
+        endIf
+      endIf
+      l_nFlagWrkMode=l_nWrkMode
+    else
+      l_bRefresh=false
+    endIf
+    // Check if step has changed to refresh display
+    if l_nFlagStep!=l_nStep
+      l_bRefresh=true
+      l_nFlagStep=l_nStep
+    endIf
+    //---------------------------Modified by Guo Hailong-------------------------//
+    if l_bForceRefresh
+      l_bRefresh=true
+      l_bForceRefresh=false
+    endIf
+    switch l_nStep
+      //
+      case 0
+        if l_bLock==false
+          call lang:Page(30,l_sEmpty,23,true,l_nKeyPressed)
+          l_bLock=true
+        endIf
+        // transition
+        if l_bLock==true
+          // display instantaneous encoder value
+          call enc:getValue(false,l_nEncVal[1])
+          l_sCustomTxt=toString(".2",l_nEncVal[1])
+          call lang:Page(31,l_sCustomTxt,23,true,l_nKeyPressed)
+          // display latched encoder value
+          call enc:getValue(true,l_nEncVal[0])
+          l_sCustomTxt=toString(".2",l_nEncVal[0])
+          call lang:Page(32,l_sCustomTxt,23,true,l_nDummy)
+          l_nKeyPressed=sel(l_nDummy!=-1,l_nDummy,l_nKeyPressed)
+          switch l_nKeyPressed
+            //Latch
+            case 2
+              getData("out:"+cnv:sClockSigName,doClock)
+              if ioStatus(doClock)>=0
+                doClock=!doClock
+                delay(0.2)
+                doClock=!doClock
+              else
+                popUpMsg(lang:sListOfMessage[58])
+              endIf
+            break
+            // Next
+            case 7
+              l_nStep=1
+              l_bLock=false
+            break
+            // Cancel
+            case 8
+              call up:msgBox(lang:sListOfMessage[72],36,lang:sMenu[21],l_nKeyPressed)
+              // Yes or No
+              if l_nKeyPressed==3
+                l_bQuit=true
+              else
+                l_nStep=0
+                l_bLock=false
+              endIf
+            break
+          endSwitch
+        endIf
+      break
+      case 1
+        if l_bLock==false
+          call lang:Page(33,l_sEmpty,18,true,l_nKeyPressed)
+          l_bLock=true
+        endIf
+        // transition
+        if l_bLock==true
+          // display instantaneous encoder value
+          call enc:getValue(false,l_nEncVal[1])
+          l_sCustomTxt=toString(".2",l_nEncVal[1])
+          call lang:Page(31,l_sCustomTxt,18,true,l_nKeyPressed)
+          // display latched encoder value
+          l_sCustomTxt=toString(".2",l_nEncVal[0])
+          call lang:Page(32,l_sCustomTxt,18,true,l_nDummy)
+          l_nKeyPressed=sel(l_nDummy!=-1,l_nDummy,l_nKeyPressed)
+          switch l_nKeyPressed
+            // previous
+            case 1
+              l_nStep=0
+              l_bLock=false
+            break
+            // Next
+            case 7
+              l_nStep=10
+            break
+            // Cancel
+            case 8
+              call up:msgBox(lang:sListOfMessage[72],36,lang:sMenu[21],l_nKeyPressed)
+              // Yes or No
+              if l_nKeyPressed==3
+                l_bQuit=true
+              else
+                l_nStep=1
+                l_bLock=false
+              endIf
+            break
+          endSwitch
+        endIf
+      break
+      //Teach the origin of the frame
+      case 10
+        lang:trTrsf[0]=swap:trVision[0]
+        call lang:Page(34,l_sEmpty,sel(l_nWrkMode==1,6,7),l_bRefresh,l_nKeyPressed)
+        switch l_nKeyPressed
+          // previous
+          case 1
+            l_nStep=1
+            l_bLock=false
+          break
+          //Record
+          case 2
+            if bIsScara
+              call _recordLoc(tPointer,world,swap:trVision[0],swap:cVisionRS[0])
+            else
+              call _recordLoc(tPointer,world,swap:trVision[0],swap:cVision[0])
+            endIf
+            l_nFlagStep=-1
+          break
+          // Move
+          case 3
+            if bIsScara
+              call moveTo(swap:trVision[0],swap:cVisionRS[0],l_nFlagStep)
+            else
+              call moveTo(swap:trVision[0],swap:cVision[0],l_nFlagStep)
+            endIf
+          break
+          // Next
+          case 7
+            l_nStep=20
+          break
+          // Cancel
+          case 8
+            call up:msgBox(lang:sListOfMessage[72],36,lang:sMenu[21],l_nKeyPressed)
+            // Yes or No
+            if l_nKeyPressed==3
+              l_bQuit=true
+            else
+              l_nStep=10
+              l_bForceRefresh=true
+            endIf
+          break
+        endSwitch
+      break
+      //Teach the second location to define Ox vector
+      case 20
+        lang:trTrsf[0]=swap:trVision[1]
+        call lang:Page(35,l_sEmpty,sel(l_nWrkMode==1,6,7),l_bRefresh,l_nKeyPressed)
+        switch l_nKeyPressed
+          // previous
+          case 1
+            l_nStep=10
+          break
+          //Record
+          case 2
+            if bIsScara
+              call _recordLoc(tPointer,world,swap:trVision[1],swap:cVisionRS[1])
+            else
+              call _recordLoc(tPointer,world,swap:trVision[1],swap:cVision[1])
+            endIf
+            l_nFlagStep=-1
+          break
+          // Move
+          case 3
+            if bIsScara
+              call moveTo(swap:trVision[1],swap:cVisionRS[1],l_nFlagStep)
+            else
+              call moveTo(swap:trVision[1],swap:cVision[1],l_nFlagStep)
+            endIf
+          break
+          // Next
+          case 7
+            l_nStep=30
+          break
+          // Cancel
+          case 8
+            call up:msgBox(lang:sListOfMessage[72],36,lang:sMenu[21],l_nKeyPressed)
+            // Yes or No
+            if l_nKeyPressed==3
+              l_bQuit=true
+            else
+              l_nStep=20
+              l_bForceRefresh=true
+            endIf
+          break
+        endSwitch
+      break
+      //Teach the third location to define Oy vector
+      case 30
+        lang:trTrsf[0]=swap:trVision[2]
+        call lang:Page(36,l_sEmpty,sel(l_nWrkMode==1,6,7),l_bRefresh,l_nKeyPressed)
+        switch l_nKeyPressed
+          // previous
+          case 1
+            l_nStep=20
+          break
+          //Record
+          case 2
+            if bIsScara
+              call _recordLoc(tPointer,world,swap:trVision[2],swap:cVisionRS[2])
+            else
+              call _recordLoc(tPointer,world,swap:trVision[2],swap:cVision[2])
+            endIf
+            l_nFlagStep=-1
+          break
+          // Move
+          case 3
+            if bIsScara
+              call moveTo(swap:trVision[2],swap:cVisionRS[2],l_nFlagStep)
+            else
+              call moveTo(swap:trVision[2],swap:cVision[2],l_nFlagStep)
+            endIf
+          break
+          // Next
+          case 7
+            l_nStep=40
+          break
+          // Cancel
+          case 8
+            call up:msgBox(lang:sListOfMessage[72],36,lang:sMenu[21],l_nKeyPressed)
+            // Yes or No
+            if l_nKeyPressed==3
+              l_bQuit=true
+            else
+              l_nStep=30
+              l_bForceRefresh=true
+            endIf
+          break
+        endSwitch
+      break
+      // Build vision frame
+      case 40
+        call geometry:SetPoint(2)
+        call geometry:BuildFrame("vision",cnv:fDetection,l_nError)
+        if l_nError!=0
+          l_nValue[0]=l_nError
+          call ut:addNumToString(lang:sListOfMessage[25],l_sCustomTxt,"*",l_nValue)
+          call up:msgBox(l_sCustomTxt,36,lang:sMenu[1],l_nKeyPressed)
+          l_nStep=30
+        else
+          l_nStep=50
+          l_bLock=false
+        endIf
+      break
+      // Display results
+      case 50
+        if l_bLock==false
+          // Read instantaneous encoder position
+          call enc:getValue(false,l_nEncVal[1])
+          // Set distance between detection device and robot's working area
+          cnv:nDetection2Rob=(l_nEncVal[1]-l_nEncVal[0])*cnv:nENCSCALEFACTOR
+          l_sCustomTxt=toString(".3",cnv:nDetection2Rob)+" mm"
+          call lang:Page(38,l_sCustomTxt,18,true,l_nKeyPressed)
+          // Shift vision frame according to measured distance
+          l_bLock=true
+        endIf
+        if l_bLock==true
+          call lang:Page(38,l_sCustomTxt,18,false,l_nKeyPressed)
+          switch l_nKeyPressed
+            //Previous
+            case 1
+              l_nStep=30
+              l_bLock=false
+            break
+            // Next
+            case 7
+              l_nStep=70
+              l_bLock=false
+            break
+            // Cancel
+            case 8
+              call up:msgBox(lang:sListOfMessage[72],36,lang:sMenu[21],l_nKeyPressed)
+              // Yes or No
+              if l_nKeyPressed==3
+                l_bQuit=true
+              else
+                l_nStep=50
+                l_bLock=false
+              endIf
+            break
+          endSwitch
+        endIf
+      break
+      //
+      // Select file name
+      //
+      case 60
+        if l_bLock==false
+          call lang:Page(39,l_sEmpty,19,true,l_nKeyPressed)
+          call _displayList(cfg:sPATHCONVEYOR,lang:sListOfMessage[9],23,2,15,7)
+          l_bLock=true
+        endIf
+        if l_bLock==true
+          call lang:Page(39,l_sEmpty,19,false,l_nKeyPressed)
+          call up:listEvent(l_nKeyPressed,l_nDummy,l_sFileName)
+          switch l_nKeyPressed
+            // Previous
+            case 1
+              l_bLock=false
+              l_nStep=50
+            break
+            // New
+            case 2
+              call convGetName(l_sFileName)
+              l_nStep=70
+              l_bLock=false
+            break
+            // Select
+            case 4,270
+              if l_sFileName!=sConveyorFile
+                // to be handle completly,geometry...
+                l_nError=cnv:libLoad(cfg:sPATHCONVEYOR+"\"+l_sFileName)
+              endIf
+              l_nStep=70
+            break
+            // Cancel
+            case 8
+              call up:msgBox(lang:sListOfMessage[72],36,lang:sMenu[21],l_nKeyPressed)
+              // Yes or No
+              if l_nKeyPressed==3
+                l_bQuit=true
+              else
+                l_nStep=60
+                l_bLock=false
+              endIf
+              //--------------------------------------------------------------------------//
+            break
+          endSwitch
+        endIf
+      break
+      // Store data to file
+      case 70
+        l_sFileName=sConveyorFile
+        // ? "DefinedVisionFrame:ConveyorName : "+sConveyorFile
+        call convCreate(l_sFileName,l_nError)
+        if l_nError>0
+          // call ut:addNumToString(lang:sListOfMessage[l_nCustomCod],l_sCustomTxt,"*",l_nError[0])
+          // call up:msgBox(lang:sListOfMessage[34]+l_sCustomTxt,36,lang:sMenu[1],l_nError)
+        else
+          // success
+          if l_nError==0
+            call up:msgBox("Saving successfull",36,lang:sMenu[1],l_nError)
+            sConveyorFile=l_sFileName
+          endIf
+        endIf
+        l_bQuit=true
+      break
+    endSwitch
+    delay(0)
+  until (l_bQuit==true)
+  call enc:kill()
+  $jogContext(tPointer,world,0)
+  cls()
+end]]></Code>
+  </Program>
+</Programs>

@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="getDistance" access="public">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_pLoc" type="point" xsi:type="element" />
+      <Parameter name="x_nTime" type="num" xsi:type="element" />
+      <Parameter name="x_nDist2Up" type="num" xsi:type="array" use="reference" />
+      <Parameter name="x_nDist2Down" type="num" xsi:type="array" use="reference" />
+      <Parameter name="x_nError" type="num" xsi:type="array" use="reference" />
+    </Parameters>
+    <Locals>
+      <Local name="l_i" type="num" xsi:type="array" size="1" />
+      <Local name="l_nDummy" type="num" xsi:type="array" size="1" />
+      <Local name="l_nXlimUp" type="num" xsi:type="array" size="1" />
+      <Local name="l_nXlimDwn" type="num" xsi:type="array" size="1" />
+      <Local name="l_pObject" type="point" xsi:type="array" size="1" />
+      <Local name="l_trObject" type="trsf" xsi:type="array" size="1" />
+      <Local name="l_sErrMsg" type="string" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[
+begin
+  // This program returns the distance between the position of the object
+  // passed as parameter and the boundaries of the robot's working area
+  //
+  // Input param
+  //  x_pLoc    : Location of interess on the object.
+  //  x_nTime   : time to look ahead to evaluate position of the object
+  //
+  // Output param
+  //  x_nDist2Up  : Distance of the object to the upstream limit
+  //  x_nDist2Down: Distance of the object to the upstream limit
+  //  x_nError    : Error code
+  //    0 : No error
+  //    1 : No object available
+  //    2 : Object not calibrated
+  //    3 : Object outside of the working window
+  //
+  // Created 25-01-06                                   C.CURRIVAND
+  //----------------------------------------------------------------
+  //
+  x_nError=0
+  if nNumbOfUser[nIdxPull]!=0
+    // Link local variable to a reference frame
+    if geometry:bIsScara
+      l_pObject=pObjectRS
+    else
+      l_pObject=pObject
+    endIf
+    //
+    // Compute instantaneous position of the object
+    call getObjectPos(nIdxPull,x_pLoc,l_pObject,x_nError)
+    //
+    // Compute distance to Upstream end
+    if x_nError==0
+      l_trObject=position(l_pObject,fConveyor)
+      // Estimate object position
+      l_trObject.x=l_trObject.x+nConveyorSpeed*limit(0,x_nTime,x_nTime)
+      // Compute the X value @ upstream limit
+      l_nXlimUp=sel(nA1==0,0,(l_trObject.y-nB1)/nA1)
+      // Compute the X value @ downstream limit
+      l_nXlimDwn=sel(nA2==0,trBoundaryDwn[0].x,(l_trObject.y-nB2)/nA2)
+      // Compute distance to up and downstream limits
+      x_nDist2Up=l_trObject.x-l_nXlimUp
+      x_nDist2Down=l_trObject.x-l_nXlimDwn
+    endIf
+  else
+    //* No Object requested
+    x_nError=1
+    if cfg:bLog==true
+      nErrVal[0]=nIdxPull
+      call ut:addNumToString(sConvNum+"(getDistance)>>"+sErrMsgList[x_nError],sMsg,"*",nErrVal)
+      logMsg(sMsg)
+    endIf
+  endIf
+end
+]]></Code>
+  </Program>
+</Programs>

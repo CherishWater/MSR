@@ -1,0 +1,145 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="main" access="public" >
+    <Locals>
+      <Local name="l_bQuit" type="bool" xsi:type="array" size="1" />
+      <Local name="l_bRefresh" type="bool" xsi:type="array" size="1" />
+      <Local name="l_nError" type="num" xsi:type="array" size="1" />
+      <Local name="l_nKeyPressed" type="num" xsi:type="array" size="1" />
+      <Local name="l_sLangFile" type="string" xsi:type="array" size="1" />
+      <Local name="l_sMessage" type="string" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+  userPage()
+  cls()
+  logMsg(lang:sListOfMessage[59]+" "+cfg:sVERSION)
+  popUpMsg(lang:sListOfMessage[59]+" "+cfg:sVERSION+". "+lang:sListOfMessage[60])
+  //**************************
+  //***** INITALIZATIONS *****
+  //**************************
+  l_bQuit=false
+  l_bRefresh=true
+  call init(l_nError)
+  if l_nError!=0
+    call up:msgBox(sErrorMessage,36,lang:sMenu[1],l_nError)
+  endIf
+  //
+  // Load message library according to Language
+  if (nLanguage>0) and (nLanguage<=nMAXLANG)
+    l_sLangFile=cfg:sPATHLANGUAGE+sLangFile[nLanguage]
+  else
+    // english by default
+    l_sLangFile=cfg:sPATHLANGUAGE+sLangFile[1]
+    nLanguage=1
+  endIf
+  l_nError=lang:libLoad(l_sLangFile)
+  if l_nError!=0
+    l_sMessage=lang:sListOfMessage[38]+l_sLangFile+": "+toString("",l_nError)
+    popUpMsg(l_sMessage)
+  else
+    //
+    //*************************
+    //*****   MAIN LOOP  ******
+    //*************************
+    //
+    call up:nullKey(l_nKeyPressed)
+    // Force selection of a conveyor library to work with
+    do
+      l_nError=0
+      call convSelect(sConveyorFile,l_nError,l_bQuit)
+      if l_nError!=0
+        call up:msgBox(sErrorMessage,36,lang:sMenu[1],l_nKeyPressed)
+        l_bRefresh=true
+      endIf
+    until l_nError==0 or l_bQuit
+    //
+    while !l_bQuit
+      if l_bRefresh==true
+        call lang:Menu(1,sConveyorFile)
+        l_bRefresh=false
+      endIf
+      //
+      if l_nError!=0
+        call up:msgBox(sErrorMessage,36,lang:sMenu[1],l_nKeyPressed)
+        l_bRefresh=true
+        l_nError=0
+      endIf
+      //
+      // EVENT SECTION
+      //
+      l_nKeyPressed=getKey()
+      switch l_nKeyPressed
+        // Complete calibration sequence.
+        case 271
+          taskCreate "spy",10,ut:uSpy()
+          userPage(true)
+          call DefineGeometry(true)
+          taskKill("spy")
+          userPage(false)
+          l_bRefresh=true
+        break
+        // Define scale factor
+        case 272
+          taskCreate "spy",10,ut:uSpy()
+          userPage(true)
+          call DefineScaleFact()
+          taskKill("spy")
+          userPage(false)
+          l_bRefresh=true
+        break
+        // Conveyor geometry
+        case 273
+          taskCreate "spy",10,ut:uSpy()
+          userPage(true)
+          call DefineGeometry(false)
+          taskKill("spy")
+          userPage(false)
+          l_bRefresh=true
+        break
+        // Define frame for vision
+        case 274
+          taskCreate "spy",10,ut:uSpy()
+          userPage(true)
+          call DefineVisFrame()
+          taskKill("spy")
+          userPage(false)
+          l_bRefresh=true
+        break
+        //        // conveyor diagnostic
+        //        case 275
+        //          call cnv:create(0)
+        //          call TrkDiagnostic()
+        //          call cnv:kill(0)
+        //          l_bRefresh=true
+        //        break
+        // Load conveyor library
+        case 276
+          do
+            l_nError=0
+            call convSelect(sConveyorFile,l_nError,l_bQuit)
+            if l_nError!=0
+              call up:msgBox(sErrorMessage,36,lang:sMenu[1],l_nKeyPressed)
+              l_bRefresh=true
+            endIf
+          until l_nError==0
+          l_bRefresh=true
+        break
+        // Settings
+        case 277
+          call DefineSettings()
+          l_bRefresh=true
+        break
+        // Quit ValTrack
+        case 278
+          l_bQuit=true
+        break
+      endSwitch
+      delay(0)
+    endWhile
+    // CleanUp
+    cls()
+    title("")
+  endIf
+end]]></Code>
+  </Program>
+</Programs>

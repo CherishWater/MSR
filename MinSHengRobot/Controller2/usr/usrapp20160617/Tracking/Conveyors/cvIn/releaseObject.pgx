@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="releaseObject" access="public" >
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1" >
+      <Parameter name="x_nIdx" type="num" use="value" xsi:type="element" dimensions="1" />
+    </Parameters>
+    <Locals>
+      <Local name="l_nQueue" type="num" xsi:type="array" size="1" />
+      <Local name="l_sMessage" type="string" xsi:type="array" size="1" />
+      <Local name="l_str" type="string" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+  // This programs is used to count how many users have accessed
+  // to the data of an object in the queue
+  //
+  // Input param
+  //  x_nIdx       : Index of the object in the queue
+  //
+  // Output param
+  //  none
+  //
+  //----------------------------------------------------------------
+  //
+  nNumbOfUser[x_nIdx]=max(0,nNumbOfUser[x_nIdx]-1)
+  if (roundDown(nNumbOfUser[x_nIdx])<=0)
+    nQueueID[x_nIdx]=-1
+    //
+    if bAnd(cfg:nLog,cfg:nLOGQUEUE)==cfg:nLOGQUEUE and bLOG
+      ? sConvNum+"(releaseObject)>>"
+      ? "           -------------------------Remove Part------------------------"
+      ? "           |Index|  ID | latch value |     x    |     y    |    rz    |"
+      ? "           ------------------------------------------------------------"
+      for l_nQueue=0 to nBufferSize-1
+        if nQueueID[l_nQueue]>=0
+          l_sMessage="           | "+toString("3.0",l_nQueue)+" | "+toString("3.0",nQueueID[l_nQueue])+" | "+toString("11.2",nEncLatchedVal[l_nQueue])+" | "
+          l_sMessage=l_sMessage+toString("8.2",trDetectedCoord[l_nQueue].x)+" | "+toString("8.2",trDetectedCoord[l_nQueue].y)+" | "+toString("8.2",trDetectedCoord[l_nQueue].rz)+" |"
+          ? l_sMessage
+        endIf
+      endFor
+      ? "           ------------------------------------------------------------"
+      ? ""
+    endIf
+    //
+  endIf
+  if bAnd(cfg:nLog,cfg:nLOGMOTION)==cfg:nLOGMOTION
+    l_str=sConvNum+"(releaseObject)>>Request to release object @ position "+toString("",x_nIdx)+" in queue, nbUser="
+    l_str=l_str+toString("",nNumbOfUser[x_nIdx])
+    ? l_str
+  endIf
+end]]></Code>
+  </Program>
+</Programs>

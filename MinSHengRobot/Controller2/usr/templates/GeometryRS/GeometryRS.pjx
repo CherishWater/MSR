@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://www.staubli.com/robotics/VAL3/Project/3">
+  <Parameters version="s7.0" stackSize="5000" millimeterUnit="true" />
+  <Programs>
+    <Program file="BuildFrame.pgx" />
+    <Program file="GetPoint.pgx" />
+    <Program file="Init.pgx" />
+    <Program file="Reset.pgx" />
+    <Program file="SetPoint.pgx" />
+    <Program file="start.pgx" />
+    <Program file="stop.pgx" />
+  </Programs>
+  <Database>
+    <Data file="GeometryRS.dtx" />
+  </Database>
+  <Libraries>
+    <Library alias="ut" path="Disk://Tracking/Tools/util/util.pjx" />
+    <Library alias="cfg" path="Disk://Tracking/config/config.pjx" />
+    <Library alias="swap" path="Disk://Tracking/Swap/Swap.pjx" />
+  </Libraries>
+</Project>

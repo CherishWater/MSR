@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="listSetSize" access="public">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_nPx" type="num" xsi:type="element" />
+      <Parameter name="x_nPy" type="num" xsi:type="element" />
+      <Parameter name="x_nPBottomX" type="num" xsi:type="element" />
+      <Parameter name="x_nPBottomY" type="num" xsi:type="element" />
+    </Parameters>
+    <Code><![CDATA[
+begin
+  //-----------------------------------------------------------------------
+  //Header begin
+  //Description of program
+  //  Defines all the parameters of positions and size of the list menu.
+  //
+  //Input parameters
+  //  num x_nPx:
+  //    role : cursor column position : top left corner for the beginning of
+  //    the list menu
+  //  num x_nPy :
+  //    role : cursor column position : top left corner for the beginning of
+  //    the list menu
+  //  num x_nPBottomX
+  //    role : width of the box
+  //  num x_nPBottomY :
+  //    role : height of the box
+  //
+  //Example
+  //  call setSizeList(20,0,18,11)
+  //
+  //History
+  //  Creation : 28-04-08 - f.Rob
+  //Header end
+  //-----------------------------------------------------------------------
+  //Put all the parameters in globals variables
+  nTopX=nTopX[1]=x_nPx
+  nTopY=x_nPy
+  nBottomX=nBottomX[1]=x_nPBottomX
+  nListHeight=x_nPBottomY
+end
+]]></Code>
+  </Program>
+</Programs>

@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="refreshStatic">
+    <Locals>
+      <Local name="l_sMenu" type="string" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+  cls()
+  //
+  // set the view of the page..
+  //
+  // SET THE PAGE NUMBER 
+  use:nPage=0
+  // USE <>PROFILE for <>PAGE
+  use:nPage=use:nPage+abs(limit(global:mode,0,2)-2)
+  // SET THE VIEW OF THE PAGE
+  call language:page(l_sMenu,use:nPage)
+  // define the menu
+  call use:stringToArray(l_sMenu,sMenu)
+  // set the menu
+  call use:setMenu(sMenu,false,3)
+  call use:getMenu(sMenu,bButton)
+  //
+  // CREATE THE LIST
+  //
+  // define your list size for default
+  call use:setSizeList(17,0,21,10)
+  call use:setView(bLarge)
+  //
+  call use:listcreate("")
+  //
+  call use:listadd(sList)
+  //
+  // refresh the cursor
+  use:nView=nView
+  // refresh the list
+  call use:listupdate(nIndex-nView)
+end
+      ]]></Code>
+  </Program>
+</Programs>

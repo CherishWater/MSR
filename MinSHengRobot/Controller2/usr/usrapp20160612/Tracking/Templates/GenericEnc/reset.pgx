@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="reset" access="public">
+    <Code><![CDATA[
+begin
+  // This program resets the encoder librarie. This reset consist of
+  //  - resetting the VAL3 counter
+  //  - Resetting the digital output cRstErr
+  // This actions are performed in the program "encoder" of the library
+  // Created 29-05-08                                  C.CURRIVAND
+  //----------------------------------------------------------------
+  bReset=true
+end
+]]></Code>
+  </Program>
+</Programs>

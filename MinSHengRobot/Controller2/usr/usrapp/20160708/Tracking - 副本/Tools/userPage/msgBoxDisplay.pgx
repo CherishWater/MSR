@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="msgBoxDisplay" access="public">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_nBoxWidth" type="num" xsi:type="element" />
+    </Parameters>
+    <Locals>
+      <Local name="l_i" type="num" xsi:type="array" size="1" />
+      <Local name="l_sLine" type="string" xsi:type="array" size="1" />
+      <Local name="l_sEmptyLine" type="string" xsi:type="array" size="1" />
+      <Local name="l_sGraphicLine" type="string" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[
+begin
+  // This program displays a message box on the MCP
+  //
+  // Input param
+  // nTxtBoxRow      : Message to display
+  // nTxtBoxCol      : width of the message box to display
+  //
+  // Output param
+  //
+  // Created 23-02-05                           C.CURRIVAND
+  //------------------------------------------------------------------
+  //
+  l_sEmptyLine="                                        "
+  l_sGraphicLine="────────────────────────────────────────"
+  //
+  // display upper graphic line
+  l_sLine="┌"+mid(l_sGraphicLine,x_nBoxWidth-2,1)+"┐"
+  call type(nTxtBoxCol,nTxtBoxRow,l_sLine)
+  //
+  //display message
+  for l_i=0 to size(sWrkString)-1
+    if (x_nBoxWidth-len(sWrkString[l_i])>=0)
+      l_sLine="│"+sWrkString[l_i]+mid(l_sEmptyLine,x_nBoxWidth-2-len(sWrkString[l_i]),1)+"│"
+    else
+      l_sLine="│"+sWrkString[l_i]+"│"
+    endIf
+    call type(nTxtBoxCol,nTxtBoxRow+1+l_i,l_sLine)
+  endFor
+  // display lower graphic line
+  l_sLine="└"+mid(l_sGraphicLine,x_nBoxWidth-2,1)+"┘"
+  call type(nTxtBoxCol,nTxtBoxRow+1+l_i,l_sLine)
+  //
+end
+]]></Code>
+  </Program>
+</Programs>

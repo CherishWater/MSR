@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://www.staubli.com/robotics/VAL3/Project/3">
+  <Parameters version="s7.6" stackSize="5000" millimeterUnit="true" />
+  <Programs>
+    <Program file="create.pgx" />
+    <Program file="detection.pgx" />
+    <Program file="getMaxNumOfPart.pgx" />
+    <Program file="getObjectData.pgx" />
+    <Program file="getObjectLatch.pgx" />
+    <Program file="init.pgx" />
+    <Program file="isDetected.pgx" />
+    <Program file="kill.pgx" />
+    <Program file="resetTask.pgx" />
+    <Program file="start.pgx" />
+    <Program file="stop.pgx" />
+  </Programs>
+  <Database>
+    <Data file="Sensor1.dtx" />
+  </Database>
+  <Libraries>
+    <Library alias="ut" path="Disk://Tracking/Tools/util/util.pjx" />
+  </Libraries>
+</Project>

@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://www.staubli.com/robotics/VAL3/Project/3">
+  <Parameters version="s7.0" stackSize="5000" millimeterUnit="true" />
+  <Programs>
+    <Program file="BuildTitle.pgx" />
+    <Program file="Menu.pgx" />
+    <Program file="Page.pgx" />
+    <Program file="start.pgx" />
+    <Program file="stop.pgx" />
+  </Programs>
+  <Database>
+    <Data file="english.dtx" />
+  </Database>
+  <Libraries>
+    <Library alias="up" path="Disk://Tracking/Tools/userPage/userPage.pjx" />
+  </Libraries>
+</Project>

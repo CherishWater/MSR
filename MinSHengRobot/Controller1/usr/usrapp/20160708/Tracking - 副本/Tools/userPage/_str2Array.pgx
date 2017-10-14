@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="_str2Array" access="public">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_sString" type="string" xsi:type="element" />
+      <Parameter name="x_sDelimiter" type="string" xsi:type="element" />
+      <Parameter name="x_sArray" type="string" xsi:type="array" use="reference" />
+    </Parameters>
+    <Locals>
+      <Local name="l_i" type="num" xsi:type="array" size="1" />
+      <Local name="l_sDummy" type="string" xsi:type="array" size="1" />
+      <Local name="l_nPos" type="num" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[
+begin
+  // This program extracts items from a string and put them into an array.
+  // If the character ; (semi-colon) is detected in the input string, an
+  // empty element will be created in the output array.
+  //
+  // Input param
+  //  x_sString     : String with the items
+  //  x_sDelimiter  : Character used to find the differents items in x_sString
+  //
+  // Output Param
+  //  x_sArray      : output array
+  //
+  // The size of the array is limited to 8
+  // Created 23-02-05                                   C.CURRIVAND
+  //----------------------------------------------------------------
+  //
+  if find(x_sString,x_sDelimiter)!=-1
+    // If string is starting with char sDelimiter, remove them
+    l_i=0
+    while (mid(x_sString,1,l_i)==x_sDelimiter)
+      l_i=l_i+1
+    endWhile
+    x_sString=delete(x_sString,l_i,0)
+    //
+    l_i=0
+    //
+    while len(x_sString)!=0
+      l_nPos=find(x_sString,x_sDelimiter)
+      switch l_nPos
+        // No delimiter found
+        case -1
+          x_sArray[l_i]=x_sString
+          x_sString=delete(x_sString,len(x_sString),0)
+        break
+        // First char is delimiter
+        case 0
+          x_sString=delete(x_sString,1,0)
+        break
+        // Delimiter found
+        default
+          l_sDummy=left(x_sString,limit(1,l_nPos,len(x_sString)))
+          if l_sDummy==";"
+            x_sArray[l_i]=""
+          else
+            x_sArray[l_i]=l_sDummy
+          endIf
+          x_sString=delete(x_sString,l_nPos+1,0)
+          l_i=l_i+1
+        break
+      endSwitch
+    endWhile
+  endIf
+end
+]]></Code>
+  </Program>
+</Programs>

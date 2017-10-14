@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="txtBoxDyn" access="public">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_sMessage" type="string" xsi:type="element" />
+      <Parameter name="x_nRow" type="num" xsi:type="element" />
+      <Parameter name="x_nCol" type="num" xsi:type="element" />
+      <Parameter name="x_nBoxWidth" type="num" xsi:type="element" />
+    </Parameters>
+    <Locals>
+      <Local name="l_i" type="num" xsi:type="array" size="1" />
+      <Local name="l_nError" type="num" xsi:type="array" size="1" />
+      <Local name="l_nRow" type="num" xsi:type="array" size="1" />
+      <Local name="l_nCol" type="num" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[
+begin
+  // This program displays a message on the MCP composed of a
+  // static part and a dynamic part
+  //
+  // Input param
+  // x_sMessage    : Message to display
+  // x_nBoxWidth   : width of the message box to display
+  //
+  //
+  // Created 23-02-05                           C.CURRIVAND
+  //------------------------------------------------------------------
+  //
+  // Set default width if parameter is not consistent
+  if x_nBoxWidth<=0
+    x_nBoxWidth=5
+  endIf
+  //
+  // Format the message to display (result is array of string called sWrkString[])
+  // BoxWidth may be adjusted if one string is longer than boxWidth
+  call setString(x_sMessage,x_nBoxWidth,l_nError)
+  // Add an item to the working string array to reserve space for dynamic text
+  insert(sWrkString[size(sWrkString)])
+  x_nCol=roundDown((40-x_nBoxWidth)/2)
+  //
+  // display message Box
+  nTxtBoxCol=x_nCol
+  nTxtBoxRow=x_nRow
+  nTxtBoxWidth=x_nBoxWidth-2
+  call msgBoxDisplay(x_nBoxWidth)
+  //
+end
+]]></Code>
+  </Program>
+</Programs>

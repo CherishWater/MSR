@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="_findBorders">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_nWidth" type="num" xsi:type="array" use="reference" />
+      <Parameter name="x_nHeight" type="num" xsi:type="array" use="reference" />
+    </Parameters>
+    <Locals>
+      <Local name="l_i" type="num" xsi:type="array" size="1" />
+      <Local name="l_nColLimit" type="num" xsi:type="array" size="1" />
+      <Local name="l_nColMin" type="num" xsi:type="array" size="1" />
+      <Local name="l_nColMax" type="num" xsi:type="array" size="1" />
+      <Local name="l_nRowMin" type="num" xsi:type="array" size="1" />
+      <Local name="l_nRowMax" type="num" xsi:type="array" size="1" />
+      <Local name="l_nCol" type="num" xsi:type="array" size="2" />
+      <Local name="l_nRow" type="num" xsi:type="array" size="2" />
+      <Local name="l_nBoxLen" type="num" xsi:type="array" size="1" />
+      <Local name="l_bError" type="bool" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[
+begin
+  // This program returns the height and width of the page to display
+  //
+  // Input Param
+  //  x_nWidth : witdth of the page to display
+  //  x_nWidth : Height of the page to display
+  // Output Param
+  //
+  //Created 21/12/05                              CCUR
+  //--------------------------------------------------------------
+  l_nColMin=l_nRowMin=99
+  l_nColLimit=38
+  l_nColMax=l_nRowMax=0
+  for l_i=0 to nNumOfLabel-1
+    call ut:extractPos(pw:sLabelPos[l_i],";",l_nCol[0],l_nRow[0])
+    //
+    l_nColMin=sel(l_nCol[0]<l_nColMin,l_nCol[0],l_nColMin)
+    l_nRowMin=sel(l_nRow[0]<l_nRowMin,l_nRow[0],l_nRowMin)
+    //
+    l_nCol[0]=l_nCol[0]+len(pw:sLabel[l_i])
+    l_nColMax=sel(l_nCol[0]>l_nColMax,limit(0,l_nCol[0],l_nColLimit),l_nColMax)
+    l_nRowMax=sel(l_nRow[0]>l_nRowMax,l_nRow[0],l_nRowMax)
+  endFor
+  for l_i=0 to nNumOfTxtBox-1
+    if (asc(pw:sTxtBoxType[l_i],0)!=asc("H",0)) and (asc(pw:sTxtBoxType[l_i],0)!=asc("h",0))
+      call ut:extractPos(pw:sTxtBoxPos[l_i],";",l_nCol[1],l_nRow[1])
+      toNum(pw:sTxtBoxLen[l_i],l_nBoxLen,l_bError)
+      //
+      l_nColMin=sel(l_nCol[1]<l_nColMin,l_nCol[1],l_nColMin)
+      l_nRowMin=sel(l_nRow[1]<l_nRowMin,l_nRow[1],l_nRowMin)
+      //
+      //l_nCol[1]=l_nCol[1]+len(pw:sTxtBoxCaption[l_i])+l_nBoxLen
+      // Add +1 to avoid cursor overwriting frame when editing field
+      l_nCol[1]=l_nCol[1]+len(pw:sTxtBoxCaption[l_i])+l_nBoxLen+1
+      l_nColMax=sel(l_nCol[1]>l_nColMax,limit(0,l_nCol[1],l_nColLimit),l_nColMax)
+      l_nRowMax=sel(l_nRow[1]>l_nRowMax,l_nRow[1],l_nRowMax)
+    endIf
+  endFor
+  x_nWidth=l_nColMax-l_nColMin
+  x_nHeight=l_nRowMax-l_nRowMin+1
+end
+]]></Code>
+  </Program>
+</Programs>

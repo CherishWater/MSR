@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="init">
+    <Locals>
+      <Local name="l_nError" type="num" xsi:type="array" size="1" />
+      <Local name="l_sErrorMessage" type="string" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[
+begin
+  //
+  l_nError=mot:libLoad("Tracking\Motion")
+  if l_nError!=0
+    popUpMsg("Error while loading motion library: "+toString("",l_nError))
+  endIf
+  //
+  // Start the libraries to perform conveyor tracking
+  call mot:create(sConveyorList)
+  //
+  // Get the conveyor frame
+  call mot:getConvFrame(0,fConveyor,world,l_nError)
+  if l_nError!=0
+    call mot:getErrorMessage(l_sErrorMessage)
+    popUpMsg(l_sErrorMessage)
+  endIf
+  //
+  // Get the detection frame
+  call mot:getDetectFrame(0,fDetection,world,l_nError)
+  if l_nError!=0
+    call mot:getErrorMessage(l_sErrorMessage)
+    popUpMsg(l_sErrorMessage)
+  endIf
+end
+]]></Code>
+  </Program>
+</Programs>

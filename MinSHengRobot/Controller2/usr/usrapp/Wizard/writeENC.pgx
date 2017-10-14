@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="writeENC" access="private" >
+    <Locals>
+      <Local name="l_bResult" type="bool" xsi:type="array" size="1" />
+      <Local name="l_nError" type="num" xsi:type="array" size="1" />
+      <Local name="l_nValue" type="num" xsi:type="array" size="1" />
+      <Local name="l_sValue" type="string" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+  // Update variables of the conveyor library
+  resize(sCaption,1,pg:nNumOfTxtBox)
+  call pg:getCaption(sCaption)
+  //
+  // LatchPeriod
+  call pg:getFieldValue(sCaption[0],l_sValue,l_nError)
+  toNum(l_sValue,enc:nLatchPeriod,l_bResult)
+  // Encoder Resolution
+  call pg:getFieldValue(sCaption[1],l_sValue,l_nError)
+  toNum(l_sValue,cnv:nENCRESOLUTION,l_bResult)
+  call enc:setResolution(cnv:nENCRESOLUTION)
+  // FIR filter length
+  call pg:getFieldValue(sCaption[2],l_sValue,l_nError)
+  toNum(l_sValue,cnv:nFirOrdre,l_bResult)
+  // FIR filter Delay
+  call pg:getFieldValue(sCaption[3],l_sValue,l_nError)
+  toNum(l_sValue,l_nValue,l_bResult)
+  cnv:nFirDelay=l_nValue/1000
+end]]></Code>
+  </Program>
+</Programs>

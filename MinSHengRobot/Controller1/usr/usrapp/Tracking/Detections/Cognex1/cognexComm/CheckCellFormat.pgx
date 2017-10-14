@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="CheckCellFormat">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_sCellNumber" type="string" xsi:type="array" use="reference" />
+      <Parameter name="x_bMatchOK" type="bool" xsi:type="array" use="reference" />
+    </Parameters>
+    <Locals>
+      <Local name="l_i" type="num" xsi:type="array" size="1" />
+      <Local name="l_bDigitOK" type="bool" xsi:type="array" size="1" />
+      <Local name="l_sWrkString" type="string" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[
+begin
+  // this routines checks if the format of the string used to point on a cell
+  // of the cognex speadsheet matches the format of native command
+  // 
+  // Input Param
+  //  x_sCellNumber  : Cell number in string format. Must be :
+  //            First digit is a letter (A-Z) for Column number
+  //            3 next digits is a number for Row number 
+  //
+  // Output Param
+  //  x_bMatchOK  : TRUE if format of the String passed as parameter is OK
+  //------------------------------------------------------------
+  x_bMatchOK=true
+  if len(x_sCellNumber)>=2
+    // first digit must be in range 'A-Z' or 'a-z'
+    call checkColValue(mid(x_sCellNumber,1,0),l_bDigitOK)    
+    if l_bDigitOK
+      l_sWrkString=right(x_sCellNumber,len(x_sCellNumber)-1)
+      for l_i=1 to len(l_sWrkString)
+        l_bDigitOK=l_bDigitOK and (asc(mid(l_sWrkString,l_i,0),0)>=(asc("0",0))) and (asc(mid(l_sWrkString,l_i,0),0)<=(asc("9",0)))
+      endFor
+      if l_bDigitOK
+        l_sWrkString=mid("000",3-len(l_sWrkString),0)+l_sWrkString
+      endIf
+      x_sCellNumber=mid(x_sCellNumber,1,0)+l_sWrkString    
+    else
+      x_bMatchOK=false
+    endIf
+  else
+    x_bMatchOK=false
+  endIf  
+end
+]]></Code>
+  </Program>
+</Programs>

@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://www.staubli.com/robotics/VAL3/Project/3">
+  <Parameters version="s7.6" stackSize="5000" millimeterUnit="true" />
+  <Programs>
+    <Program file="_decode.pgx" />
+    <Program file="_getVersion.pgx" />
+    <Program file="_str2Array.pgx" />
+    <Program file="_toString.pgx" />
+    <Program file="_trsf2String.pgx" />
+    <Program file="addNumToString.pgx" />
+    <Program file="addStrToString.pgx" />
+    <Program file="binToDec.pgx" />
+    <Program file="bmask.pgx" />
+    <Program file="BuildString.pgx" />
+    <Program file="centerCircle.pgx" />
+    <Program file="COM.pgx" />
+    <Program file="decToBin.pgx" />
+    <Program file="extractPos.pgx" />
+    <Program file="fillStr.pgx" />
+    <Program file="getLibName.pgx" />
+    <Program file="isBitSet.pgx" />
+    <Program file="padding.pgx" />
+    <Program file="setBit.pgx" />
+    <Program file="SHL.pgx" />
+    <Program file="SHR.pgx" />
+    <Program file="start.pgx" />
+    <Program file="stop.pgx" />
+    <Program file="strAlign.pgx" />
+    <Program file="uSpy.pgx" />
+  </Programs>
+  <Database>
+    <Data file="util.dtx" />
+  </Database>
+  <Libraries />
+</Project>

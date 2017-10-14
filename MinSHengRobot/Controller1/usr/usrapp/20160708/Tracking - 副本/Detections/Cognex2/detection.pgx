@@ -1,0 +1,117 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="detection">
+    <Locals>
+      <Local name="l_nCompteur" type="num" xsi:type="array" size="1" />
+      <Local name="l_i" type="num" xsi:type="array" size="1" />
+      <Local name="l_j" type="num" xsi:type="array" size="1" />
+      <Local name="l_ImageNumber0" type="num" xsi:type="array" size="1" />
+      <Local name="l_ImageNumber" type="num" xsi:type="array" size="1" />
+      <Local name="l_nNumOfPart" type="num" xsi:type="array" size="1" />
+      <Local name="l_nRow" type="num" xsi:type="array" size="1" />
+      <Local name="l_bResult" type="bool" xsi:type="array" size="1" />
+      <Local name="l_bVisOK" type="bool" xsi:type="array" size="1" />
+      <Local name="l_sMessage" type="string" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[
+begin
+  // This program reads the ID and the transformation of the parts
+  // detected by the camera.
+  //
+  // Input Param
+  //  none       : 
+  //
+  // Output Param
+  //  none       : 
+  //
+  //----------------------------------------------------------------
+  //
+  // Log into Cognex camera
+  call initvis(l_bVisOK)
+  // Reads number of images taken from cell A120
+  call cam:readNumValue(hCamTable,"A",120,l_ImageNumber0,l_bResult)
+  //
+  // detection task running : unlock the task's conveyor when valtrack  begins
+  bTaskDetOK=true
+  //
+  do
+    // Loop until a new image has been taken (read cell A120 of the spreadsheet)
+    do
+      call cam:readNumValue(hCamTable,"A",120,l_ImageNumber,l_bResult)
+      delay(0)
+    until (l_ImageNumber!=l_ImageNumber0)
+    l_ImageNumber0=l_ImageNumber
+    //
+    // Initialize counter of parts already treated.
+    l_nNumOfPart=0
+    //
+    // Reads number of parts found on the images from cell B117
+    call cam:readNumValue(hCamTable,"B",117,l_j,l_bResult)
+    // If "number of parts" detected by the camera is bigger than the limit,
+    //  set the local variable to the size of the limit.
+    l_j=sel(l_j>nMaxNumOfObject,nMaxNumOfObject,l_j)
+    //
+    // If any parts have been found on the image:
+    if l_j>0
+      //for i=0 to the number of parts found on the image -1
+      for l_i=0 to l_j-1
+        //The results of the first part are on row 106
+        l_nRow=106+l_i
+        //
+        // Reads object's ID from cell at column I, row 106+l_i
+        l_bResult=true
+        call cam:readNumValue(hCamTable,"I",l_nRow,nObjectID[l_nNumOfPart],l_bResult)
+        //
+        if l_bResult==false
+          call cam:getErrorMessage(hCamTable,l_sMessage)
+          logMsg(sDetNum+"(detection)>>Error0 :"+l_sMessage)
+        else
+          // Reads the X value of the part and stores it on trObjectPos[l_nNumOfPart].x
+          // Reads cell at column D, row 106+l_i
+          call cam:readNumValue(hCamTable,"D",l_nRow,trObjectPos[l_nNumOfPart].x,l_bResult)
+          if l_bResult==false
+            call cam:getErrorMessage(hCamTable,l_sMessage)
+            logMsg(sDetNum+"(detection)>>Error1 :"+l_sMessage)
+          else
+            // Reads the Y value of the part and stores it on trObjectPos[l_nNumOfPart].y
+            // Reads cell at column E, row 106+l_i
+            call cam:readNumValue(hCamTable,"E",l_nRow,trObjectPos[l_nNumOfPart].y,l_bResult)
+            if l_bResult==false
+              call cam:getErrorMessage(hCamTable,l_sMessage)
+              logMsg(sDetNum+"(detection)>>Error2 :"+l_sMessage)
+            else
+              // Reads the RZ value of the part and stores it on trObjectPos[l_nNumOfPart].rz
+              // Reads cell at column F, row 106+l_i
+              call cam:readNumValue(hCamTable,"F",l_nRow,trObjectPos[l_nNumOfPart].rz,l_bResult)
+              if l_bResult==false
+                call cam:getErrorMessage(hCamTable,l_sMessage)
+                logMsg(sDetNum+"(detection)>>Error3 :"+l_sMessage)
+              endIf
+            endIf
+          endIf
+        endIf
+        //Increases the counter of parts already treated
+        l_nNumOfPart=sel(l_bResult==false,l_nNumOfPart,l_nNumOfPart+1)
+      endFor
+    endIf
+    //
+    // Sort objects
+    // call sortObjects(l_nNumOfPart)
+    //
+    // Set number of detected parts.
+    // nNumOfPart is watched by the conveyor library
+    // Once nNumOfPart is set, the conveyor library will access
+    //  the variables nObjectID[] and trObjectPos[].
+    //  They must be fully updated before nNumOfPart is set.
+    nNumOfPart=l_nNumOfPart
+    //
+    // Once data have been read by conveyor library
+    // nNumOfPart is reset
+    wait(nNumOfPart==-1)
+    //
+    delay(0)
+  until false
+end
+]]></Code>
+  </Program>
+</Programs>

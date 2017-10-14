@@ -1,0 +1,614 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="DefineGeometry" access="private" >
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1" >
+      <Parameter name="x_bCompleteSeq" type="bool" use="value" xsi:type="element" dimensions="1" />
+    </Parameters>
+    <Locals>
+      <Local name="l_TRSF" type="trsf" xsi:type="array" size="4" />
+      <Local name="l_bLock" type="bool" xsi:type="array" size="1" />
+      <Local name="l_bQuit" type="bool" xsi:type="array" size="1" />
+      <Local name="l_bRefresh" type="bool" xsi:type="array" size="1" />
+      <Local name="l_bResult" type="bool" xsi:type="array" size="1" />
+      <Local name="l_i" type="num" xsi:type="array" size="1" />
+      <Local name="l_nCustomCod" type="num" xsi:type="array" size="1" />
+      <Local name="l_nEncDelta" type="num" xsi:type="array" size="1" />
+      <Local name="l_nEncVal" type="num" xsi:type="array" size="2" />
+      <Local name="l_nError" type="num" xsi:type="array" size="1" />
+      <Local name="l_nFlagWrkMode" type="num" xsi:type="array" size="2" />
+      <Local name="l_nIdx" type="num" xsi:type="array" size="1" />
+      <Local name="l_nKeyPressed" type="num" xsi:type="array" size="1" />
+      <Local name="l_nMean" type="num" xsi:type="array" size="1" />
+      <Local name="l_nMenu" type="num" xsi:type="array" size="1" />
+      <Local name="l_nReturnStep" type="num" xsi:type="array" size="1" />
+      <Local name="l_nScaleFactor" type="num" xsi:type="array" size="1" />
+      <Local name="l_nStep" type="num" xsi:type="array" size="1" />
+      <Local name="l_nStepPrev" type="num" xsi:type="array" size="1" />
+      <Local name="l_nValue" type="num" xsi:type="array" size="2" />
+      <Local name="l_nWrkModStatus" type="num" xsi:type="array" size="1" />
+      <Local name="l_nWrkMode" type="num" xsi:type="array" size="1" />
+      <Local name="l_sCustomTxt" type="string" xsi:type="array" size="2" />
+      <Local name="l_sEmpty" type="string" xsi:type="array" size="1" />
+      <Local name="l_sFileName" type="string" xsi:type="array" size="1" />
+      <Local name="l_sTRSF" type="string" xsi:type="array" size="4" />
+    </Locals>
+    <Code><![CDATA[begin
+  // This program guides the user through the differents
+  // step to define the geometry of the conveyor
+  //
+  // Created 23-02-05                                   C.CURRIVAND
+  //----------------------------------------------------------------
+  //
+  l_bQuit=false
+  l_bLock=false
+  l_nStep=0
+  l_nStepPrev=l_nStep
+  l_bRefresh=true
+  l_nFlagWrkMode[0]=l_nFlagWrkMode[1]=-1
+  l_sFileName=""
+  l_sEmpty=""
+  $jogContext(tPointer,world,0)
+  if x_bCompleteSeq==true
+    call enc:create(0,"encoder")
+  endIf
+  cls()
+  do
+    // Check Workingmode from manual to 'other'
+    // or from 'other' to manual
+    l_nWrkMode=workingMode(l_nWrkModStatus)
+    if l_nWrkMode!=l_nFlagWrkMode[0]
+      if (l_nWrkMode==nMANUAL) or (l_nFlagWrkMode[0]==nMANUAL)
+        l_bRefresh=true
+      endIf
+      l_nFlagWrkMode[0]=l_nWrkMode
+    else
+      l_bRefresh=false
+    endIf
+    // jog mode has changed
+    if l_nWrkModStatus!=l_nFlagWrkMode[1]
+      // ? "statprev: "+toString("",l_nFlagWrkMode[1])+" statAct: "+toString("",l_nWrkModStatus)
+      if (l_nWrkModStatus>=2) and (l_nWrkModStatus<=5)
+        resetMotion()
+      else
+      endIf
+      l_nFlagWrkMode[1]=l_nWrkModStatus
+    endIf
+    //
+    // Check if step has changed to refresh display
+    if l_nStepPrev!=l_nStep
+      logMsg("WZD(DefineGeometry)>>Step :"+toString("",l_nStep))
+      l_bRefresh=true
+      l_nStepPrev=l_nStep
+      resetMotion()
+    endIf
+    //
+    switch l_nStep
+      // Teach upstream end of tracking window
+      case 0
+        lang:trTrsf[0]=swap:trWinUp[1]
+        l_nMenu=sel(l_nWrkMode==1,14,15)
+        call lang:Page(20,l_sEmpty,l_nMenu,l_bRefresh,l_nKeyPressed)
+        switch l_nKeyPressed
+          //Record
+          case 2
+            if bIsScara
+              call _recordLoc(tPointer,world,swap:trWinUp[1],swap:cWinUpRS[1])
+            else
+              call _recordLoc(tPointer,world,swap:trWinUp[1],swap:cWinUp[1])
+            endIf
+            l_nStepPrev=-1
+          break
+          // move
+          case 3
+            if bIsScara
+              call moveTo(swap:trWinUp[1],swap:cWinUpRS[1],l_nStepPrev)
+            else
+              call moveTo(swap:trWinUp[1],swap:cWinUp[1],l_nStepPrev)
+            endIf
+          break
+          // view
+          case 6
+            l_nReturnStep=l_nStep
+            l_nStep=999
+          break
+          // next
+          case 7
+            l_nStep=5
+          break
+          // cancel
+          case 8,255
+            l_bQuit=true
+          break
+        endSwitch
+      break
+      //
+      // Teach 2nd location for upstream end of tracking window
+      case 5
+        lang:trTrsf[0]=swap:trWinUp[0]
+        l_nMenu=sel(l_nWrkMode==1,16,17)
+        if x_bCompleteSeq==true
+          // Read encoder position
+          call enc:getValue(false,l_nEncVal[0])
+          l_sCustomTxt[0]="extended display"
+          l_sCustomTxt[1]=toString(".3",l_nEncVal[0])
+        else
+          l_sCustomTxt[0]=""
+        endIf
+        call lang:Page(21,l_sCustomTxt,l_nMenu,l_bRefresh,l_nKeyPressed)
+        switch l_nKeyPressed
+          // previous
+          case 1
+            l_nStep=0
+          break
+          //Record
+          case 2
+            if bIsScara
+              call _recordLoc(tPointer,world,swap:trWinUp[0],swap:cWinUpRS[0])
+            else
+              call _recordLoc(tPointer,world,swap:trWinUp[0],swap:cWinUp[0])
+            endIf
+            l_nStepPrev=-1
+          break
+          // move
+          case 3
+            if bIsScara
+              call moveTo(swap:trWinUp[0],swap:cWinUpRS[0],l_nStepPrev)
+            else
+              call moveTo(swap:trWinUp[0],swap:cWinUp[0],l_nStepPrev)
+            endIf
+          break
+          // view
+          case 6
+            l_nReturnStep=l_nStep
+            l_nStep=999
+          break
+          // next
+          case 7
+            l_nStep=10
+          break
+          // cancel
+          case 8,255
+            l_bQuit=true
+          break
+        endSwitch
+      break
+      // Move target to downstream end
+      case 10
+        call lang:Page(22,l_sEmpty,18,l_bRefresh,l_nKeyPressed)
+        switch l_nKeyPressed
+          // previous
+          case 1
+            l_nStep=5
+          break
+          // next
+          case 7
+            l_nStep=20
+          break
+          // cancel
+          case 8,255
+            l_bQuit=true
+          break
+        endSwitch
+      break
+      // Teach 1st downstream end of tracking window
+      case 20
+        lang:trTrsf[0]=swap:trWinDown[0]
+        l_nMenu=sel(l_nWrkMode==1,16,17)
+        if x_bCompleteSeq==true
+          // Read encoder position
+          call enc:getValue(false,l_nEncVal[1])
+          l_sCustomTxt[0]="extended display"
+          l_sCustomTxt[1]=toString(".3",l_nEncVal[1])
+        else
+          l_sCustomTxt[0]=""
+        endIf
+        call lang:Page(23,l_sCustomTxt,l_nMenu,l_bRefresh,l_nKeyPressed)
+        switch l_nKeyPressed
+          // previous
+          case 1
+            l_nStep=10
+          break
+          //Record
+          case 2
+            if bIsScara
+              call _recordLoc(tPointer,world,swap:trWinDown[0],swap:cWinDownRS[0])
+            else
+              call _recordLoc(tPointer,world,swap:trWinDown[0],swap:cWinDown[0])
+            endIf
+            l_nStepPrev=-1
+          break
+          // move
+          case 3
+            if bIsScara
+              call moveTo(swap:trWinDown[0],swap:cWinDownRS[0],l_nStepPrev)
+            else
+              call moveTo(swap:trWinDown[0],swap:cWinUp[0],l_nStepPrev)
+            endIf
+          break
+          // view
+          case 6
+            l_nReturnStep=l_nStep
+            l_nStep=999
+          break
+          // next
+          case 7
+            l_nStep=22
+          break
+          // cancel
+          case 8,255
+            l_bQuit=true
+          break
+        endSwitch
+      break
+      // Compute scale factor
+      case 22
+        if x_bCompleteSeq==true
+          l_nEncDelta=l_nEncVal[1]-l_nEncVal[0]
+          l_nStep=sel(abs(l_nEncDelta)>5,23,100)
+        else
+          l_nStep=25
+        endIf
+      break
+      case 23
+        l_nScaleFactor=distance(swap:trWinUp[0],swap:trWinDown[0])/l_nEncDelta
+        l_sCustomTxt=toString(".3",l_nScaleFactor)
+        call lang:Page(13,l_sCustomTxt,18,l_bRefresh,l_nKeyPressed)
+        l_bRefresh=false
+        switch l_nKeyPressed
+          //Previous
+          case 1
+            l_nStep=20
+            l_bRefresh=true
+          break
+          // next
+          case 7
+            cnv:nENCSCALEFACTOR=l_nScaleFactor
+            l_nStep=25
+            l_bLock=false
+          break
+          // cancel
+          case 8,255
+            l_bQuit=true
+          break
+        endSwitch
+      break
+      // Teach 2nd location for downstream end of tracking window
+      case 25
+        lang:trTrsf[0]=swap:trWinDown[1]
+        l_nMenu=sel(l_nWrkMode==1,16,17)
+        call lang:Page(24,l_sEmpty,l_nMenu,l_bRefresh,l_nKeyPressed)
+        switch l_nKeyPressed
+          // previous
+          case 1
+            l_nStep=20
+          break
+          //Record
+          case 2
+            if bIsScara
+              call _recordLoc(tPointer,world,swap:trWinDown[1],swap:cWinDownRS[1])
+            else
+              call _recordLoc(tPointer,world,swap:trWinDown[1],swap:cWinDown[1])
+            endIf
+            l_nStepPrev=-1
+          break
+          // move
+          case 3
+            if bIsScara
+              call moveTo(swap:trWinDown[1],swap:cWinDownRS[1],l_nStepPrev)
+            else
+              call moveTo(swap:trWinDown[1],swap:cWinUp[1],l_nStepPrev)
+            endIf
+          break
+          // view
+          case 6
+            l_nReturnStep=l_nStep
+            l_nStep=999
+          break
+          // Next
+          case 7
+            l_nStep=40
+          break
+          // cancel
+          case 8,255
+            l_bQuit=true
+          break
+        endSwitch
+      break
+      //
+      // Want to define custom WinCenter ?
+      case 30
+        cls()
+        call up:msgBox(lang:sListOfMessage[72],36,lang:sMenu[21],l_nKeyPressed)
+        // Yes or No
+        l_nStep=sel((l_nKeyPressed==3),32,35)
+      break
+      //
+      // YES,teach pWinCenter
+      case 32
+        lang:trTrsf[0]=swap:trWinCenter
+        l_nMenu=sel(l_nWrkMode==1,16,17)
+        call lang:Page(25,l_sEmpty,l_nMenu,l_bRefresh,l_nKeyPressed)
+        switch l_nKeyPressed
+          // previous
+          case 1
+            l_nStep=25
+          break
+          //Record
+          case 2
+            if bIsScara
+              call _recordLoc(tPointer,world,swap:trWinCenter,swap:cWinCenterRS)
+            else
+              call _recordLoc(tPointer,world,swap:trWinCenter,swap:cWinCenter)
+            endIf
+            cnv:bUseUserCenter=true
+            l_nStepPrev=-1
+          break
+          // move
+          case 3
+            call moveTo(swap:trWinCenter,swap:cWinCenter,l_nStepPrev)
+          break
+          // view
+          case 6
+            l_nReturnStep=l_nStep
+            l_nStep=999
+          break
+          // next
+          case 7
+            l_nStep=40
+          break
+          // cancel
+          case 8,255
+            l_bQuit=true
+          break
+        endSwitch
+      break
+      // NO
+      case 35
+        cnv:bUseUserCenter=false
+        l_nStep=40
+      break
+      //
+      // Compute conveyor's frame
+      case 40
+        call geometry:SetPoint(1)
+        call geometry:BuildFrame("conveyor",cnv:fConveyor,l_nError)
+        if l_nError!=0
+          l_nValue[0]=l_nError
+          call ut:addNumToString(lang:sListOfMessage[24],l_sCustomTxt,"*",l_nValue)
+          call up:msgBox(l_sCustomTxt,36,lang:sMenu[1],l_nKeyPressed)
+          l_nStep=25
+        else
+          if bIsScara
+            l_nStep=41
+          else
+            l_nStep=44
+          endIf
+        endIf
+      break
+      //
+      // For scara robot, check alignement of the conveyor's frame
+      // in relation with WORLD
+      case 41
+        call chkScaraFrame(cnv:fConveyor,l_nError)
+        l_nStep=sel(l_nError==1,42,44)
+      break
+      //
+      // Ask user to align or not the conveyor's frame with robot's WORLD
+      case 42
+        lang:trTrsf[0]=cnv:fConveyor.trsf
+        l_nMenu=5
+        call lang:Page(28,l_sEmpty,l_nMenu,l_bRefresh,l_nKeyPressed)
+        switch l_nKeyPressed
+          // previous
+          case 1
+            l_nStep=25
+          break
+          // adjust
+          case 4
+            call uInitTRSF(l_TRSF)
+            l_nStep=43
+          break
+          // next
+          case 7
+            l_nStep=44
+          break
+          // cancel
+          case 8,255
+            l_bQuit=true
+          break
+        endSwitch
+      break
+      //
+      // Perform frame alignment
+      case 43
+        l_nMenu=4
+        call lang:Page(29,l_sEmpty,l_nMenu,l_bRefresh,l_nKeyPressed)
+        if l_bRefresh
+          call uListTRSF(l_TRSF,l_sTRSF)
+          l_bRefresh=false
+        endIf
+        call up:listEvent(l_nKeyPressed,l_nIdx,l_sCustomTxt)
+        switch l_nKeyPressed
+          // Previous
+          case 1
+            l_nStep=42
+          break
+          // Undo
+          case 2
+            call uInitTRSF(l_TRSF)
+            // trick to refresh screen
+            l_nStepPrev=-1
+          break
+          // Select
+          case 3
+            // get Z value of the location
+            l_sTRSF[l_nIdx]=right(l_sTRSF[l_nIdx],7)
+            call ut:_decode(l_sTRSF[l_nIdx],l_sTRSF[l_nIdx],"",1)
+            toNum(l_sTRSF[l_nIdx],l_nValue,l_bResult)
+            for l_i=0 to 3
+              l_TRSF[l_i].z=l_nValue
+            endFor
+            // trick to refresh screen
+            l_nStepPrev=-1
+          break
+          // Average
+          case 5
+            l_nMean=0
+            for l_i=0 to 3
+              // get Z value of the 4 locations
+              l_sTRSF[l_i]=right(l_sTRSF[l_i],7)
+              call ut:_decode(l_sTRSF[l_i],l_sTRSF[l_i],"",1)
+              toNum(l_sTRSF[l_i],l_nValue,l_bResult)
+              l_nMean=l_nMean+l_nValue
+            endFor
+            l_nMean=l_nMean/4
+            for l_i=0 to 3
+              l_TRSF[l_i].z=l_nMean
+            endFor
+            // trick to refresh screen
+            l_nStepPrev=-1
+          break
+          // Next
+          case 7
+            // update locations
+            swap:trWinUp[0]=l_TRSF[0]
+            swap:trWinUp[1]=l_TRSF[1]
+            swap:trWinDown[0]=l_TRSF[2]
+            swap:trWinDown[1]=l_TRSF[3]
+            l_nStep=40
+          break
+          // Cancel
+          case 8,255
+            l_bQuit=true
+          break
+        endSwitch
+      break
+      //
+      // Check conveyor frame
+      // Ask User
+      case 44
+        cls()
+        call up:msgBox(lang:sListOfMessage[20],36,lang:sMenu[21],l_nKeyPressed)
+        // Yes or No
+        l_nStep=sel((l_nKeyPressed==3),45,60)
+      break
+      //
+      //
+      case 45
+        $jogContext(tPointer,cnv:fConveyor,0)
+        l_nStep=46
+      break
+      //
+      // Check conveyor frame
+      // Motion in conveyor Frame
+      case 46
+        lang:trTrsf[0]=cnv:fConveyor.trsf
+        call lang:Page(26,l_sEmpty,18,l_bRefresh,l_nKeyPressed)
+        switch l_nKeyPressed
+          // previous
+          case 1
+            l_nStep=25
+            $jogContext(tPointer,world,0)
+          break
+          // next
+          case 7
+            l_nStep=60
+          break
+          // cancel
+          case 8,255
+            l_bQuit=true
+          break
+        endSwitch
+      break
+      //
+      // Select file name
+      //
+      case 50
+        if l_bLock==false
+          call lang:Page(27,l_sEmpty,19,true,l_nKeyPressed)
+          call _displayList(cfg:sPATHCONVEYOR,lang:sListOfMessage[9],23,2,15,7)
+          l_bLock=true
+        endIf
+        if l_bLock==true
+          call lang:Page(27,l_sEmpty,19,false,l_nKeyPressed)
+          call up:listEvent(l_nKeyPressed,l_nIdx,l_sFileName)
+          switch l_nKeyPressed
+            // Previous
+            case 1
+              l_bLock=false
+              l_nStep=25
+            break
+            // New
+            case 2
+              call convGetName(l_sFileName)
+              l_nStep=60
+              l_bLock=false
+            break
+            // Select or Return
+            case 4,270
+              if l_sFileName!=sConveyorFile
+                // to be handle completly,geometry...
+                l_nError=cnv:libLoad(cfg:sPATHCONVEYOR+"\"+l_sFileName)
+              endIf
+              l_nStep=60
+            break
+            // Cancel
+            case 8,255
+              l_bQuit=true
+            break
+          endSwitch
+        endIf
+      break
+      // Store calibration data
+      case 60
+        l_sFileName=sConveyorFile
+        //? "DefinedGeometry:ConveyorName : "+sConveyorFile
+        cls()
+        call convCreate(l_sFileName,l_nError)
+        if l_nError==0
+          // success
+          call up:txtBoxDynUpdate(lang:sListOfMessage[15])
+          delay(1)
+          sConveyorFile=l_sFileName
+        else
+          cls()
+          call up:msgBox(sErrorMessage,36,lang:sMenu[1],l_nError)
+        endIf
+        l_bQuit=true
+      break
+      // Computation of scale factor not possible
+      case 100
+        call lang:Page(14,l_sEmpty,8,l_bRefresh,l_nKeyPressed)
+        switch l_nKeyPressed
+          // Previous
+          case 1
+            l_bLock=false
+            l_nStep=20
+          break
+          // Cancel
+          case 8,255
+            l_bQuit=true
+          break
+        endSwitch
+      break
+      //
+      // Display help diagram (View)
+      case 999
+        call lang:Page(0,l_sEmpty,1,l_bRefresh,l_nKeyPressed)
+        // wait for OK
+        l_nStep=sel(l_nKeyPressed==4,l_nReturnStep,l_nStep)
+      break
+      //
+      default
+      break
+    endSwitch
+    delay(0)
+  until (l_bQuit==true)
+  cls()
+  if x_bCompleteSeq==true
+    call enc:kill()
+  endIf
+  $jogContext(tPointer,world,0)
+end]]></Code>
+  </Program>
+</Programs>

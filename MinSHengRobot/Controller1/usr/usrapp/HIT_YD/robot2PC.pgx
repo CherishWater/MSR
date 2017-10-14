@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="robot2PC" access="private" >
+    <Code><![CDATA[begin
+  //清空缓存
+  clearBuffer(sktoPC)
+  //设置终止符 $
+  sioCtrl(sktoPC,"endOfString",36)
+  do
+    sktoPC="run"
+    sDataPC=sktoPC
+    _bVisionOK=true
+    delay(1)
+  until false
+end]]></Code>
+  </Program>
+</Programs>

@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="send2NextRob" access="private" >
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1" >
+      <Parameter name="x_nConvNum" type="num" use="value" xsi:type="element" dimensions="1" />
+      <Parameter name="x_nID" type="num" use="value" xsi:type="element" dimensions="1" />
+      <Parameter name="x_trTrsf" type="trsf" use="value" xsi:type="element" dimensions="1" />
+      <Parameter name="x_nLatchedValue" type="num" use="value" xsi:type="element" dimensions="1" />
+    </Parameters>
+    <Code><![CDATA[begin
+  // This program pushes an object into the transfer queue. 
+  // The production cycle pushes the objects to be transferred to
+  //  the next robot into the transfer queue, and the tasks
+  //  transferQueue will actually take care of sending the object
+  //  to the next robot.
+  //
+  // Input parameters
+  //  x_nConvNum      : Conveyor number
+  //  x_nID           : ID of the object
+  //  x_trTrsf        : Transformation of the object
+  //  x_nLatchedValue : Latched encoder value of the object
+  //
+  // Output parameters
+  //  None            :
+  //
+  //----------------------------------------------------------------
+  //
+  // If the ID of the next element of the queue is equals to -1, it
+  //  means that the element is free and a new object can be stacked.
+  //  Otherwise the queue is full.
+  if _oTransferQueue[x_nConvNum,_nPushIndexTQ[x_nConvNum]].nID==-1
+    _oTransferQueue[x_nConvNum,_nPushIndexTQ[x_nConvNum]].nLatchedValue=x_nLatchedValue
+    _oTransferQueue[x_nConvNum,_nPushIndexTQ[x_nConvNum]].trTrsf=x_trTrsf
+    // The last value updated is the ID. The task transferQueue is
+    //  looking to this value in order to know if there is an object
+    //  to be sent to the next robot. 
+    _oTransferQueue[x_nConvNum,_nPushIndexTQ[x_nConvNum]].nID=x_nID
+    _nPushIndexTQ[x_nConvNum]=(_nPushIndexTQ[x_nConvNum]+1)%size(_oTransferQueue,2)
+  else
+    popUpMsg("Part not queued, transfer queue "+toString("",x_nConvNum+1)+" full")
+  endIf
+end]]></Code>
+  </Program>
+</Programs>

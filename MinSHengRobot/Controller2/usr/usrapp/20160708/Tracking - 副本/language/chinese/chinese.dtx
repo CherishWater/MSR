@@ -1,0 +1,135 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Database xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Data/2">
+  <Datas>
+    <Data name="sCancel" access="public" xsi:type="array" type="string" size="1">
+      <Value key="0" value="Cancel" />
+    </Data>
+    <Data name="sCircular" access="public" xsi:type="array" type="string" size="1">
+      <Value key="0" value="Circular" />
+    </Data>
+    <Data name="sEvtMsg" access="private" xsi:type="array" type="string" size="1" />
+    <Data name="sLinear" access="public" xsi:type="array" type="string" size="1">
+      <Value key="0" value="Linear" />
+    </Data>
+    <Data name="sListOfMessage" access="public" xsi:type="array" type="string" size="73">
+      <Value key="0" value="Conveyor calibration utility" />
+      <Value key="1" value="Define conveyor geometry" />
+      <Value key="2" value="Define vision frame" />
+      <Value key="3" value="Define scale factor" />
+      <Value key="4" value="Conveyor overview" />
+      <Value key="5" value="Setup general parameter" />
+      <Value key="6" value="Setup encoder parameter" />
+      <Value key="7" value="Setup detection parameter" />
+      <Value key="8" value="Setup conveyor parameter" />
+      <Value key="9" value="Conveyor Lib." />
+      <Value key="10" value="Encoder Lib." />
+      <Value key="11" value="Detection Lib." />
+      <Value key="12" value="Conveyor type" />
+      <Value key="13" value="Load calibration file" />
+      <Value key="14" value="Conveyor library *\../* is not started, the frame *\../* could not be computed." />
+      <Value key="15" value="Saving successfull" />
+      <Value key="16" value="The library *\../* is going to be deleted, are you sure ?" />
+      <Value key="17" value="Deleting existing conveyor file" />
+      <Value key="18" value="Saving conveyor library" />
+      <Value key="19" value="Saving geometry library" />
+      <Value key="20" value="是否需要检测刚定义的传送带库?" />
+      <Value key="21" value="Libary name : " />
+      <Value key="22" value="No message pending" />
+      <Value key="23" value="Do you want to define a custom origine for the conveyor's frame" />
+      <Value key="24" value="Error code * while computing the frame associated with the conveyor." />
+      <Value key="25" value="Error while computing vision frame : *" />
+      <Value key="26" value="The digital output selected for the clockSignal parameter is not valid." />
+      <Value key="27" value="The digital output selected for reporting robot motion through the upstream end of conveyor window is not valid" />
+      <Value key="28" value="The digital output selected for reporting robot motion through the downstream end of conveyor window is not valid" />
+      <Value key="30" value="The conveyor library *\../* could not be loaded because of error code * " />
+      <Value key="31" value="The encoder library *\../* could not be loaded because of error code * " />
+      <Value key="32" value="The detection library *\../* could not be loaded because of error code * " />
+      <Value key="33" value="The geometry library *\../* could not be loaded because of error code * " />
+      <Value key="34" value="Your current conveyor library *\../* is beeing saved. Please wait..." />
+      <Value key="35" value="The existing conveyor library *\../* could not be replaced, error code *" />
+      <Value key="36" value="The conveyor library *\../* could not be saved because of error code *" />
+      <Value key="37" value="The geometry library *\../* could not be saved because of error code *" />
+      <Value key="38" value="Wizard&gt;&gt;Couldn't find language file:" />
+      <Value key="40" value="Disable any jog mode" />
+      <Value key="41" value="Disable any jog mode" />
+      <Value key="42" value="Disable the Joint jog mode" />
+      <Value key="43" value="Disable the Frame jog mode" />
+      <Value key="44" value="Disable the Tool jog mode" />
+      <Value key="45" value="Disable the Point jog mode" />
+      <Value key="46" value="Warning, This application requires VAL3 version s7.6.0 or higher" />
+      <Value key="47" value="The valTrack license is not installed or demo period has expired." />
+      <Value key="48" value="Loading your conveyor library *\../* into memory. Please wait..." />
+      <Value key="49" value="Initializing conveyor library" />
+      <Value key="50" value="loading geometry library" />
+      <Value key="51" value="loading encoder library" />
+      <Value key="52" value="loading detection library" />
+      <Value key="53" value="Cannot move to the approach of the current robot position. Please check approach TRSF X=* Y=* Z=*." />
+      <Value key="54" value="Cannot move to the approach of the final destination. Please check approach TRSF X=* Y=* Z=*." />
+      <Value key="55" value="Destination is the out of reach." />
+      <Value key="56" value="Warning: Conveyor not created. Create socket client called 'cognex*', camera's IP address, port 1023, timeout 0. Reload wizard." />
+      <Value key="57" value="Warning: Conveyor not selected. Create socket client called 'cognex*', camera's IP address, port 1023, timeout 0. Reload wizard." />
+      <Value key="58" value="Warning: The output defined as ClkSignal doesn't exist" />
+      <Value key="59" value="欢迎进入传送带库设置程序" />
+      <Value key="60" value="选择或新建一个传送带库" />
+      <Value key="61" value="警告：传送带库无法创建。请先创建一个socket服务器，命名&quot;fromRobot_sk*&quot;，端口号100*。重载程序。" />
+      <Value key="62" value="Warning: Conveyor not selected. Create a socket server called 'fromRobot_sk*', port 100*. Reload wizard." />
+      <Value key="63" value="Warning: Message not sent. The socket sent as a parameter is not working. Bad link or device in error." />
+      <Value key="64" value="Warning: Message not sent. Timeout expired. The other robot is not present on the network." />
+      <Value key="65" value="Warning: Message not sent. Timeout expired. The other robot is not working with the detection library 'Socket'." />
+      <Value key="66" value="Warning: Message sent, but the server from the other robot didn't acknowledge reception before expiration of timeout." />
+      <Value key="67" value="VALTRACK" />
+      <Value key="68" value="Warning: Conveyor not created. Edit library Tracking\io\sockets, add to the array of the variable skCognex the index *" />
+      <Value key="69" value="Warning: Conveyor not created. Edit library Tracking\io\sockets, add to the array of the variable skFromRobot the index *" />
+      <Value key="70" value="Warning: Conveyor not selected. Edit library Tracking\io\sockets, add to the array of the variable skCognex the index *" />
+      <Value key="71" value="Warning: Conveyor not selected. Edit library Tracking\io\sockets, add to the array of the variable skFromRobot the index *" />
+      <Value key="72" value="确定取消吗?" />
+    </Data>
+    <Data name="sMenu" access="public" xsi:type="array" type="string" size="60">
+      <Value key="0" value="; ; ; OK ; ; 取消" />
+      <Value key="1" value="; ; ; OK" />
+      <Value key="4" value="上步 未做 选择 ; 平均 ; 下步 取消" />
+      <Value key="5" value="上步 ; ; 调整 ; ; 下步 取消" />
+      <Value key="6" value="上步 记录 移动 ; ; ; 下步 取消" />
+      <Value key="7" value="上步 记录 ; ; ; ; 下步 取消" />
+      <Value key="8" value="上步 ; ; ; ; ; ; 取消" />
+      <Value key="9" value="; ; ; ; ; ; 下步 取消" />
+      <Value key="10" value="; 新建 复制 选择 ; 删除  ; 退出" />
+      <Value key="11" value="; 新建 ; ; ; ; ; 退出" />
+      <Value key="12" value="; ; ; 选择 ; ; ; 取消" />
+      <Value key="13" value="上步 ; ; 选择 ; ; ; 取消" />
+      <Value key="14" value="; 记录 移动 ; ; 帮助 下步 取消" />
+      <Value key="15" value="; 记录 ; ; ; 帮助 下步 取消" />
+      <Value key="16" value="上步 记录 移动 ; ; 帮助 下步 取消" />
+      <Value key="17" value="上步 记录 ; ; ; 帮助 下步 取消" />
+      <Value key="18" value="上步 ; ; ; ; ; 下步 取消" />
+      <Value key="19" value="上步 新建 ; 选择 ; ; ; 取消" />
+      <Value key="20" value="上步 新建 ; ; ; ; ; 取消" />
+      <Value key="21" value="; ; 是 ; ; ; 否" />
+      <Value key="22" value="; ; 是 ; ; ;  否 取消" />
+      <Value key="23" value="; 锁定 ; ; ; ; 下步 取消" />
+      <Value key="50" value="F1: 定义编码器比例因数" />
+      <Value key="51" value="F2: 传送带库坐标系" />
+      <Value key="52" value="F3: 定义传感器距离" />
+      <Value key="53" value="F4: 传送带库诊断" />
+      <Value key="54" value="F5: 完整的校准" />
+      <Value key="55" value="F8: 退出" />
+    </Data>
+    <Data name="sNONE" access="public" xsi:type="array" type="string" size="1">
+      <Value key="0" value="none" />
+    </Data>
+    <Data name="sNOTDEFINED" access="public" xsi:type="array" type="string" size="1">
+      <Value key="0" value="Not defined" />
+    </Data>
+    <Data name="sNo" access="public" xsi:type="array" type="string" size="1">
+      <Value key="0" value="No" />
+    </Data>
+    <Data name="sOptionTitle" access="public" xsi:type="array" type="string" size="1" />
+    <Data name="sYes" access="public" xsi:type="array" type="string" size="1">
+      <Value key="0" value="Yes" />
+    </Data>
+    <Data name="trTrsf" access="public" xsi:type="array" type="trsf" size="4" />
+    <Data name="mNomSpeed" access="public" xsi:type="array" type="mdesc" size="1">
+      <Value key="0" blend="off" />
+    </Data>
+  </Datas>
+</Database>

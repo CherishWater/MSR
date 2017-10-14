@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="start">
+    <Locals>
+      <Local name="l_nCounter" type="num" xsi:type="array" size="1" />
+      <Local name="l_bLatched" type="bool" xsi:type="array" size="1" />
+      <Local name="l_sMessage" type="string" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[
+begin
+  cls()
+  userPage()
+  call create(0,"encoder")
+  do
+    call getValue(false,l_nCounter)
+    l_sMessage="Instant val: "+toString("10",l_nCounter)
+    gotoxy(5,0)
+    putln(l_sMessage)
+    call isLatched(l_bLatched)
+    if l_bLatched==true
+      call getValue(true,l_nCounter)
+      l_sMessage="Latched val: "+toString("10",l_nCounter)
+      gotoxy(5,1)
+      putln(l_sMessage)
+    endIf
+    //
+    l_sMessage="IsLatched: "
+    if diEncLatched==true
+      l_sMessage=l_sMessage+"TRUE"
+    else
+      l_sMessage=l_sMessage+"FALSE"
+    endIf
+    gotoxy(5,2)
+    putln(l_sMessage)
+    delay(0)
+  until false
+end
+]]></Code>
+  </Program>
+</Programs>

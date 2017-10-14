@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="handleNtype">
+    <Locals>
+      <Local name="l_bIsNumeric" type="bool" xsi:type="array" size="1" />
+      <Local name="l_nTxtBoxVal" type="num" xsi:type="array" size="1" />
+      <Local name="l_sInputValue" type="string" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[
+begin
+  // If attribute is Numeric,remove 0 from string
+  if (pw:sTxtBoxType[nFocused]=="N")
+    // Remove 0 if present
+    if pw:sTxtBoxVal[nFocused]!="0"
+      call _removeChar(pw:sTxtBoxVal[nFocused],"0",1,l_sInputValue)
+    else
+      l_sInputValue=pw:sTxtBoxVal[nFocused]
+    endIf
+    call _GetUserInput(l_sInputValue)
+  endIf
+  // If attribute is Numeric,check if value is in range
+  if (pw:sTxtBoxType[nFocused]=="N")
+    toNum(l_sInputValue,l_nTxtBoxVal,l_bIsNumeric)
+    if l_bIsNumeric
+      if (l_nTxtBoxVal<nTxtMinVal[nFocused]) or (l_nTxtBoxVal>nTxtMaxVal[nFocused])
+        popUpMsg("Value must be in range of "+toString(".",nTxtMinVal[nFocused])+"->"+toString(".",nTxtMaxVal[nFocused]))
+        call _writeTxtBoxVal(nFocused,nVIDEOINVERSED,"R")
+      else
+        // Remove 0 if present
+        call _removeChar(l_sInputValue,"0",1,pw:sTxtBoxVal[nFocused])
+        // force value to 0 if empty string
+        if pw:sTxtBoxVal[nFocused]==""
+          pw:sTxtBoxVal[nFocused]="0"
+        endIf
+      endIf
+    else
+      call _writeTxtBoxVal(nFocused,nVIDEOINVERSED,"R")
+    endIf
+    call _writeTxtBoxVal(nFocused,nVIDEOINVERSED,"R")
+  endIf
+end
+]]></Code>
+  </Program>
+</Programs>

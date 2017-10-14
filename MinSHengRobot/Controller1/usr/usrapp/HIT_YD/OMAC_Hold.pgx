@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="OMAC_Hold" access="private" >
+    <Locals>
+      <Local name="l_jHere" type="joint" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+  //OMAC进程:Holding
+  _nOmacStat=5
+  logMsg("上位机手动操作：暂停")
+  _bEndCycle=true
+  wait(taskStatus("productionCycle")==-1)
+  _bMutexCnvQueue[0]=false
+  taskKill("cellManager")
+  wait(taskStatus("cellManager")==-1)
+  stopMove()
+  resetMotion()
+  // Move up axis 3
+  l_jHere=herej()
+  l_jHere.j3=95
+  movej(l_jHere,tGripper,mSlow)
+  movej(jHome,tGripper,mSlow)
+  waitEndMove()
+  disablePower()
+  dVacuum=false
+  wait(isSettled())
+  wait(isPowered()==false)
+  //OMAC进程:Held
+  _nOmacStat=6
+  delay(0)
+end]]></Code>
+  </Program>
+</Programs>

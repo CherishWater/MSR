@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="getObjectData" access="public" >
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1" >
+      <Parameter name="x_trObject" type="trsf" use="reference" xsi:type="array" dimensions="1" />
+      <Parameter name="x_nError" type="num" use="reference" xsi:type="array" dimensions="1" />
+    </Parameters>
+    <Locals>
+      <Local name="l_pPoint" type="point" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+  // This program returns the coordinates of the object
+  // that have been pushed into the buffer by the detection lib.
+  // This function is usefull when an advanced detection device
+  // (e.g vision system) is in use.
+  //
+  // Input Param
+  //  none
+  //
+  // Output Param
+  //  x_trObject  : coordinates of the object
+  //  x_nError    : Error code
+  //    0 : No error
+  //    1 : No data available
+  //
+  // Created 25-01-06                                   C.CURRIVAND
+  //----------------------------------------------------------------
+  //
+  x_nError=0
+  if nNumbOfUser[nIdxPull]!=0
+    x_trObject=trDetectedCoord[nIdxPull]
+  else
+    //* No Object requested
+    x_nError=1
+    if cfg:bLog==true
+      nErrVal[0]=nIdxPull
+      call ut:addNumToString(sConvNum+"(getObjectData)>>"+sErrMsgList[x_nError],sMsg,"*",nErrVal)
+      logMsg(sMsg)
+    endIf
+  endIf
+end]]></Code>
+  </Program>
+</Programs>

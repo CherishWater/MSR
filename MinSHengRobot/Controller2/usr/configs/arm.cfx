@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<arm>
+  <String name="date" value="07 MAR 2010  01:07" />
+  <String name="orderNumber" value="F14_5XN5A1_A_01" />
+  <String name="arm" value="tp80-S2" />
+  <String name="tuning" value="" />
+  <String name="mount" value="wall" />
+  <FloatArray name="minArmJointPos" >
+    <Float index="0" value="-9999999" />
+    <Float index="1" value="-150" />
+    <Float index="2" value="-9999999" />
+    <Float index="3" value="-9999999" />
+  </FloatArray>
+  <FloatArray name="maxArmJointPos" >
+    <Float index="0" value="9999999" />
+    <Float index="1" value="150" />
+    <Float index="2" value="9999999" />
+    <Float index="3" value="9999999" />
+  </FloatArray>
+  <ArmJntRange>
+  </ArmJntRange>
+  <FloatArray name="zeroOffset" >
+    <Float index="0" value="1291309.074097" />
+    <Float index="1" value="1157125.215454" />
+    <Float index="2" value="1059459.136963" />
+    <Float index="3" value="977376.785889" />
+  </FloatArray>
+  <FloatArray name="phaseOffset" >
+    <Float index="0" value="245.10498" />
+    <Float index="1" value="259.661865" />
+    <Float index="2" value="164.031372" />
+    <Float index="3" value="303.041382" />
+  </FloatArray>
+  <DhArray name="dhOffset" >
+    <DH index="0" theta="0" d="0" a="0" b="0" alpha="0" beta="0" />
+    <DH index="1" theta="0" d="0" a="0" b="0" alpha="0" beta="0" />
+    <DH index="2" theta="0" d="0" a="0" b="0" alpha="0" beta="0" />
+    <DH index="3" theta="0" d="0" a="0" b="0" alpha="0" beta="0" />
+  </DhArray>
+  <Float name="flangeLengthOffset" value="0" />
+  <StringArray name="motorType" >
+    <String index="0" value="" />
+    <String index="1" value="" />
+    <String index="2" value="" />
+    <String index="3" value="" />
+  </StringArray>
+  <FloatArray name="userMark" >
+    <Float index="0" value="0" />
+    <Float index="1" value="0.2568" />
+    <Float index="2" value="0" />
+    <Float index="3" value="0" />
+  </FloatArray>
+  <FloatArray name="factoryMark" >
+    <Float index="0" value="0" />
+    <Float index="1" value="0.2568" />
+    <Float index="2" value="0" />
+    <Float index="3" value="0" />
+  </FloatArray>
+  <Bool name="factoryMarkLocked" value="true" />
+  <Bool name="sleeve" value="false" />
+  <Bool name="userCabling" value="false" />
+  <String name="diameterAxis3" value="D20" />
+  <String name="lengthAxis3" value="L100" />
+</arm>

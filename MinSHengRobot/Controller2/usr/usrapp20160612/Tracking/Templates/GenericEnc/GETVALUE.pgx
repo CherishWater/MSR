@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="getValue" access="public">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_bUseLatch" type="bool" xsi:type="element" />
+      <Parameter name="x_nEncValue" type="num" xsi:type="array" use="reference" />
+    </Parameters>
+    <Code><![CDATA[
+begin
+  // This routine returns either the latched or the actual value
+  // of the encoder
+  //
+  // Input Param
+  //  xUseLatch define which kind of encoder value should be returned
+  //    x_bUseLatch=true --> returns the value of the Latch register
+  //    x_bUseLatch=false--> returns the current of the counter.
+  //
+  // Output Param
+  //  x_nEncValue : Encoder value
+  //
+  // Created 23-02-05                                   C.CURRIVAND
+  //----------------------------------------------------------------
+  if x_bUseLatch==true
+    x_nEncValue=nEncLatchedVal
+  else
+    x_nEncValue=nEncValue
+  endIf
+end
+]]></Code>
+  </Program>
+</Programs>

@@ -1,0 +1,221 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="conveyor" access="private" >
+    <Locals>
+      <Local name="l_bLatched" type="bool" xsi:type="array" size="1" />
+      <Local name="l_bLock" type="bool" xsi:type="array" size="1" />
+      <Local name="l_bMemoCalib" type="bool" xsi:type="array" size="1" />
+      <Local name="l_nDelayEnLatch" type="num" xsi:type="array" size="1" />
+      <Local name="l_nEncEnaLatVal" type="num" xsi:type="array" size="1" />
+      <Local name="l_nEncLatchVal" type="num" xsi:type="array" size="1" />
+      <Local name="l_nEncValue" type="num" xsi:type="array" size="1" />
+      <Local name="l_nLatchLocked" type="num" xsi:type="array" size="1" />
+      <Local name="l_nNumOfObject" type="num" xsi:type="array" size="1" />
+      <Local name="l_nStepFill" type="num" xsi:type="array" size="1" />
+      <Local name="l_nTimeLatched" type="num" xsi:type="array" size="1" />
+      <Local name="l_nTrigger" type="num" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+  //
+  //----------------------------------------------------------------
+  l_nEncEnaLatVal=l_nEncLatchVal=l_nEncValue
+  l_bMemoCalib=det:bCalibrating
+  //
+  //--- Enable latch feature of the encoder library
+  enc:bLatchEnabled=true
+  if bClockEnabled
+    l_nStepFill=-1
+  else
+    l_nStepFill=0
+  endIf
+  l_nTimeLatched=clock()
+  //*****
+  //
+  // Initializing the output to start if it's used
+  if bClockEnabled
+    // If position capture OUTPUT occurs on falling edge
+    // CHANGE the logic of the output doClock at all lines of this program.
+    // false-->true / true-->false 
+    doClock=false
+  endIf
+  // waiting the task's detection is running
+  wait(det:bTaskDetOK)
+  //****   MAIN LOOP
+  while true
+    //--- Read instantaneous encoder value
+    l_nEncValue=aioGet(enc:aiEncCurrentPos)
+    //
+    //*****  CLOCK SECTION
+    l_nLatchLocked=sel(bClockEnabled,max(2*nClockPeriod/3,nLatchLockDist),nLatchLockDist)
+    // Check if feature is enabled
+    if bClockEnabled
+      // If trigger OFF, and If the conveyor has moved more than the trigger perriod
+      if (doClock==false) and abs((l_nEncValue-l_nEncEnaLatVal)*nENCSCALEFACTOR)>nClockPeriod
+        // If system ready, set trigger
+        // Else, set Status in overrun
+        if l_nStepFill==-1
+          l_nStepFill=0
+          doClock=true
+          l_nTrigger=l_nTrigger+1
+          logMsg("trigger num: "+toString("",l_nTrigger)+" :"+toString("0.2",clock())+" s")
+          logMsg("trigger: "+toString(".2",(l_nEncValue-l_nEncEnaLatVal)*nENCSCALEFACTOR)+" mm")
+          l_nEncEnaLatVal=l_nEncValue
+          if bAnd(cfg:nLog,cfg:nLOGDETECT)==cfg:nLOGDETECT and bLOG
+            ? sConvNum+"(conveyor)>>Set trigger. Clock :"+toString(".2",clock())
+          endIf
+        elseIf nStatus!=2
+          // Warning, detection overrun. Object(s) wont been queued
+          if bAnd(cfg:nLog,cfg:nLOGDETECT)==cfg:nLOGDETECT and bLOG
+            ? sConvNum+"(conveyor)>>Detection Overrun : Cannot set trigger on time. Clock :"+toString(".2",clock())
+          endIf
+          nStatus=2
+          sErrorMessage=sErrMsgList[nDETECT_OVR]
+        endIf
+      endIf
+      // If trigger ON, and If the conveyor has move more than half of the trigger period
+      // reset trigger
+      if (doClock==true) and abs((l_nEncValue-l_nEncEnaLatVal)*nENCSCALEFACTOR)>nClockPeriod/2
+        doClock=false
+      endIf
+    endIf
+    //
+    //*****  CONVEYOR SECTION
+    if left(sDetectionLib,6)=="Socket" and !det:bCalibrating
+      // When working with the detection library "Socket" and the conveyor
+      //  isn't calibrating the distance from the sensor, the encoder
+      //  latched value is given by the "Socket" and the encoder library is
+      //  not used.
+      l_bLatched=true
+      l_nEncLatchVal=0
+      if l_nStepFill==0
+        l_nStepFill=1
+      endIf
+    else
+      // Reinitialize conveyor sequence when detection library "Socket"
+      //  goes into Calibration Mode.
+      if left(sDetectionLib,6)=="Socket" and det:bCalibrating and !l_bMemoCalib
+        l_nStepFill=0
+        det:nNumOfPart=-1
+      endIf
+      // Use the encoder library to get the encoder latched value.
+      // Check if latch occured
+      call enc:isLatched(l_bLatched)
+      // If part latched, get encoder latched value.
+      // Else, re-enable latching at the encoder library
+      if l_bLatched==true
+        logMsg("getLatched: "+toString(".2",clock())+" s")
+        det:nNumOfPart=-1
+        delay(0)
+        call enc:resetLatch()
+        if bAnd(cfg:nLog,cfg:nLOGDETECT)==cfg:nLOGDETECT and bLOG
+          ? sConvNum+"(conveyor)>>Object latched detected. Clock :"+toString(".2",clock())
+        endIf
+        //
+        // Start timer for re-enabling latch feature
+        l_nDelayEnLatch=clock()
+        //
+        // If system ready, get encoder latched value.
+        // Else, overrun for external latch
+        if l_nStepFill==0
+          l_nStepFill=1
+          l_bLock=false
+          // Get encoder latched value
+          call enc:getValue(true,l_nEncLatchVal)
+          // Disable latch feature of the encoder library until conveyor has moved
+          // the distance defined by the user (variable nLatchLockDist)
+          enc:bLatchEnabled=false
+          // Record clock of Latch
+          l_nTimeLatched=clock()
+          //
+          //Overrun for external latch
+        elseIf !bClockEnabled and nStatus!=2
+          // Warning, detection overrun. Object(s) wont been queued
+          if bAnd(cfg:nLog,cfg:nLOGDETECT)==cfg:nLOGDETECT and bLOG
+            ? sConvNum+"(conveyor)>>Detection Overrun : System not ready to latch again."
+          endIf
+          nStatus=2
+          sErrorMessage=sErrMsgList[nDETECT_OVR]
+        endIf
+      else
+        // wait a while before re-enabling the latch feature
+        if clock()-l_nDelayEnLatch>0.02
+          // Latch feature not enabled
+          if (enc:bLatchEnabled==false)
+            // Check conveyor's advance
+            if abs((l_nEncValue-l_nEncLatchVal)*nENCSCALEFACTOR)>=l_nLatchLocked
+              enc:bLatchEnabled=true
+            endIf
+          endIf
+        endIf
+      endIf
+    endIf
+    l_bMemoCalib=det:bCalibrating
+    //
+    //--- Poll detection library
+    if bEnableQueuing==true
+      switch l_nStepFill
+        // Poll detection lib for number of detected objects
+        case 1
+          if l_bLock==false
+            if bAnd(cfg:nLog,cfg:nLOGDETECT)==cfg:nLOGDETECT and bLOG
+              ? sConvNum+"(conveyor)>>Reading number of detected objects"
+            endIf
+            l_bLock=true
+          endIf
+          //
+          if l_bLock==true
+            call det:isDetected(l_nNumOfObject)
+            if (l_nNumOfObject>=0)
+              l_nStepFill=sel(l_nNumOfObject>0,10,20)
+              l_bLock=false
+            endIf
+          endIf
+        break
+        // Queue detected objects
+        case 10
+          if l_bLock==false
+            if bAnd(cfg:nLog,cfg:nLOGDETECT)==cfg:nLOGDETECT and bLOG
+              ? sConvNum+"(conveyor)>>Response time of the detection lib: "+toString(".2",clock()-l_nTimeLatched)+" sec."
+            endIf
+            call fillQueue(l_nNumOfObject,l_nEncLatchVal)
+            l_bLock=true
+          endIf
+          if l_bLock==true
+            l_nStepFill=20
+            l_bLock=false
+          endIf
+        break
+        // Acknowledge detection library
+        case 20
+          if l_bLock==false
+            if bAnd(cfg:nLog,cfg:nLOGDETECT)==cfg:nLOGDETECT and bLOG
+              ? sConvNum+"(conveyor)>>Reset nNumOfPart variable of detection lib"
+            endIf
+            //det:nNumOfPart=-1
+            if nStatus==2
+              if bAnd(cfg:nLog,cfg:nLOGDETECT)==cfg:nLOGDETECT and bLOG
+                ? sConvNum+"(conveyor)>>Detection Overrun : Time to recover data after latch :"+toString(".2",clock()-l_nTimeLatched)+" sec."
+              endIf
+              nStatus=0
+            endIf
+            if bClockEnabled
+              l_nStepFill=-1
+            else
+              l_nStepFill=0
+            endIf
+          endIf
+        break
+      endSwitch
+    endIf
+    //
+    // //*****  RESET SECTION
+    if bResetConv==true
+      call flushQueue()
+      bResetConv=false
+    endIf
+    //
+    delay(0)
+  endWhile
+end]]></Code>
+  </Program>
+</Programs>

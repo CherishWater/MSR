@@ -1,0 +1,637 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="Page" access="public">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_nPageNum" type="num" xsi:type="element" />
+      <Parameter name="x_sCustomTxt" type="string" xsi:type="array" use="reference" />
+      <Parameter name="x_nMenu" type="num" xsi:type="element" />
+      <Parameter name="x_bRefresh" type="bool" xsi:type="element" />
+      <Parameter name="x_nSelectedMenu" type="num" xsi:type="array" use="reference" />
+    </Parameters>
+    <Locals>
+      <Local name="l_nMenu" type="num" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[
+begin
+  // This program displays the different pages of the user interface
+  //
+  // Input param
+  //  x_nPageNum  : Number of the page to display
+  //  x_sCustomTxt : Custom text to display
+  //
+  // Output param
+  //  x_nMenu         : Number of the menu list to display
+  //  x_nSelectedMenu : Number of the function key pressed by user
+  //
+  //----------------------------------------------------------------
+  //
+  //-----------------
+  //  DISPLAY SECTION
+  //-----------------
+  //
+  switch x_nPageNum
+    case -1
+    break
+    // ****************************************
+    // *****        Help screens          *****
+    // ****************************************
+    //
+    //  Conveyor overview
+    //
+    case 0
+      if x_bRefresh
+        cls()
+        call BuildTitle(sListOfMessage[4],"")
+        call up:type(4,1,"┌──────P0x................xP3───┐")
+        call up:type(4,2,"│        ^Y+              .     │")
+        call up:type(4,3,"│ ───>   │                .     │")
+        call up:type(4,4,"│        │                .     │")
+        call up:type(4,5,"└──────P1x--->X+..........xP2───┘")
+        call up:type(1,8,"...  : Working window")
+        call up:type(1,9,"───> : Conveyor stream")
+        call up:type(1,10,"P1   : Origin of conveyor's frame")
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    //
+    // Define Encoder Scale Factor
+    // Teach upstream location
+    //
+    case 10
+      if x_bRefresh==true
+        cls()
+        call BuildTitle(sListOfMessage[3]+" 1/6",sOptionTitle)
+        call up:type(0,0,"Place calibration target on conveyor")
+        call up:type(0,1,"as far upstream as the robot can reach")
+        call up:type(0,3,"Jog the robot pointer on the target")
+        call up:type(0,4,"and press NEXT to record the location")
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+      call up:type(0,7,"Robot position:")
+      call up:DisplayPt(trTrsf[0],8)
+      call up:type(0,10,"Encoder value : "+x_sCustomTxt[0])
+    break
+    //
+    // Define Encoder Scale Factor
+    // Move target to downstream limit
+    //
+    case 11
+      if x_bRefresh==true
+        cls()
+        //        call BuildTitle(sListOfMessage[3]+" 2/6",sOptionTitle)
+        call up:type(0,0,"Move the robot away from the target.")
+        call up:type(0,2,"Run the conveyor until the target has")
+        call up:type(0,3,"reached the downstream limit of the")
+        call up:type(0,4,"robot's working range")
+        call up:type(0,6,"Make sure the target doesn't slip on")
+        call up:type(0,7,"the conveyor when it starts and stops")
+        call up:type(0,9,"Press NEXT to continue")
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    //
+    // Define Encoder Scale Factor
+    // Teach upstream location
+    //
+    case 12
+      if x_bRefresh==true
+        cls()
+        call BuildTitle(sListOfMessage[3]+" 3/6",sOptionTitle)
+        call up:type(0,0,"Without moving the calibration target")
+        call up:type(0,1,"jog again the robot on the target")
+        call up:type(0,3,"Press NEXT to record the location")
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+      call up:type(0,7,"Robot position:")
+      call up:DisplayPt(trTrsf[0],8)
+      call up:type(0,10,"Encoder value: "+x_sCustomTxt[0])
+    break
+    //
+    // Define Encoder Scale Factor
+    // Perform computation
+    //
+    case 13
+      if x_bRefresh==true
+        cls()
+        call BuildTitle(sListOfMessage[3]+" 4/6",sOptionTitle)
+        call up:type(0,0,"The encoder scale factor computation")
+        call up:type(0,1,"gives the following result :")
+        call up:type(0,3,"Encoder scale factor : "+x_sCustomTxt[0])
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    //
+    // Define Encoder Scale Factor
+    // Display error message
+    //
+    case 14
+      if x_bRefresh==true
+        cls()
+        call BuildTitle(sListOfMessage[3]+" 5/6",sOptionTitle)
+        call up:type(0,0,"The following error occured during")
+        call up:type(0,1,"the encoder scale factor computation:")
+        call up:type(0,4,"No conveyor motion detected")
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    //
+    // Define Encoder Scale Factor
+    // Store calibration data
+    //
+    case 15
+      if x_bRefresh==true
+        call BuildTitle(sListOfMessage[3]+" 6/6",sOptionTitle)
+        call up:type(0,0,"Select file to save the conveyor's data")
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    // ****************************************
+    // *****  Define Conveyor geometry    *****
+    // ****************************************
+    // Teach upstream end p0 of the tracking window
+    case 20
+      if x_bRefresh==true
+        cls()
+        call BuildTitle(sListOfMessage[1]+" 1/8",sOptionTitle)
+        call up:type(0,0,"Place calibration target on conveyor")
+        call up:type(0,1,"at position p0 and teach this location")
+        call up:type(0,3,"Press VIEW to display help diagram")
+        call up:type(0,4,"Press HERE to store the location")
+        call up:type(0,5,"Press NEXT when you're done")
+        call up:type(0,7,"Current p0 location : ")
+        call up:DisplayPt(trTrsf[0],8)
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    // Teach upstream end (p1) of the tracking window
+    case 21
+      if x_bRefresh==true
+        cls()
+        call BuildTitle(sListOfMessage[1]+" 2/8",sOptionTitle)
+        call up:type(0,0,"Place calibration target on conveyor")
+        call up:type(0,1,"at position p1 and teach this location")
+        call up:type(0,3,"Press VIEW to display help diagram")
+        call up:type(0,4,"Press HERE to store the location")
+        call up:type(0,5,"Press NEXT when you're done")
+        call up:type(0,7,"Current p1 location : ")
+        call up:DisplayPt(trTrsf[0],8)
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+      if x_sCustomTxt[0]!=""
+        call up:type(0,10,"Current encoder value : "+x_sCustomTxt[1])
+      endIf
+    break
+    call up:type(0,10,"Current encoder value: ")
+    //
+    // Move target to downstream limit
+    //
+    case 22
+      if x_bRefresh==true
+        cls()
+        call BuildTitle(sListOfMessage[1]+" 3/8",sOptionTitle)
+        call up:type(0,0,"Move the robot away from the target.")
+        call up:type(0,2,"Run the conveyor until the target has")
+        call up:type(0,3,"reached the downstream limit of the")
+        call up:type(0,4,"robot's working range")
+        call up:type(0,6,"Make sure the target doesn't slip on")
+        call up:type(0,7,"the conveyor when it starts and stops")
+        call up:type(0,8,"Press NEXT when you're done")
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    //
+    // Define Conveyor geometry
+    // Teach downstream end of the tracking window
+    //
+    case 23
+      if x_bRefresh==true
+        cls()
+        call BuildTitle(sListOfMessage[1]+" 4/8",sOptionTitle)
+        call up:type(0,0,"Without moving the calibration target")
+        call up:type(0,1,"jog again the robot on the target")
+        call up:type(0,2,"to teach location p2")
+        call up:type(0,3,"Press VIEW to display help diagram")
+        call up:type(0,4,"Press HERE to store the location")
+        call up:type(0,5,"Press NEXT when you're done")
+        call up:type(0,7,"Current p2 location:")
+        call up:DisplayPt(trTrsf[0],8)
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+      if x_sCustomTxt[0]!=""
+        call up:type(0,10,"Current encoder value : "+x_sCustomTxt[1])
+      endIf
+    break
+    //
+    // Define Conveyor geometry
+    // Teach downstream end p4 of the tracking window
+    //
+    case 24
+      if x_bRefresh==true
+        cls()
+        call BuildTitle(sListOfMessage[1]+" 5/8",sOptionTitle)
+        call up:type(0,0,"Place calibration target on conveyor")
+        call up:type(0,1,"at position p3 and teach this location")
+        call up:type(0,3,"Press VIEW to display help diagram")
+        call up:type(0,4,"Press HERE to store the location")
+        call up:type(0,5,"Press NEXT when you're done")
+        call up:type(0,7,"Current p3 location:")
+        call up:DisplayPt(trTrsf[0],8)
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    //
+    // Define Conveyor geometry
+    // Teach custom origin of the conveyor's frame
+    //
+    case 25
+      if x_bRefresh==true
+        cls()
+        call BuildTitle(sListOfMessage[1]+" 6/8",sOptionTitle)
+        call up:type(0,0,"Place calibration target on conveyor")
+        call up:type(0,1,"at the position p4. This will define")
+        call up:type(0,2,"the new origin of the conveyor's frame")
+        call up:type(0,3,"Press VIEW to display help diagram")
+        call up:type(0,4,"Press HERE to store the location")
+        call up:type(0,5,"Press NEXT when you're done")
+        call up:type(0,7,"Current origin location:")
+        call up:DisplayPt(trTrsf[0],8)
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    //
+    // Define Conveyor geometry
+    // Check Conveyor frame
+    //
+    case 26
+      if x_bRefresh==true
+        cls()
+        call BuildTitle(sListOfMessage[1]+" 7/8",sOptionTitle)
+        call up:type(0,0,"Jog the robot in X,Y,Z direction")
+        call up:type(0,1,"and check that it moves as expected")
+        call up:type(0,2,"X+ is the conveyor's moving direction")
+        call up:type(0,3,"Y+ is the across-conveyor direction")
+        call up:type(0,4,"  pointing away from the robot")
+        //call up:type(0,6,"Press NEXT when you're done")
+        call up:type(0,8,"Current frame coordinates:")
+        call up:DisplayPt(trTrsf[0],9)
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    //
+    // Define Conveyor geometry
+    // Store conveyor's data
+    //
+    case 27
+      if x_bRefresh==true
+        cls()
+        call BuildTitle(sListOfMessage[1]+" 8/8",sOptionTitle)
+        call up:type(0,0,"Select file to save the conveyor's data")
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    //
+    // Define conveyor geometry
+    // Adjust conveyor's frame alignment
+    //
+    case 28
+      if x_bRefresh==true
+        cls()
+        call BuildTitle(sListOfMessage[1]+" 6/8",sOptionTitle)
+        call up:type(0,0,"Warning, the conveyor's frame has an ")
+        call up:type(0,1,"unusual alignment with the robot's WORLD")
+        call up:type(0,3,"Press ADJUST to modify frame alignment")
+        call up:type(0,4,"Press NEXT to ignore this warning")
+        call up:type(0,7,"Position of the conveyor's frame:")
+        call up:DisplayPt(trTrsf[0],8)
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    //
+    case 29
+      if x_bRefresh==true
+        cls()
+        call BuildTitle(sListOfMessage[1]+" 6/8",sOptionTitle)
+        call up:type(0,0,"This adjustment  allows  setting the Z ")
+        call up:type(0,1,"field of all locations you've taught ")
+        call up:type(0,2,"to the same value. You can press :")
+        call up:type(0,3,"SELECT to copy the selected Z value")
+        call up:type(3,4,"into the 3 other locations")
+        call up:type(0,5,"AVERAGE to set all Z values to the mean")
+        call up:type(3,6,"value of the 4 locations.")
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    //
+    // ************************************
+    // *****  Define Sensor distance  *****
+    // ************************************
+    //
+    case 30
+      if x_bRefresh==true
+        cls()
+        call BuildTitle(sListOfMessage[2],sOptionTitle)
+        call up:type(0,0,"1.-Place the calibration target on the")
+        call up:type(0,1,"   conveyor, under the detection device.")
+        call up:type(0,2,"2.-Trigger robot/vision latch.")
+        call up:type(0,3,"   Make sure that a picture is taken and")
+        call up:type(0,4,"   that the Latched value is equal to")
+        call up:type(0,5,"   the Encoder value (see below).")
+        call up:type(0,6,"3.-Calibrate you vision system.")
+        call up:type(0,7,"4.-Press NEXT to proceed")
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    //
+    // Define Frame for Vision
+    // Display data
+    //
+    case 31
+      call up:type(0,10,"Encoder value : "+x_sCustomTxt)
+    break
+    case 32
+      call up:type(0,11,"Latched value : "+x_sCustomTxt)
+    break
+    case 33
+      if x_bRefresh==true
+        cls()
+        call up:type(0,1,"5.-Select one option:")
+        call up:type(0,2,"-Start the conveyor and stop it when the")
+        call up:type(0,3," target is in the robot's working area")
+        call up:type(0,4,"            ** Or **")
+        call up:type(0,5,"-Proceed if the target is already in the")
+        call up:type(0,6,"robot's working area.")
+        call up:type(0,8,"6.-Press NEXT to proceed")
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    case 34
+      if x_bRefresh==true
+        cls()
+        call BuildTitle(sListOfMessage[2],sOptionTitle)
+        call up:type(0,0,"Teach the origin of the frame")
+        call up:type(0,3,"Press HERE to store the location")
+        call up:type(0,4,"Press NEXT to continue")
+        call up:type(0,7,"Current origin location:")
+        call up:DisplayPt(trTrsf[0],8)
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    case 35
+      if x_bRefresh==true
+        cls()
+        call BuildTitle(sListOfMessage[2],sOptionTitle)
+        call up:type(0,0,"Teach the Xdirection of the frame")
+        call up:type(0,3,"Press HERE to store the location")
+        call up:type(0,4,"Press NEXT to continue")
+        call up:type(0,7,"Current Xdirection location:")
+        call up:DisplayPt(trTrsf[0],8)
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    case 36
+      if x_bRefresh==true
+        cls()
+        call BuildTitle(sListOfMessage[2],sOptionTitle)
+        call up:type(0,0,"Teach the Ydirection of the frame")
+        call up:type(0,3,"Press HERE to store the location")
+        call up:type(0,4,"Press NEXT to continue")
+        call up:type(0,7,"Current Ydirection location:")
+        call up:DisplayPt(trTrsf[0],8)
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    case 37
+      if x_bRefresh==true
+        cls()
+        call BuildTitle(sListOfMessage[2],sOptionTitle)
+        call up:type(0,1,"No conveyor motion detected")
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    case 38
+      if x_bRefresh==true
+        cls()
+        call BuildTitle(sListOfMessage[2],sOptionTitle)
+        call up:type(0,0,"The computed distance between vision and")
+        call up:type(0,1,"robot's working area is : "+x_sCustomTxt[0])
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    case 39
+      if x_bRefresh==true
+        cls()
+        call BuildTitle(sListOfMessage[2],sOptionTitle)
+        call up:type(0,0,"Select file to save the conveyor's data")
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    //
+    // Tracking Diagnostic
+    //
+    case 40
+      if x_bRefresh==true
+        cls()
+        call BuildTitle(sListOfMessage[3],sOptionTitle)
+        call up:type(0,0,"  ID  State  Ltchd Offs")
+        call up:type(30,0,"Encod val")
+        call up:type(30,3,"Fltrd val")
+        call up:type(30,6,"Conv speed")
+        call up:type(30,9,"Idx Push")
+        call up:type(30,11,"Idx Pull")
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    case 41
+      cls()
+      call BuildTitle(sListOfMessage[3],sOptionTitle)
+      call up:type(0,5,"Track. Parts : ")
+      call up:type(0,6,"Encoder OVFL : ")
+      call up:type(0,7,"Encoder UDFL : ")
+      call up:type(0,8,"Encoder counts: ")
+      call up:type(0,9,"Conveyor speed: ")
+      call up:displayMenu(sMenu[x_nMenu])
+    break
+    case 42
+      call up:type(0,8,"Part in Window: "+x_sCustomTxt)
+    break
+    // ****************************************
+    // *****  Setup parameter for the     *****
+    // *****     libraries                *****
+    // ****************************************
+    //
+    //  General parameter
+    case 50
+      cls()
+      call BuildTitle(sListOfMessage[5],"")
+    break
+    //
+    // Encoder library
+    //
+    case 51
+      cls()
+      call BuildTitle(sListOfMessage[6],"")
+    break
+    //
+    // Detection library
+    //
+    case 52
+      cls()
+      call BuildTitle(sListOfMessage[7],"")
+    break
+    //
+    // Conveyor library
+    //
+    case 53
+      cls()
+      call BuildTitle(sListOfMessage[8],"")
+    break
+    //
+    // Load a calibration file
+    //
+    case 60
+      if x_bRefresh==true
+        cls()
+        call up:type(0,0,"Create/Select a conveyor library")
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    //
+    // Select an encoder library
+    //
+    case 70
+      if x_bRefresh==true
+        cls()
+        //title(sListOfMessage[6]+" (1/1)")
+        call up:type(0,0,"Select an encoder library")
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    //
+    // Select a detection library
+    //
+    case 71
+      if x_bRefresh==true
+        cls()
+        //title(sListOfMessage[6]+" (1/1)")
+        call up:type(0,0,"Select a detection library")
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    //
+    // Select the conveyor type
+    //
+    case 72
+      if x_bRefresh==true
+        cls()
+        //title(sListOfMessage[6]+" (1/1)")
+        call up:type(0,0,"Select the conveyor type")
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    // ****************************************
+    // *****  Define Conveyor geometry    *****
+    // *****     CIRCULAR CONVEYOR        *****
+    // ****************************************
+    // Teach upstream end of the tracking window
+    case 90
+      if x_bRefresh==true
+        cls()
+        call BuildTitle(sListOfMessage[1]+" 1/8",sOptionTitle)
+        call up:type(0,0,"Place calibration target on conveyor")
+        call up:type(0,1,"to teach the first location")
+        call up:type(0,4,"Press HERE to store the location")
+        call up:type(0,5,"Press NEXT when you're done")
+        call up:type(0,6,"Current opposite upstream location : ")
+        call up:DisplayPt(trTrsf[0],7)
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    //
+    // Teach middle location
+    case 91
+      if x_bRefresh==true
+        cls()
+        call BuildTitle(sListOfMessage[1]+" 2/8",sOptionTitle)
+        call up:type(0,0,"Move the robot away from the target.")
+        call up:type(0,2,"Run the conveyor until the target has")
+        call up:type(0,3,"moved to the second location")
+        call up:type(0,5,"Make sure the target doesn't slip on")
+        call up:type(0,6,"the conveyor when it starts and stops")
+        call up:type(0,7,"Press NEXT when you're done")
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    //
+    case 92
+      if x_bRefresh==true
+        cls()
+        call BuildTitle(sListOfMessage[1]+" 3/8",sOptionTitle)
+        call up:type(0,0,"Without moving the calibration target")
+        call up:type(0,1,"jog again the robot on the target")
+        call up:type(0,3,"Press HERE to store the location")
+        call up:type(0,4,"Press NEXT when you're done")
+        call up:type(0,6,"Current intermediate location:")
+        call up:DisplayPt(trTrsf[0],7)
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    //
+    //
+    case 93
+      if x_bRefresh==true
+        cls()
+        call BuildTitle(sListOfMessage[1]+" 4/8",sOptionTitle)
+        call up:type(0,0,"Move the robot away from the target.")
+        call up:type(0,2,"Run the conveyor until the target has")
+        call up:type(0,3,"moved to the third location")
+        call up:type(0,5,"Make sure the target doesn't slip on")
+        call up:type(0,6,"the conveyor when it starts and stops")
+        call up:type(0,7,"Press NEXT when you're done")
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    //
+    // Teach downstream end of the tracking window
+    case 94
+      if x_bRefresh==true
+        cls()
+        call BuildTitle(sListOfMessage[1]+" 5/8",sOptionTitle)
+        call up:type(0,0,"Without moving the calibration target")
+        call up:type(0,1,"jog again the robot on the target")
+        call up:type(0,3,"Press HERE to store the location")
+        call up:type(0,4,"Press NEXT when you're done")
+        call up:type(0,6,"Current intermediate location:")
+        call up:DisplayPt(trTrsf[0],7)
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    //
+    // Teach downstream location
+    case 95
+      if x_bRefresh==true
+        cls()
+        call BuildTitle(sListOfMessage[1]+" 6/8",sOptionTitle)
+        call up:type(0,0,"Without moving the calibration target")
+        call up:type(0,1,"jog again the robot on the target")
+        call up:type(0,3,"Press HERE to store the location")
+        call up:type(0,4,"Press NEXT when you're done")
+        call up:type(0,6,"Current downstream location:")
+        call up:DisplayPt(trTrsf[0],7)
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    default
+    break
+  endSwitch
+  //
+  //-----------------
+  //  EVENT SECTION
+  //-----------------
+  //
+  if x_nMenu>0
+    call up:GetFKey(sMenu[x_nMenu],x_nSelectedMenu)
+  endIf
+end
+]]></Code>
+  </Program>
+</Programs>

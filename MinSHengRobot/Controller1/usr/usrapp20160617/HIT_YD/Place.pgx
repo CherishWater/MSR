@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="place" access="private" >
+    <Locals>
+      <Local name="l_bNoError" type="bool" xsi:type="array" size="1" />
+      <Local name="l_jAppro" type="joint" xsi:type="array" size="1" />
+      <Local name="l_nConvNum" type="num" xsi:type="array" size="1" />
+      <Local name="l_nError" type="num" xsi:type="array" size="1" />
+      <Local name="l_nMoveID" type="num" xsi:type="array" size="1" />
+      <Local name="l_nTrackStatus" type="num" xsi:type="array" size="1" />
+      <Local name="l_pAppro" type="pointRs" xsi:type="array" size="1" />
+      <Local name="l_pPlace" type="pointRs" xsi:type="array" size="1" />
+      <Local name="l_sToolStatus" type="string" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+  l_nConvNum=1
+  link(l_pPlace,world)
+  //che modify start
+  if nPlaceNum<0
+    nPlaceNum=3
+  endIf
+  _mLoad=mLoad
+  _mLoad.vel=mLoad.vel*nLoadRatio[nPlaceNum]
+  _mLoad.accel=mLoad.accel*nLoadRatio[nPlaceNum]*nLoadRatio[nPlaceNum]
+  _mLoad.decel=mLoad.decel*nLoadRatio[nPlaceNum]*nLoadRatio[nPlaceNum]
+  if nPlaceCycleNum>7
+    nPlaceCycleNum=0
+  endIf
+
+  //dControlVacuum[nPlaceNum]=false
+  l_pPlace=pPlace[nPlaceNum]
+  //end
+  // Place part
+  l_pAppro=appro(l_pPlace,{0,0,-nPlaceAppro,0,0,0})
+  l_bNoError=pointToJoint(tGripper,jHome,l_pAppro,l_jAppro)
+  call mot:getTrackStatus(l_nTrackStatus)
+  if l_nTrackStatus>0
+    // Use trackOff if the robot is synchronized
+    if l_bNoError
+      call mot:trackOffJ(l_jAppro,tGripper,_mLoad,l_nMoveID,l_nError)
+    else
+      call mot:trackOff(l_pAppro,tGripper,_mLoad,l_nMoveID,l_nError)
+    endIf
+  else
+    // Use movej if the robot is not synchronized
+    if l_bNoError
+      l_nMoveID=movej(l_jAppro,tGripper,_mLoad)
+    else
+      l_nMoveID=movej(l_pAppro,tGripper,_mLoad)
+    endIf
+  endIf
+  // wait permit signal
+  //wait(sFirstRStatus!="0")
+  //
+  wait(bIsPermitPlace==true)
+  wait(dPermitPlace[nPlaceNum]==true)
+  movel(l_pPlace,tGripper,mPlaceDown)
+  l_nMoveID=movel(l_pAppro,tGripper,mPlaceUp)
+  // check PartInTool if bPickDetection
+  if bPickDetection
+    //wait(getMoveId()>l_nMoveID-0.8)
+    wait(getMoveId()>l_nMoveID+nBlowID-1.2)
+    call getToolStatus(l_sToolStatus)
+  else
+    //wait(getMoveId()>l_nMoveID-0.2)
+    wait(getMoveId()>l_nMoveID+nBlowID-1.2)
+    _bPartInTool=false
+  endIf
+  //Blow
+  wait(getMoveId()>l_nMoveID+nBlowID-1)
+  _nBlowDelay=0.15
+  // send done signal
+  //dPlaceDone[nPlaceNum]=true
+  wait(getMoveId()>l_nMoveID+0.1)
+  delay(0)
+  //dPlaceDone[nPlaceNum]=false
+  if l_sToolStatus=="PartInTool" or _bPartInTool==false
+    // A part has been placed
+    _nCntPartsDone[l_nConvNum]=_nCntPartsDone[l_nConvNum]+1
+  endIf
+  delay(0)
+
+  //sServer=toString("",nPlaceCycleNum)
+  nPlaceCycleNum=nPlaceCycleNum+1
+  dPlaceDone[nPlaceNum]=true
+  wait(getMoveId()>l_nMoveID+0.4)
+  if nPlaceNum==3 and bSyn
+    do
+      sString=synServer
+    until (sString=="done")
+  endIf
+  if nPlaceNum==0
+    synServer="done"
+  endIf
+  nPlaceNum=nPlaceNum-1
+  nTestData[4]=nTestData[4]+1
+  //end
+
+end]]></Code>
+  </Program>
+</Programs>

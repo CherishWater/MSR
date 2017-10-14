@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="uSpy" access="public">
+    <Locals>
+      <Local name="lKey" type="num" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[
+begin
+  do
+    lKey=workingMode()
+    if lKey==4
+      userPage(false)
+    endIf
+    delay(0)
+    delay(0)
+  until false
+end
+]]></Code>
+  </Program>
+</Programs>

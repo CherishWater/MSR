@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="Menu" access="public">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_nMenu" type="num" xsi:type="element" />
+      <Parameter name="x_sCustomTxt" type="string" xsi:type="element" />
+    </Parameters>
+    <Code><![CDATA[
+begin
+  switch x_nMenu
+    case 1
+      cls()
+      call BuildTitle(sListOfMessage[0],sOptionTitle)
+      call up:type(0,1,"F1: Complete calibration sequence")
+      call up:type(0,2,"F2: Define scale factor")
+      call up:type(0,3,"F3: Conveyor geometry")
+      call up:type(0,4,"F4: Define frame for vision")
+      //call up:type(0,5,"F5: Conveyor diagnostic")
+      call up:type(0,6,"F6: New/Load conveyor library")
+      call up:type(0,7,"F7: Settings")
+      call up:type(0,8,"F8: Quit")
+      call up:type(10,10,"Selected Lib: "+x_sCustomTxt)
+      call up:typeMenu(1,"F1")
+      call up:typeMenu(2,"F2")
+      call up:typeMenu(3,"F3")
+      call up:typeMenu(4,"F4")
+      //call up:typeMenu(5, "F5")
+      call up:typeMenu(6,"F6")
+      call up:typeMenu(7,"F7")
+      call up:typeMenu(8,"F8")
+    break
+    default
+    break
+  endSwitch
+end
+]]></Code>
+  </Program>
+</Programs>

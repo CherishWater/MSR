@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="teach" access="public">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_tTool" type="tool" xsi:type="element" />
+      <Parameter name="x_fFrame" type="frame" xsi:type="element" />
+      <Parameter name="x_pLoc" type="point" xsi:type="array" use="reference" />
+      <Parameter name="x_nError" type="num" xsi:type="array" use="reference" />
+    </Parameters>
+    <Locals>
+      <Local name="l_i" type="num" xsi:type="array" size="1" />
+      <Local name="l_bFound" type="bool" xsi:type="array" size="1" />
+      <Local name="l_bExit" type="bool" xsi:type="array" size="1" />
+      <Local name="l_nError" type="num" xsi:type="array" size="1" />
+      <Local name="l_nObjectOffset" type="num" xsi:type="array" size="1" />
+      <Local name="l_str" type="string" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[
+begin
+  // This program records the encoder offset associated with the
+  // object, which ID is given by the detection Library. This encoder offset
+  // is used as reference to evaluate the shifting of the object laying
+  // on the conveyor.The program memorizes which object ID have been already
+  // calibrated
+  //
+  // Input Param
+  //  x_tTool   : Tool for motion
+  //  x_fFrame  : Reference frame in which the location must be taught
+  //
+  // Output Param
+  // x_pLoc   : Taught location
+  // x_nError : Error code
+  //    =0    : No error
+  //    =-1   : No object detected, not possible to teach anything
+  //
+  // Created 11-01-06                                   C.CURRIVAND
+  //----------------------------------------------------------------
+  //
+  // Initialisations
+  x_nError=0
+  l_bExit=false
+  l_bFound=false
+  // Check if an object has been detected
+  if nNumbOfUser[nIdxPull]!=0
+    nIdxCalib=0
+    if bAnd(cfg:nLog,cfg:nLOGMISC)==cfg:nLOGMISC
+      ? sConvNum+"(teach)>>CALIBRATING ID "+toString("",nQueueID[nIdxPull])
+    endIf
+    do
+      if bAnd(cfg:nLog,cfg:nLOGMISC)==cfg:nLOGMISC
+        l_str=sConvNum+"(teach)>>CalibratedID["+toString("",nIdxCalib)+"]: "+toString("",nCalibratedID[nIdxCalib])
+        l_str=l_str+"  DetectedID: "+toString("",nQueueID[nIdxPull])
+        l_str=l_str+"  CalibratedDist["+toString("",nIdxCalib)+"]: "+toString("",nCalibratedDist[nIdxPull])
+        ? l_str
+      endIf
+      // Check if ID has already been calibrated
+      l_bFound=(nCalibratedID[nIdxCalib]==nDEFAULTID) or (nQueueID[nIdxPull]==nCalibratedID[nIdxCalib])
+      if !l_bFound
+        nIdxCalib=nIdxCalib+1
+        l_bExit=(nIdxCalib>=size(nCalibratedID))
+      endIf
+    until l_bExit or l_bFound
+    //
+    // The object has not been calibrated (yet!)
+    if !l_bFound
+      if bAnd(cfg:nLog,cfg:nLOGMISC)==cfg:nLOGMISC
+        logMsg(sConvNum+"(teach)>>Object with ID "+toString("",nQueueID[nIdxPull])+" has never been calibrated,add to list")
+      endIf
+      resize(nCalibratedID,1,size(nCalibratedID)+1)
+      resize(nCalibratedDist,1,size(nCalibratedDist)+1)
+      // update data
+      nCalibratedID[nIdxCalib]=nQueueID[nIdxPull]
+      nCalibratedDist[nIdxCalib]=nENCSCALEFACTOR*(aioGet(enc:aiEncCurrentPos)-nEncLatchedVal[nIdxPull])-nDetection2Rob
+      l_nObjectOffset=0
+    else
+      // this object has aready been calibrated, compute offset between current position
+      // and position when it has been calibrated
+      if bAnd(cfg:nLog,cfg:nLOGMISC)==cfg:nLOGMISC
+        ? sConvNum+"(teach)>>Object with ID "+toString("",nQueueID[nIdxPull])+" is calibrated"
+      endIf
+      call getObjectOffset(nIdxPull,l_nObjectOffset,l_nError)
+    endIf
+    // returns robot position
+    x_pLoc.trsf=position(compose(here(x_tTool,world),fConveyor,{-l_nObjectOffset,0,0,0,0,0}),x_fFrame)
+    //
+    // saving data
+    x_nError=libSave()
+    if bAnd(cfg:nLog,cfg:nLOGMISC)==cfg:nLOGMISC
+      if x_nError==0
+        ? sConvNum+"(teach)>>Calibration data for ID "+toString("",nQueueID[nIdxPull])+" saved successfully"
+      else
+        ? sConvNum+"(teach)>>ERROR "+toString("",x_nError)+" while saving data for ID "+toString("",x_nError)
+      endIf
+    endIf
+  else
+    x_nError=-1
+    if bAnd(cfg:nLog,cfg:nLOGMISC)==cfg:nLOGMISC
+      ? sConvNum+"(teach)>>No object detected for teaching"
+    endIf
+  endIf
+end
+]]></Code>
+  </Program>
+</Programs>

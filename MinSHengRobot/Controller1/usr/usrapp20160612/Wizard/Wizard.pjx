@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Project xmlns="http://www.staubli.com/robotics/VAL3/Project/3" >
+  <Parameters version="s7.6.2" stackSize="10000" millimeterUnit="true" />
+  <Programs>
+    <Program file="DefineGeometry.pgx" />
+    <Program file="DefineScaleFact.pgx" />
+    <Program file="DefineSettings.pgx" />
+    <Program file="DefineVisFrame.pgx" />
+    <Program file="TrkDiagnostic.pgx" />
+    <Program file="_displayList.pgx" />
+    <Program file="_recordLoc.pgx" />
+    <Program file="buildOutputList.pgx" />
+    <Program file="chkScaraFrame.pgx" />
+    <Program file="convConfig.pgx" />
+    <Program file="convCreate.pgx" />
+    <Program file="convGetName.pgx" />
+    <Program file="convLoad.pgx" />
+    <Program file="convSelect.pgx" />
+    <Program file="init.pgx" />
+    <Program file="isInList.pgx" />
+    <Program file="main.pgx" />
+    <Program file="moveRobot.pgx" />
+    <Program file="moveTo.pgx" />
+    <Program file="readCFG.pgx" />
+    <Program file="readCNV.pgx" />
+    <Program file="readDET.pgx" />
+    <Program file="readENC.pgx" />
+    <Program file="start.pgx" />
+    <Program file="stop.pgx" />
+    <Program file="uInitTRSF.pgx" />
+    <Program file="uListTRSF.pgx" />
+    <Program file="writeCFG.pgx" />
+    <Program file="writeCNV.pgx" />
+    <Program file="writeDET.pgx" />
+    <Program file="writeENC.pgx" />
+  </Programs>
+  <Database>
+    <Data file="Wizard.dtx" />
+  </Database>
+  <Libraries>
+    <Library alias="cfg" path="Disk://Tracking/config/config.pjx" autoload="true" password="" />
+    <Library alias="cnv" path="Disk://Tracking/Templates/GenericConv/GenericConv.pjx" autoload="true" password="" />
+    <Library alias="det" path="Disk://Tracking/Templates/GenericDetect/GenericDetect.pjx" autoload="true" password="" />
+    <Library alias="enc" path="Disk://Tracking/Templates/GenericEnc/GenericEnc.pjx" autoload="true" password="" />
+    <Library alias="geometry" path="Disk://Tracking/Templates/Geometry/Geometry.pjx" autoload="false" password="" />
+    <Library alias="lang" path="Disk://Tracking/language/english/english.pjx" autoload="true" password="" />
+    <Library alias="pg" path="Disk://Tracking/Tools/EntryBox/EntryBox.pjx" autoload="true" password="" />
+    <Library alias="swap" path="Disk://Tracking/Swap/Swap.pjx" autoload="true" password="" />
+    <Library alias="up" path="Disk://Tracking/Tools/userPage/userPage.pjx" autoload="true" password="" />
+    <Library alias="ut" path="Disk://Tracking/Tools/util/util.pjx" autoload="true" password="" />
+    <Library alias="out" path="Disk://Tracking/io/outputs/outputs.pjx" autoload="true" password="" />
+    <Library alias="sck" path="Disk://Tracking/io/sockets/sockets.pjx" autoload="true" password="" />
+  </Libraries>
+  <Types>
+  </Types>
+</Project>

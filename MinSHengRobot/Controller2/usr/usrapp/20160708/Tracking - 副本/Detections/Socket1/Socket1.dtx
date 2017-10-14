@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Database xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Data/2">
+  <Datas>
+    <Data name="bCalibrating" access="public" xsi:type="array" type="bool" size="1">
+    </Data>
+    <Data name="bTaskDetOK" access="public" xsi:type="array" type="bool" size="1">
+    </Data>
+    <Data name="nLatchedValue" access="private" xsi:type="array" type="num" size="10">
+    </Data>
+    <Data name="nMaxNumOfObject" access="public" xsi:type="array" type="num" size="1">
+      <Value key="0" value="10" />
+    </Data>
+    <Data name="nNumOfPart" access="public" xsi:type="array" type="num" size="1">
+      <Value key="0" value="-1" />
+    </Data>
+    <Data name="nObjectID" access="private" xsi:type="array" type="num" size="10">
+      <Value key="0" value="-1" />
+      <Value key="1" value="-1" />
+      <Value key="2" value="-1" />
+      <Value key="3" value="-1" />
+      <Value key="4" value="-1" />
+      <Value key="5" value="-1" />
+      <Value key="6" value="-1" />
+      <Value key="7" value="-1" />
+      <Value key="8" value="-1" />
+      <Value key="9" value="-1" />
+    </Data>
+    <Data name="skFromRobot" access="private" xsi:type="array" type="sio" size="1">
+      <Value key="0" link="Socket\fromRobot_sk1" />
+    </Data>
+    <Data name="sDetNum" access="private" xsi:type="array" type="string" size="1">
+      <Value key="0" value="DET0" />
+    </Data>
+    <Data name="sErrorCode" access="private" xsi:type="array" type="string" size="6">
+      <Value key="1" value="Could not convert to num ID" />
+      <Value key="2" value="Could not convert to num X" />
+      <Value key="3" value="Could not convert to num Y" />
+      <Value key="4" value="Could not convert to num RZ" />
+      <Value key="5" value="Could not convert to num Encoder Latched Value" />
+    </Data>
+    <Data name="sTASK" access="private" xsi:type="array" type="string" size="1">
+      <Value key="0" value="detect0" />
+    </Data>
+    <Data name="trObjectPos" access="private" xsi:type="array" type="trsf" size="10">
+    </Data>
+  </Datas>
+</Database>

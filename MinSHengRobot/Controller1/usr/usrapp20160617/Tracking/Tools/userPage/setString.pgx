@@ -1,0 +1,127 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="setString">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_sMessageIn" type="string" xsi:type="element" />
+      <Parameter name="x_nDisplayWidth" type="num" xsi:type="array" use="reference" />
+      <Parameter name="x_nError" type="num" xsi:type="array" use="reference" />
+    </Parameters>
+    <Locals>
+      <Local name="l_i" type="num" xsi:type="array" size="1" />
+      <Local name="l_j" type="num" xsi:type="array" size="1" />
+      <Local name="l_IdxDelimiter" type="num" xsi:type="array" size="1" />
+      <Local name="l_nMsgLength" type="num" xsi:type="array" size="1" />
+      <Local name="l_nToAdd" type="num" xsi:type="array" size="1" />
+      <Local name="l_nDisplayWidth" type="num" xsi:type="array" size="1" />
+      <Local name="l_nTotalAdded" type="num" xsi:type="array" size="1" />
+      <Local name="l_nMemoDisplay" type="num" xsi:type="array" size="1" />
+      <Local name="l_nNumOfChar" type="num" xsi:type="array" size="1" />
+      <Local name="l_sToAdd" type="string" xsi:type="array" size="1" />
+      <Local name="l_sPattern" type="string" xsi:type="array" size="1" />
+      <Local name="l_sMessageIn" type="string" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[
+begin
+  // This routine format the inputs string to be displayed
+  // into a msgBox
+  //
+  // Input Param
+  // l_sMessageIn    : Message to be formatted
+  // x_nDisplayWidth : Width of the msgBox
+  //
+  // Output Param
+  // x_sMessageOut
+  // x_nError        : Error code
+  //
+  // Comments
+  // the length of the input message should not exceeds 128 char
+  //
+  // Created 23-02-05                                   C.CURRIVAND
+  //----------------------------------------------------------------
+  //          0123456789à123456789à123456789à123456789
+  l_sPattern="                                        "
+  //l_sPattern="----------------------------------------"
+  x_nError=0
+  l_nMsgLength=len(x_sMessageIn)
+  // the length of the message to display is 38
+  // Length of the screen on MCP is 40 - 2 char for the frame of the message box
+  l_nDisplayWidth=x_nDisplayWidth-2
+  if l_nMsgLength>128
+    x_sMessageIn=mid(x_sMessageIn,127,0)
+  endIf
+  if (l_nMsgLength<l_nDisplayWidth)
+    resize(sWrkString,1,1)
+    sWrkString[0]=x_sMessageIn
+  else
+    do
+      l_sMessageIn=x_sMessageIn
+      l_nMemoDisplay=l_nDisplayWidth
+      // Find " " in the input message
+      resize(sWrkString,1,1)
+      sWrkString[0]=""
+      l_j=0
+      while len(l_sMessageIn)>0
+        resize(nDelimiterCount,1,1)
+        nDelimiterCount[0]=0
+        l_i=0
+        l_IdxDelimiter=0
+        call _decode(l_sMessageIn,l_sMessageIn," ",1)
+        while (l_i<len(l_sMessageIn)) and (l_i<=l_nDisplayWidth)
+          if (mid(l_sMessageIn,1,l_i)==" ") and (l_i<l_nDisplayWidth)
+            if size(nDelimiterCount)-1<l_IdxDelimiter
+              insert(nDelimiterCount[size(nDelimiterCount)])
+            endIf
+            nDelimiterCount[l_IdxDelimiter]=l_i
+            l_IdxDelimiter=l_IdxDelimiter+1
+          endIf
+          // Build working string
+          if size(sWrkString)-1<l_j
+            insert(sWrkString[size(sWrkString)])
+          endIf
+          sWrkString[l_j]=sWrkString[l_j]+mid(l_sMessageIn,1,l_i)
+          //
+          l_i=l_i+1
+        endWhile
+        // Look for the last delimiter starting from end of string
+        if (find(sWrkString[l_j]," ")!=-1) and (len(sWrkString[l_j])!=len(l_sMessageIn))
+          // last char is blank char, remove it otherwise cut at last blank char found in sMessagIn
+          if right(sWrkString[l_j],1)==" "
+            l_nNumOfChar=max(len(l_sMessageIn)-len(sWrkString[l_j]),0)
+            sWrkString[l_j]=left(sWrkString[l_j],len(sWrkString[l_j])-1)
+          else
+            sWrkString[l_j]=left(sWrkString[l_j],nDelimiterCount[size(nDelimiterCount)-1]+1)
+            l_nNumOfChar=len(l_sMessageIn)-len(sWrkString[l_j])
+          endIf
+          //
+          l_nToAdd=roundDown((l_nDisplayWidth-len(sWrkString[l_j]))/(size(nDelimiterCount)))
+          if l_nToAdd>0
+            l_nTotalAdded=0
+            l_sToAdd=mid(l_sPattern,l_nToAdd,0)
+            for l_i=0 to size(nDelimiterCount)-1
+              sWrkString[l_j]=insert(sWrkString[l_j],l_sToAdd,nDelimiterCount[l_i]+1+l_nTotalAdded)
+              l_nTotalAdded=l_nTotalAdded+l_nToAdd
+            endFor
+          endIf
+        else
+          // there is no blank char
+          l_nNumOfChar=len(l_sMessageIn)-len(sWrkString[l_j])
+        endIf
+        // Check if working string is not too long
+        if len(sWrkString[l_j])>l_nDisplayWidth
+          l_nDisplayWidth=min(38,len(sWrkString[l_j]))
+          sWrkString[l_j]=left(sWrkString[l_j],len(sWrkString[l_j])-1)
+          l_nNumOfChar=len(l_sMessageIn)-len(sWrkString[l_j])
+        endIf
+        // Remove working string from input string
+        //l_nNumOfChar=len(l_sMessageIn)-len(sWrkString[l_j])
+        l_sMessageIn=right(l_sMessageIn,l_nNumOfChar)
+        //
+        l_j=l_j+1
+      endWhile
+    until (l_nDisplayWidth==l_nMemoDisplay)
+  endIf
+  x_nDisplayWidth=l_nDisplayWidth+2
+end
+]]></Code>
+  </Program>
+</Programs>

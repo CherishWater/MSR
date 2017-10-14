@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="flushQueue" access="public">
+    <Locals>
+      <Local name="l_i" type="num" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[
+begin
+  // This program flushes the queue of object
+  //
+  // Input param
+  //  none
+  //
+  // Output param
+  // none
+  //
+  // Created 25-09-07                                    C.CURRIVAND
+  //----------------------------------------------------------------
+  nIdxPush=nIdxPull=0
+  for l_i=0 to (nBufferSize-1)
+    nEncLatchedVal[l_i]=0
+    trDetectedCoord[l_i]=trDEFAULT
+    nQueueID[l_i]=nDEFAULTID
+    nNumbOfUser[l_i]=0
+  endFor
+end
+]]></Code>
+  </Program>
+</Programs>

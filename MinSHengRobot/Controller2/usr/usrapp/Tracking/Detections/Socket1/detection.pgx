@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="detection" access="private" >
+    <Locals>
+      <Local name="l_i" type="num" xsi:type="array" size="1" />
+      <Local name="l_nCntParts" type="num" xsi:type="array" size="1" />
+      <Local name="l_nError" type="num" xsi:type="array" size="1" />
+      <Local name="l_nID" type="num" xsi:type="array" size="1" />
+      <Local name="l_nLatchedValue" type="num" xsi:type="array" size="1" />
+      <Local name="l_nNumOfPart" type="num" xsi:type="array" size="1" />
+      <Local name="l_trObjectPos" type="trsf" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+  // This program detects the parts detected by another robot.
+  //  It has two operation modes:
+  //     1.- When working with a sensor and while calibrating
+  //          the distance from the sensor: It defines the ID
+  //          and the transformation (x,y and rz) of the detected part.
+  //          The conveyor library uses the latched encoder value given
+  //          by the encoder library.
+  //     2.- Normal operation: The ID, the transformation (x,y and rz)
+  //          and the latched encoder value are sent from another system
+  //          via a socket. The conveyor library uses the latched
+  //          encoder value given by this program. The latched encoder
+  //          values from the encoder library are not used.
+  //
+  // Input Param
+  //  none       : 
+  //
+  // Output Param
+  //  none       : 
+  //
+  //----------------------------------------------------------------
+  //
+  // Init Variables
+  l_nError=0
+  // Number of parts to be detected per cycle
+  l_nNumOfPart=1
+  // If the local variable "number of parts" is bigger than the global
+  //  variable, set the local variable to the size of the global variable.
+  l_nNumOfPart=sel(l_nNumOfPart>nMaxNumOfObject,nMaxNumOfObject,l_nNumOfPart)
+  //
+  // detection task running : unlock the task's conveyor when valtrack  begins
+  bTaskDetOK=true
+  //
+  do
+    //
+    if bCalibrating
+      // Operation mode 1
+      for l_i=0 to l_nNumOfPart-1
+        nObjectID[l_i]=-1
+        trObjectPos[l_i]={0,0,0,0,0,0}
+      endFor
+      nObjectID[0]=1
+      // Set number of detected parts.
+      // nNumOfPart is watched by the conveyor library.
+      //  Once nNumOfPart is set, the conveyor library will access
+      //  the variables nObjectID[] and trObjectPos[].
+      //  They must be fully updated before nNumOfPart is set.
+      nNumOfPart=l_nNumOfPart
+    else
+      // Operation mode 2
+      // Counter of detected parts
+      l_nCntParts=0
+      for l_i=0 to l_nNumOfPart-1
+        call readSocket(l_nID,l_trObjectPos,l_nLatchedValue,l_nError)
+        // If a good telegram has been received, then update global
+        //  variables
+        if l_nError==0
+          nObjectID[l_i]=l_nID
+          trObjectPos[l_i]=l_trObjectPos
+          nLatchedValue[l_i]=l_nLatchedValue
+          l_nCntParts=l_nCntParts+1
+        else
+          nObjectID[l_i]=-1
+          trObjectPos[l_i]={0,0,0,0,0,0}
+          nLatchedValue[l_i]=0
+        endIf
+      endFor
+      // If the library didn't switch to calibration mode, set number
+      //  of detected parts.
+      // nNumOfPart is watched by the conveyor library.
+      //  Once nNumOfPart is set, the conveyor library will access
+      //  the variables nObjectID[], trObjectPos[] and nLatchedValue[].
+      //  They must be fully updated before nNumOfPart is set.
+      nNumOfPart=l_nCntParts
+    endIf
+    // 
+    // Once data have been read by conveyor library
+    // nNumOfPart is reset
+    wait(nNumOfPart==-1)
+    //
+    delay(0)
+  until false
+end]]></Code>
+  </Program>
+</Programs>

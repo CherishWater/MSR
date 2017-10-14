@@ -1,0 +1,133 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="detection" access="private" >
+    <Locals>
+      <Local name="l_ImageNumber" type="num" xsi:type="array" size="1" />
+      <Local name="l_ImageNumber0" type="num" xsi:type="array" size="1" />
+      <Local name="l_bResult" type="bool" xsi:type="array" size="1" />
+      <Local name="l_bVisOK" type="bool" xsi:type="array" size="1" />
+      <Local name="l_i" type="num" xsi:type="array" size="1" />
+      <Local name="l_j" type="num" xsi:type="array" size="1" />
+      <Local name="l_nCompteur" type="num" xsi:type="array" size="1" />
+      <Local name="l_nNum" type="num" xsi:type="array" size="1" />
+      <Local name="l_nNumOfPart" type="num" xsi:type="array" size="1" />
+      <Local name="l_nRow" type="num" xsi:type="array" size="1" />
+      <Local name="l_sData" type="string" xsi:type="array" size="1" />
+      <Local name="l_sMessage" type="string" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+  // This program reads the ID and the transformation of the parts
+  // detected by the camera.
+  //
+  // Input Param
+  //  none       : 
+  //
+  // Output Param
+  //  none       : 
+  //
+  //----------------------------------------------------------------
+  //
+  //init
+  call initvis(l_bVisOK)
+  title(scVision,"视觉通讯数据")
+  //设置终止符 $
+  sioCtrl(skVision,"endOfString",36)
+  // detection task running : unlock the task's conveyor when valtrack  begins
+  bTaskDetOK=true
+  //读取相机数据
+  l_ImageNumber0=-1
+  do
+    wait(nNumOfPart==-1)
+    l_sData=""
+    do
+      l_sData=skVision
+      delay(0)
+    until (l_sData!="")
+    if bDebug
+      cls(scVision)
+      putln(scVision,"Data="+l_sData)
+      logMsg("Data="+l_sData+" "+toString(".2",clock())+" s")
+    endIf
+    //解析数据，得到拍照位数
+    call getValue(l_sData,l_ImageNumber,l_bResult)
+    l_ImageNumber0=l_ImageNumber
+    if bDebug
+      putln(scVision,"ImageNumber="+toString("",l_ImageNumber))
+    endIf
+    if l_bResult==false
+      popUpMsg("获得拍照位数错误！")
+    endIf
+
+    //解析数据，得到物件数量
+    call getValue(l_sData,l_j,l_bResult)
+    if bDebug
+      putln(scVision,"PartNumber="+toString("",l_j))
+    endIf
+    if l_bResult==false
+      popUpMsg("获得物件数量错误！")
+    endIf
+    l_j=sel(l_j>nMaxNumOfObject,nMaxNumOfObject,l_j)
+
+    // Initialize counter of parts already treated.
+    l_nNumOfPart=0
+    if l_j>0
+      for l_i=0 to l_j-1
+        //ID定为1
+        nObjectID[l_nNumOfPart]=1
+        l_bResult=true
+
+        //解析数据，得到X坐标
+        call getValue(l_sData,trObjectPos[l_nNumOfPart].x,l_bResult)
+        if bDebug
+          putln(scVision,"X"+toString("",l_nNumOfPart+1)+"="+toString("0.2",trObjectPos[l_nNumOfPart].x))
+        endIf
+        if l_bResult==false
+          popUpMsg("获得第"+toString("",l_nNumOfPart+1)+"个物件X坐标错误！")
+        endIf
+
+        //解析数据，得到Y坐标
+        call getValue(l_sData,trObjectPos[l_nNumOfPart].y,l_bResult)
+        if bDebug
+          putln(scVision,"Y"+toString("",l_nNumOfPart+1)+"="+toString("0.2",trObjectPos[l_nNumOfPart].y))
+        endIf
+        if l_bResult==false
+          popUpMsg("获得第"+toString("",l_nNumOfPart+1)+"个物件y坐标错误！")
+        endIf
+
+        //解析数据，得到Rz坐标
+        call getValue(l_sData,trObjectPos[l_nNumOfPart].rz,l_bResult)
+        if bDebug
+          putln(scVision,"Rz"+toString("",l_nNumOfPart+1)+"="+toString("0.2",trObjectPos[l_nNumOfPart].rz))
+        endIf
+        if l_bResult==false
+          popUpMsg("获得第"+toString("",l_nNumOfPart+1)+"个物件Rz坐标错误！")
+        endIf
+
+        //Increases the counter of parts already treated
+        l_nNumOfPart=sel(l_bResult==false,l_nNumOfPart,l_nNumOfPart+1)
+      endFor
+
+      //给识别到的物件按X方向排序
+      call sortObjects(l_nNumOfPart)
+    endIf
+    // Set number of detected parts.
+    // nNumOfPart is watched by the conveyor library
+    // Once nNumOfPart is set, the conveyor library will access
+    //  the variables nObjectID[] and trObjectPos[].
+    //  They must be fully updated before nNumOfPart is set.
+    nNumOfPart=l_nNumOfPart
+    //send l_ImageNumber and  $ to vision
+    //clearBuffer(skVision)
+    skVision=toString("",l_ImageNumber)
+
+    //logMsg("Send:"+toString("",l_ImageNumber)+" :"+toString("0.2",clock()))
+    //sioSet(skVision,36)
+    // Once data have been read by conveyor library
+    // nNumOfPart is reset
+    //wait(nNumOfPart==-1)
+    //
+    delay(0)
+  until false
+end]]></Code>
+  </Program>
+</Programs>

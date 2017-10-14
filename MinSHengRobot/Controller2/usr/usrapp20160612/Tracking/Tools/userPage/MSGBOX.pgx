@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="msgBox" access="public">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_sMessage" type="string" xsi:type="element" />
+      <Parameter name="x_nBoxWidth" type="num" xsi:type="element" />
+      <Parameter name="x_sChoice" type="string" xsi:type="element" />
+      <Parameter name="x_nSelectedFKey" type="num" xsi:type="array" use="reference" />
+    </Parameters>
+    <Locals>
+      <Local name="l_i" type="num" xsi:type="array" size="1" />
+      <Local name="l_nKeyPressed" type="num" xsi:type="array" size="1" />
+      <Local name="l_nError" type="num" xsi:type="array" size="1" />
+      <Local name="l_nRow" type="num" xsi:type="array" size="1" />
+      <Local name="l_nCol" type="num" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[
+begin
+  // This program displays a message box on the MCP
+  // and wait for the answer of the user.
+  //
+  // Input param
+  // x_sMessage    : Message to display
+  // x_nBoxWidth   : width of the message box to display
+  // x_sChoice     : Different choices for the user (typically YES  NO  CANCEL)
+  //
+  // Output param
+  // x_nSelectedFKey  : Number of the functio n key pressed by user
+  //        range is 1 to 8
+  //
+  // Created 23-02-05                           C.CURRIVAND
+  //------------------------------------------------------------------
+  //
+  // Set default width if parameter is not consistent
+  if x_nBoxWidth<=0
+    x_nBoxWidth=5
+  endIf
+  l_nRow=3
+  //
+  // Format the message to display (result is array of string called sWrkString[])
+  // BoxWidth may be adjusted if one string is longer than boxWidth
+  call setString(x_sMessage,x_nBoxWidth,l_nError)
+  l_nCol=roundDown((40-x_nBoxWidth)/2)
+  //
+  // display message Box
+  nTxtBoxCol=l_nCol
+  nTxtBoxRow=l_nRow
+  nTxtBoxWidth=x_nBoxWidth-2
+  call msgBoxDisplay(x_nBoxWidth)
+  //
+  // Erase last line of screen
+  call clear(0,13)
+  call displayMenu(x_sChoice)
+  do
+    call GetFKey(x_sChoice,l_nKeyPressed)
+    delay(0)
+  until (l_nKeyPressed>=1) and (l_nKeyPressed<=8)
+  x_nSelectedFKey=l_nKeyPressed
+end
+]]></Code>
+  </Program>
+</Programs>

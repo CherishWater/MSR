@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="goHome" access="private" >
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1" >
+      <Parameter name="x_nMoveID" type="num" use="reference" xsi:type="element" dimensions="1" />
+    </Parameters>
+    <Locals>
+      <Local name="l_nError" type="num" xsi:type="array" size="1" />
+      <Local name="l_nTrackStatus" type="num" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+  // This program sends the robot to the jHome position. If the
+  //  robot is synchronized with a conveyor, the program uses a
+  //  de-synchronization move instruction, otherwise the program
+  //  uses a standard move instruction.
+  //
+  // Input parameters
+  //  None            :
+  //
+  // Output parameters
+  //  x_nMoveID       : Motion stack ID for this move
+  //
+  //----------------------------------------------------------------
+  //
+  _bSentToHome=true
+  //
+  call mot:getTrackStatus(l_nTrackStatus)
+  if l_nTrackStatus>0
+    // Use trackOff if the robot is synchronized
+    call mot:trackOffJ(jHome,tGripper,mNomSpeed,x_nMoveID,l_nError)
+  else
+    // Use movej if the robot is not synchronized
+    x_nMoveID=movej(jHome,tGripper,mNomSpeed)
+  endIf
+  //
+end]]></Code>
+  </Program>
+</Programs>

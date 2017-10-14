@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="getDetectDist" access="private" >
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1" >
+      <Parameter name="x_nConvNum" type="num" use="value" xsi:type="element" dimensions="1" />
+      <Parameter name="x_nIdx" type="num" use="value" xsi:type="element" dimensions="1" />
+      <Parameter name="x_nDetectDist" type="num" use="reference" xsi:type="array" dimensions="1" />
+      <Parameter name="x_nError" type="num" use="reference" xsi:type="array" dimensions="1" />
+    </Parameters>
+    <Locals>
+      <Local name="l_pDummy" type="point" xsi:type="array" size="1" />
+      <Local name="l_pPoint" type="point" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+  // This program return the distance in between the detection
+  // device and the frame of the conveyor
+  //
+  // Input param
+  //  x_nIdx  : Index of the object in the queue
+  //
+  // Output param
+  //  x_nDetectDist : Distance
+  //  x_nError: Error code
+  //    0 : No error
+  //    1 : No object selected
+  //    2 : Object with requested ID has not been calibrated
+  //
+  //----------------------------------------------------------------
+  //
+  //
+  switch x_nConvNum
+    case 0
+      call cnv0:getDetectDist(x_nIdx,x_nDetectDist,x_nError)
+    break
+    case 1
+      call cnv1:getDetectDist(x_nIdx,x_nDetectDist,x_nError)
+    break
+  endSwitch
+end]]></Code>
+  </Program>
+</Programs>

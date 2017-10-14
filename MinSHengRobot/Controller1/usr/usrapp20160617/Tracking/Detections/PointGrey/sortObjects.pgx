@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="sortObjects" access="private" >
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1" >
+      <Parameter name="x_nNumOfPart" type="num" use="value" xsi:type="element" dimensions="1" />
+    </Parameters>
+    <Locals>
+      <Local name="l_nI" type="num" xsi:type="array" size="1" />
+      <Local name="l_nJ" type="num" xsi:type="array" size="1" />
+      <Local name="l_nMaxIndex" type="num" xsi:type="array" size="1" />
+      <Local name="l_nMaxValue" type="num" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+  // This program sorts the parts from the part with the largest X
+  //  value to the smallest X value. This particular order is
+  //  convenient when the orientation of the detection frame has the
+  //  same orientation as the conveyor frame because the first part
+  //  on the queue should be the first part to arrive into the
+  //  tracking window.
+  //
+  //----------------------------------------------------------------
+  //
+  // Init variables
+  l_nMaxIndex=0
+  //
+  // Sort parts from the largest X to the smallest X
+  for l_nJ=0 to x_nNumOfPart-1
+    // Find the largest X
+    l_nMaxValue=-power(2,100)
+    for l_nI=0 to x_nNumOfPart-1
+      if trObjectPos[l_nI].x>l_nMaxValue and nObjectID[l_nI]>0
+        l_nMaxValue=trObjectPos[l_nI].x
+        l_nMaxIndex=l_nI
+      endIf
+    endFor
+    // Copy largest
+    oTempQueue[l_nJ].nID=nObjectID[l_nMaxIndex]
+    oTempQueue[l_nJ].trTrsf=trObjectPos[l_nMaxIndex]
+    oTempQueue[l_nJ].nLatchedValue=nLatchedValue[l_nMaxIndex]
+    // Erase largest
+    nObjectID[l_nMaxIndex]=-1
+  endFor
+  //
+  // Copy sorted values
+  for l_nI=0 to x_nNumOfPart-1
+    nObjectID[l_nI]=oTempQueue[l_nI].nID
+    trObjectPos[l_nI]=oTempQueue[l_nI].trTrsf
+    nLatchedValue[l_nI]=oTempQueue[l_nI].nLatchedValue
+  endFor
+end]]></Code>
+  </Program>
+</Programs>

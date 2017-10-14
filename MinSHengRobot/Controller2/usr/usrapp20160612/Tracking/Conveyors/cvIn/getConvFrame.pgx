@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="getConvFrame" access="public" >
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1" >
+      <Parameter name="x_fConveyor" type="frame" use="reference" xsi:type="element" dimensions="1" />
+      <Parameter name="x_fRefFrame" type="frame" use="value" xsi:type="element" dimensions="1" />
+      <Parameter name="x_nError" type="num" use="reference" xsi:type="element" dimensions="1" />
+    </Parameters>
+    <Locals>
+      <Local name="l_sCustomTxt" type="string" xsi:type="array" size="2" />
+    </Locals>
+    <Code><![CDATA[begin
+  // This program returns the position of the conveyor frame
+  // in the réference frame passed as parameter
+  //
+  // Input param
+  //  x_fRefFrame   : Reference frame in which the position of the conveyor
+  //                frame must be returned
+  //
+  // Output param
+  //  x_fConveyor   : Conveyor frame
+  //  x_nError      : Error code
+  //    0    --> No error
+  //    14   --> Conveyor library not started, the frame cannot be computed.
+  //
+  // Created 7-03-08                                   C.CURRIVAND
+  //----------------------------------------------------------------
+  x_nError=0
+  if bInit
+    x_fConveyor.trsf=position(fConveyor,x_fRefFrame)
+  else
+    x_nError=14
+    // Prepare clear text error message
+    l_sCustomTxt[0]=sConveyorName
+    l_sCustomTxt[1]="conveyor"
+    call ut:addStrToString(lang:sListOfMessage[x_nError],sErrorMessage,"",l_sCustomTxt)
+  endIf
+end]]></Code>
+  </Program>
+</Programs>

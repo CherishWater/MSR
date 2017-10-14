@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="getObjectLatch" access="public">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_nIdx" type="num" xsi:type="element" />
+      <Parameter name="x_nLatchedVal" type="num" xsi:type="array" use="reference" />
+    </Parameters>
+    <Code><![CDATA[
+begin
+  // This program returns the latched encoder value of the detected object.
+  //  This is useful only when the latched encoder value is given by the
+  //  detection library and not by the encoder library, like in the case
+  //  of the detection library "Socket".
+  //
+  // Input param
+  //    x_nIdx         : Position of the object in the queue.
+  //
+  // Output param
+  //    nObjectLatch   : Latched encoder value read from a socket.
+  //
+  //
+  //----------------------------------------------------------------
+  // 
+  x_nLatchedVal=nLatchedValue[x_nIdx]
+  //
+end
+]]></Code>
+  </Program>
+</Programs>

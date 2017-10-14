@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="transferQueue" access="private" >
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1" >
+      <Parameter name="x_nConvNum" type="num" use="value" xsi:type="element" dimensions="1" />
+    </Parameters>
+    <Locals>
+      <Local name="l_nError" type="num" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+  // This program sends to the next robot the objects presents on
+  //  the transfer queue.
+  //
+  // Input parameters
+  //  x_nConvNum      : Conveyor number
+  //
+  // Output parameters
+  //  None            :
+  //
+  //----------------------------------------------------------------
+  //
+  clearBuffer(skToRobot[x_nConvNum])
+  do
+    // If the ID of the next element of the queue is greater than -1,
+    //  it means that the element contains the information of an object,
+    //  therefore it has to be sent to the next robot.
+    if _oTransferQueue[x_nConvNum,_nPullIndexTQ[x_nConvNum]].nID>-1
+      // Send the object to the next robot
+      call mot:sendToNextRobot(skToRobot[x_nConvNum],0,_oTransferQueue[x_nConvNum,_nPullIndexTQ[x_nConvNum]].nID,_oTransferQueue[x_nConvNum,_nPullIndexTQ[x_nConvNum]].trTrsf,_oTransferQueue[x_nConvNum,_nPullIndexTQ[x_nConvNum]].nLatchedValue,l_nError)
+      if l_nError>0
+        popUpMsg("Part not sent, error code over skToRobot["+toString("",x_nConvNum)+"]: "+toString("",l_nError))
+      endIf
+      // Erase the object from the queue.
+      _oTransferQueue[x_nConvNum,_nPullIndexTQ[x_nConvNum]].nLatchedValue=0
+      _oTransferQueue[x_nConvNum,_nPullIndexTQ[x_nConvNum]].trTrsf={0,0,0,0,0,0}
+      // The last value erased is the ID. The program send2NextRob is looking to
+      //  this value in order to know if the element of the queue is free.
+      _oTransferQueue[x_nConvNum,_nPullIndexTQ[x_nConvNum]].nID=-1
+      _nPullIndexTQ[x_nConvNum]=(_nPullIndexTQ[x_nConvNum]+1)%size(_oTransferQueue,2)
+    endIf
+    delay(0)
+  until false
+end]]></Code>
+  </Program>
+</Programs>

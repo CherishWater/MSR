@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="readCFG" access="private" >
+    <Locals>
+      <Local name="l_nError" type="num" xsi:type="array" size="1" />
+      <Local name="l_nItem" type="num" xsi:type="array" size="1" />
+      <Local name="l_sValue" type="string" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+  l_nItem=0
+  resize(sCaption,1,pg:nNumOfTxtBox)
+  call pg:getCaption(sCaption)
+  // Read current value of the Tool from config library
+  //X
+  call ut:_toString(cfg:tPointer.trsf.x,".3",l_sValue)
+  call pg:setFieldValue(sCaption[l_nItem],l_sValue,l_nError)
+  l_nItem=l_nItem+1
+  //Y
+  call ut:_toString(cfg:tPointer.trsf.y,".3",l_sValue)
+  call pg:setFieldValue(sCaption[l_nItem],l_sValue,l_nError)
+  l_nItem=l_nItem+1
+  //Z
+  call ut:_toString(cfg:tPointer.trsf.z,".3",l_sValue)
+  call pg:setFieldValue(sCaption[l_nItem],l_sValue,l_nError)
+  l_nItem=l_nItem+1
+  //RX
+  call ut:_toString(cfg:tPointer.trsf.rx,".3",l_sValue)
+  call pg:setFieldValue(sCaption[l_nItem],l_sValue,l_nError)
+  l_nItem=l_nItem+1
+  //RY
+  call ut:_toString(cfg:tPointer.trsf.ry,".3",l_sValue)
+  call pg:setFieldValue(sCaption[l_nItem],l_sValue,l_nError)
+  l_nItem=l_nItem+1
+  //RZ
+  call ut:_toString(cfg:tPointer.trsf.rz,".3",l_sValue)
+  call pg:setFieldValue(sCaption[l_nItem],l_sValue,l_nError)
+  l_nItem=l_nItem+1
+  // Approach TRSF
+  // X value
+  call ut:_toString(cfg:trApproach.x,".3",l_sValue)
+  call pg:setFieldValue(sCaption[l_nItem],l_sValue,l_nError)
+  l_nItem=l_nItem+1
+  // Y value
+  call ut:_toString(cfg:trApproach.y,".3",l_sValue)
+  call pg:setFieldValue(sCaption[l_nItem],l_sValue,l_nError)
+  l_nItem=l_nItem+1
+  // Z value
+  call ut:_toString(cfg:trApproach.z,".3",l_sValue)
+  call pg:setFieldValue(sCaption[l_nItem],l_sValue,l_nError)
+  l_nItem=l_nItem+1
+  //
+  // Event logging
+  call ut:_toString(cfg:nLog,"",l_sValue)
+  call pg:setFieldValue(sCaption[l_nItem],l_sValue,l_nError)
+  l_nItem=l_nItem+1
+  // Version
+  call pg:setFieldValue(sCaption[l_nItem],cfg:sVERSION,l_nError)
+  l_nItem=l_nItem+1
+end]]></Code>
+  </Program>
+</Programs>

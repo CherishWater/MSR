@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="getNextID" access="public" >
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1" >
+      <Parameter name="x_nConvNum" type="num" use="value" xsi:type="element" dimensions="1" />
+      <Parameter name="x_nNextID" type="num" use="reference" xsi:type="array" dimensions="1" />
+    </Parameters>
+    <Code><![CDATA[begin
+  // This program returns the number of the next available ID
+  //
+  // Input Param
+  //  x_nConvNum  : Conveyor number
+  //
+  // Output Param
+  //  x_nNextID : value of the next partID in the stack
+  //        -1 --> No Part Available
+  //
+  //----------------------------------------------------------------
+  //
+  switch x_nConvNum
+    case 0
+      call cnv0:getNextID(x_nNextID)
+    break
+    case 1
+      call cnv1:getNextID(x_nNextID)
+    break
+  endSwitch
+end]]></Code>
+  </Program>
+</Programs>

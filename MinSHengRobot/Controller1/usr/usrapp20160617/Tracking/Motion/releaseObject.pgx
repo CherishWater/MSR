@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="releaseObject" access="private" >
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1" >
+      <Parameter name="x_nIndex" type="num" use="value" xsi:type="element" dimensions="1" />
+    </Parameters>
+    <Code><![CDATA[begin
+  switch nLinkedTo[x_nIndex]
+    case 0
+      call cnv0:releaseObject(nPosInQueue[x_nIndex])
+    break
+    case 1
+      call cnv1:releaseObject(nPosInQueue[x_nIndex])
+    break
+  endSwitch
+  nLinkedTo[x_nIndex]=-1
+  nPosInQueue[x_nIndex]=-1
+end]]></Code>
+  </Program>
+</Programs>

@@ -1,0 +1,148 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Database xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Data/2">
+  <Datas>
+    <Data name="bIsScara" access="private" xsi:type="array" type="bool" size="1">
+      <Value key="0" value="true" />
+    </Data>
+    <Data name="bLinear" access="private" xsi:type="array" type="bool" size="1">
+      <Value key="0" value="true" />
+    </Data>
+    <Data name="bLizOK" access="private" xsi:type="array" type="bool" size="1">
+      <Value key="0" value="true" />
+    </Data>
+    <Data name="bReset" access="private" xsi:type="array" type="bool" size="1">
+    </Data>
+    <Data name="bSkipVersionChk" access="private" xsi:type="array" type="bool" size="1">
+    </Data>
+    <Data name="bStopAll" access="private" xsi:type="array" type="bool" size="1">
+    </Data>
+    <Data name="bThruDwnEnabled" access="private" xsi:type="array" type="bool" size="1">
+    </Data>
+    <Data name="bThruUpEnabled" access="private" xsi:type="array" type="bool" size="1">
+    </Data>
+    <Data name="doThruDwnLimit" access="private" xsi:type="array" type="dio" size="1">
+    </Data>
+    <Data name="doThruUpLimit" access="private" xsi:type="array" type="dio" size="1">
+    </Data>
+    <Data name="fConveyor" access="private" xsi:type="array" type="frame" size="1">
+      <Value key="0" x="650.958732" y="458.882506" z="-86.396059" rx="0.033285" ry="0.199699" rz="-179.551413" fatherId="world[0]" />
+    </Data>
+    <Data name="fMobileFrame" access="private" xsi:type="array" type="frame" size="10">
+      <Value key="0" x="3129.225307" fatherId="fConveyor[0]" />
+      <Value key="1" x="3129.220405" fatherId="fConveyor[0]" />
+      <Value key="2" x="3129.171164" fatherId="fConveyor[0]" />
+      <Value key="3" fatherId="fConveyor[0]" />
+      <Value key="4" fatherId="fConveyor[0]" />
+      <Value key="5" fatherId="fConveyor[0]" />
+      <Value key="6" fatherId="fConveyor[0]" />
+      <Value key="7" fatherId="fConveyor[0]" />
+      <Value key="8" fatherId="fConveyor[0]" />
+      <Value key="9" fatherId="fConveyor[0]" />
+    </Data>
+    <Data name="mTrackOff" access="private" xsi:type="array" type="mdesc" size="1">
+      <Value key="0" accel="25" vel="50" decel="25" blend="cartesian" leave="20" reach="20" />
+    </Data>
+    <Data name="mTrackOn" access="private" xsi:type="array" type="mdesc" size="1">
+      <Value key="0" accel="169" vel="130" decel="169" blend="cartesian" leave="20" reach="20" />
+    </Data>
+    <Data name="mTracking" access="private" xsi:type="array" type="mdesc" size="1">
+    </Data>
+    <Data name="nCnvSynch" access="private" xsi:type="array" type="num" size="1">
+    </Data>
+    <Data name="nConveyorSpeed" access="private" xsi:type="array" type="num" size="1">
+      <Value key="0" value="518.670703" />
+    </Data>
+    <Data name="nDEFAULTTRKZONE" access="private" xsi:type="array" type="num" size="1">
+      <Value key="0" value="-99" />
+    </Data>
+    <Data name="nIdxID" access="private" xsi:type="array" type="num" size="1">
+    </Data>
+    <Data name="nIdxStatus" access="private" xsi:type="array" type="num" size="1">
+    </Data>
+    <Data name="nLinkedTo" access="private" xsi:type="array" type="num" size="10">
+      <Value key="3" value="-1" />
+      <Value key="4" value="-1" />
+      <Value key="5" value="-1" />
+      <Value key="6" value="-1" />
+      <Value key="7" value="-1" />
+      <Value key="8" value="-1" />
+      <Value key="9" value="-1" />
+    </Data>
+    <Data name="nMAXMOBILEFRAME" access="private" xsi:type="array" type="num" size="1">
+      <Value key="0" value="10" />
+    </Data>
+    <Data name="nMobFrameSync" access="private" xsi:type="array" type="num" size="1">
+      <Value key="0" value="-1" />
+    </Data>
+    <Data name="nPosInQueue" access="private" xsi:type="array" type="num" size="10">
+      <Value key="0" value="2" />
+      <Value key="1" value="2" />
+      <Value key="2" value="2" />
+      <Value key="3" value="-1" />
+      <Value key="4" value="-1" />
+      <Value key="5" value="-1" />
+      <Value key="6" value="-1" />
+      <Value key="7" value="-1" />
+      <Value key="8" value="-1" />
+      <Value key="9" value="-1" />
+    </Data>
+    <Data name="nStatus" access="private" xsi:type="array" type="num" size="1">
+    </Data>
+    <Data name="nTrackZonPrev" access="private" xsi:type="array" type="num" size="1">
+      <Value key="0" value="-99" />
+    </Data>
+    <Data name="nTrackingZone" access="private" xsi:type="array" type="num" size="1">
+      <Value key="0" value="-99" />
+    </Data>
+    <Data name="pInterTrack_RS" access="private" xsi:type="array" type="pointRs" size="1">
+      <Value key="0" fatherId="fMobileFrame[0]" />
+    </Data>
+    <Data name="pTrackOff_RS" access="private" xsi:type="array" type="pointRs" size="1">
+      <Value key="0" x="-127.749433" y="517.878584" z="103.849179" rx="-179.965152" ry="-0.199433" rz="0.448706" shoulder="lefty" fatherId="fConveyor[0]" />
+    </Data>
+    <Data name="pTrackOn_RS" access="private" xsi:type="array" type="pointRs" size="1">
+      <Value key="0" x="72.083546" y="72.428021" z="77.085378" rx="-0.209053" ry="-179.916469" rz="-18.008681" shoulder="righty" fatherId="fMobileFrame[2]" />
+    </Data>
+    <Data name="pTracking_RS" access="private" xsi:type="array" type="pointRs" size="1">
+      <Value key="0" fatherId="fMobileFrame[0]" />
+    </Data>
+    <Data name="pInterTrack" access="private" xsi:type="array" type="pointRx" size="1">
+      <Value key="0" fatherId="fMobileFrame[0]" />
+    </Data>
+    <Data name="pTrackOff" access="private" xsi:type="array" type="pointRx" size="1">
+      <Value key="0" fatherId="fConveyor[0]" />
+    </Data>
+    <Data name="pTrackOn" access="private" xsi:type="array" type="pointRx" size="1">
+      <Value key="0" fatherId="fMobileFrame[0]" />
+    </Data>
+    <Data name="pTracking" access="private" xsi:type="array" type="pointRx" size="1">
+      <Value key="0" fatherId="fMobileFrame[0]" />
+    </Data>
+    <Data name="sConveyorList" access="private" xsi:type="array" type="string" size="1">
+      <Value key="0" value="cvIn" />
+    </Data>
+    <Data name="sErrMsgList" access="private" xsi:type="array" type="string" size="20">
+      <Value key="0" value="Not initialized" />
+      <Value key="1" value="Running. No tracking move command pending." />
+      <Value key="2" value="Internal run-time error in task called *\../*. Error code is *. Refer to valTrack Reference guide for more details" />
+      <Value key="3" value="The tracking is in error" />
+      <Value key="4" value="A trackOn command is being executed." />
+      <Value key="5" value="A tracking move command (linear or circular) is being executed." />
+      <Value key="6" value="The arm is tracking a fixed point on a conveyor." />
+      <Value key="9" value="Warning, the add on called &quot;expansion&quot; is required with this VAL3 version" />
+      <Value key="11" value="Warning, libraries for conveyor tracking require VAL3 version s7.6.0 or higher" />
+      <Value key="12" value="MOT&gt;&gt;Number of conveyor is limited to *" />
+      <Value key="13" value="MOT&gt;&gt;The library *\../* used as conveyor number * was not loaded because of error code *" />
+      <Value key="14" value="MOT(init)&gt;&gt;Cannot convert frame number * to mobile frame" />
+    </Data>
+    <Data name="sErrorMessage" access="private" xsi:type="array" type="string" size="1">
+      <Value key="0" value="Running. No tracking move command pending." />
+    </Data>
+    <Data name="sTASK" access="private" xsi:type="array" type="string" size="1">
+      <Value key="0" value="tracking" />
+    </Data>
+    <Data name="tTool" access="private" xsi:type="array" type="tool" size="1">
+      <Value key="0" x="-8.16" y="18.26" z="80" rz="110" fatherId="flange[0]" ioLink="valve1" />
+    </Data>
+  </Datas>
+</Database>

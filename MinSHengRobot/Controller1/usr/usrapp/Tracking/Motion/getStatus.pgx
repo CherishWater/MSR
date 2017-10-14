@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="getStatus" access="public" >
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1" >
+      <Parameter name="x_nConvNum" type="num" use="value" xsi:type="element" dimensions="1" />
+      <Parameter name="x_nStatus" type="num" use="reference" xsi:type="array" dimensions="1" />
+    </Parameters>
+    <Locals>
+      <Local name="l_i" type="num" xsi:type="array" size="1" />
+      <Local name="l_nStatus" type="num" xsi:type="array" size="1" />
+      <Local name="l_sErrorMessage" type="string" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+  // this program returns the status of the librairies used for conveyor tracking
+  //
+  // Input Param
+  //  x_nConvNum  : Conveyor number
+  //
+  // Output param
+  // x_nStatus    : Status of the librairies
+  //            x_nStatus <100    --> Warnings
+  //       100< x_nStatus <200    --> Error codes
+  //       200< x_nStatus <300    --> Status codes
+  //      1000< x_nStatus <2000   --> 
+  //      2000< x_nStatus <3000   --> Run-time error from conveyor task
+  //      3000< x_nStatus <4000   --> Run-time error from encoder task
+  //      4000< x_nStatus <5000   --> Run-time error from detection task
+  //      5000< x_nStatus <6000   --> Run-time error from motion task
+  //
+  //----------------------------------------------------------------
+  //
+  // check status of conveyor tasks
+  switch x_nConvNum
+    case 0
+      if cnv0:libExist("getStatus()")
+        call cnv0:getStatus(0,l_nStatus)
+        call cnv0:getErrorMessage(l_sErrorMessage)
+      else
+        l_sErrorMessage=sErrMsgList[0]
+        l_nStatus=-1
+      endIf
+    break
+    case 1
+      if cnv1:libExist("getStatus()")
+        call cnv1:getStatus(1,l_nStatus)
+        call cnv1:getErrorMessage(l_sErrorMessage)
+      else
+        l_sErrorMessage=sErrMsgList[0]
+        l_nStatus=-1
+      endIf
+    break
+    default
+      l_nStatus=-2
+    break
+  endSwitch
+  // If tasks for conveyors have no error,
+  // check global variable nStatus of this library
+  if l_nStatus==0
+    if (nStatus>0) and (nStatus<=200)
+      // a warning or an error has been set
+      x_nStatus=nStatus
+      // Prepare clear text
+      sErrorMessage=sErrMsgList[nStatus]
+      // Reset the variable
+      nStatus=0
+    else
+      // Check status of the task updating mobile frames
+      l_nStatus=taskStatus(sTASK)
+      switch l_nStatus
+        case 0,1
+          // Check status of the tracking
+          l_nStatus=$trackingState()
+          switch l_nStatus
+            // Internal error, VAL3 instructions for tracking have failed
+            case -1
+              x_nStatus=101
+              sErrorMessage=sErrMsgList[3]
+            break
+            // Robot not currently tracking
+            case 0
+              x_nStatus=0
+              sErrorMessage=sErrMsgList[1]
+            break
+            // Robot is currently synchronized with conveyor
+            case 1,2,3
+              x_nStatus=200+l_nStatus
+              sErrorMessage=sErrMsgList[3+l_nStatus]
+            break
+          endSwitch
+        break
+        default
+          // Task not created (yet)
+          if l_nStatus==-1
+            // Task not created (yet)
+            x_nStatus=6000+l_nStatus
+          else
+            //Run-time error
+            x_nStatus=5000+l_nStatus
+          endIf
+          // Prepare clear text error message
+          call ut:addStrToString(sErrMsgList[2],sErrorMessage,"",sTASK)
+          call ut:addNumToString(sErrorMessage,sErrorMessage,"*",x_nStatus)
+        break
+      endSwitch
+    endIf
+  else
+    // Conveyor, encoder or detection library had an error, report this error
+    x_nStatus=l_nStatus
+    sErrorMessage=l_sErrorMessage
+  endIf
+end]]></Code>
+  </Program>
+</Programs>

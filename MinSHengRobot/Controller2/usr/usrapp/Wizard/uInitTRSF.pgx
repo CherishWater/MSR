@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="uInitTRSF" access="private" >
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1" >
+      <Parameter name="x_TRSF" type="trsf" use="reference" xsi:type="array" dimensions="1" />
+    </Parameters>
+    <Code><![CDATA[begin
+  x_TRSF[0]=swap:trWinUp[0]
+  x_TRSF[1]=swap:trWinUp[1]
+  x_TRSF[2]=swap:trWinDown[0]
+  x_TRSF[3]=swap:trWinDown[1]
+end]]></Code>
+  </Program>
+</Programs>

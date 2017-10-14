@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="disableQueue" access="public" >
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1" >
+      <Parameter name="x_nConvNum" type="num" use="value" xsi:type="element" dimensions="1" />
+    </Parameters>
+    <Code><![CDATA[begin
+  // When this program is called, the queuing of detected objects is
+  //  suspended until the program enableQueue() is called. But you must
+  //  call the program flushQueue() before enableQueue() to flush the
+  //  queue.
+  //
+  // Input Param
+  //  x_nConvNum : Conveyor number
+  //
+  // Output param
+  //  none       :
+  //
+  //----------------------------------------------------------------
+  //
+  switch x_nConvNum
+    case 0
+      call cnv0:disableQueue()
+    break
+    case 1
+      call cnv1:disableQueue()
+    break
+  endSwitch
+end]]></Code>
+  </Program>
+</Programs>

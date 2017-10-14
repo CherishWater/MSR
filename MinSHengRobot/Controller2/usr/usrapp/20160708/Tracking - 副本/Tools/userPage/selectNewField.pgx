@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="selectNewField" access="public">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_nSelected" type="num" xsi:type="element" />
+      <Parameter name="x_nIndex" type="num" xsi:type="element" />
+      <Parameter name="x_nView" type="num" xsi:type="element" />
+    </Parameters>
+    <Locals>
+      <Local name="l_nFirst" type="num" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[
+begin
+  //-----------------------------------------------------------------------
+  //Header begin
+  //Description of program
+  //  Select a new item with a user friendly system.
+  //  Usually use when you create a new Item and you want to select it.
+  //  This program update the list with the the element x_nSelected
+  //  that you want to selected.
+  //
+  //Input parameters
+  //  num x_nSelected :
+  //    role : position that you want to go in the list
+  //    possible values : - "-1" : place current selected element in the
+  //    middle of the list.
+  //                      - other values : place the element in the middle of the
+  //    list.
+  //  num x_nIndex :
+  //    role : current position in the list
+  //  num x_nView :
+  //    role : current position of the list cursor
+  //
+  //Examples
+  //  call selectNewField(7,4,3)  //Displays the Item number 7 in the
+  //                              middle of the list
+  //  call selectNewField(-1,7,4) //Place the current selected Item
+  //                              in the middle of the list
+  //
+  //History
+  //  Creation : 28-04-08 - f.Rob
+  //Header end
+  //-----------------------------------------------------------------------
+  // Update the first value from the parameter
+  l_nFirst=max(x_nIndex-x_nView,0)
+  // Do only an update of the first item
+  if (x_nSelected==-1)
+    nView=x_nView
+    call listUpdate(x_nIndex-x_nView)
+  else
+    //Select the new field using a scroll logic
+    //The new value is not in the screen
+    if x_nSelected<l_nFirst or abs(x_nSelected-l_nFirst)>=(nListHeight)
+      //Start from the beginnnig
+      if x_nSelected<l_nFirst and x_nSelected<nListHeight
+        nView=x_nSelected
+        call listUpdate(0)
+      else
+        if x_nSelected<size(sItems)-nListHeight
+          //Move the list and select the field in the middle
+          nView=roundUp(nListHeight/2)
+        else
+          nView=x_nSelected-(size(sItems)-nListHeight)
+        endIf
+        call listUpdate(abs(x_nSelected-nView))
+      endIf
+    else
+      //Move only the nView of the field
+      nView=abs(x_nSelected-l_nFirst)
+      call listUpdate(abs(x_nIndex-x_nView))
+    endIf
+  endIf
+end
+]]></Code>
+  </Program>
+</Programs>

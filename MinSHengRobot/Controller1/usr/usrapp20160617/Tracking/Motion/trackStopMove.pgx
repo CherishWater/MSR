@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="trackStopMove" access="public" >
+    <Code><![CDATA[begin
+  // This program stops the motion relative to the conveyor.
+  //
+  // -If this program is called while the robot is executing a
+  //  synchronized movement $movelt (mot:moveL()) or
+  //  $movect(mot:moveC()), the robot will stop its trajectory but
+  //  it will stay synchronized to the conveyor. Execute a 
+  //  restartMove() instruction to continue the synchronized
+  //  movement.
+  //
+  // -If this program is called while the robot is executing a
+  //  synchronization movement $trackOn (mot:trackOn or
+  //  mot:trackOnJ), the robot will stop without synchronization to
+  //  the conveyor. Executing a restartMove() will result on a
+  //  $trackOn() to the point over the conveyor.
+  //
+  // -If this program is called while the robot is executing a
+  //  de-synchronization movement $trackOff (mot:trackOff or
+  //  mot:trackOffJ), the robot will stop without synchronization to
+  //  the conveyor. Executing a restartMove() will result on a
+  //  movej() to the fix point.
+  //
+  // -If this program is called while the robot is executing a
+  //  standard move, the behavior of the arm will be exactly the
+  //  same as with the instruction stopMove()
+  //
+  //----------------------------------------------------------------
+  //
+  $trkStopMove()
+  //
+end]]></Code>
+  </Program>
+</Programs>

@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="getTravelDist" access="private" >
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1" >
+      <Parameter name="x_nIdx" type="num" use="value" xsi:type="element" dimensions="1" />
+      <Parameter name="x_nTravelDist" type="num" use="reference" xsi:type="array" dimensions="1" />
+      <Parameter name="x_nError" type="num" use="reference" xsi:type="array" dimensions="1" />
+    </Parameters>
+    <Locals>
+      <Local name="l_nEncValue" type="num" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+  // This program returns the distance between the instantaneous
+  // conveyor's position and the one when it was last latched.
+  //
+  // Input param
+  //  x_nIdx    : Index of the object in the queue
+  //
+  // Output param
+  //  x_nTravelDist : Distance
+  //  x_nError      : Error code
+  //    0 : No error
+  //    1 : No object available
+  //
+  //----------------------------------------------------------------
+  //
+  x_nError=0
+  if nNumbOfUser[x_nIdx]!=0
+    l_nEncValue=aioGet(enc:aiEncCurrentPos)
+    // Test for encoder roll over
+    if l_nEncValue<nEncLatchedVal[x_nIdx]
+      // roll over
+      x_nTravelDist=nENCSCALEFACTOR*(enc:nMAXCOUNT-nEncLatchedVal[x_nIdx]+l_nEncValue-enc:nMINCOUNT)
+    else
+      // No roll over
+      x_nTravelDist=nENCSCALEFACTOR*(l_nEncValue-nEncLatchedVal[x_nIdx])
+    endIf
+  else
+    //* No Object requested
+    x_nError=1
+    if cfg:bLog==true
+      nErrVal[0]=x_nIdx
+      call ut:addNumToString(sConvNum+"(getTravelDist)>>:"+sErrMsgList[x_nError],sMsg,"*",nErrVal)
+      logMsg(sMsg)
+    endIf
+  endIf
+end]]></Code>
+  </Program>
+</Programs>

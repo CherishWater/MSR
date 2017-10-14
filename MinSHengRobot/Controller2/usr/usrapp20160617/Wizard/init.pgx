@@ -1,0 +1,121 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="init" access="private" >
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1" >
+      <Parameter name="x_nError" type="num" use="reference" xsi:type="array" dimensions="1" />
+    </Parameters>
+    <Locals>
+      <Local name="l_bIsScara" type="bool" xsi:type="array" size="1" />
+      <Local name="l_bLock" type="bool" xsi:type="array" size="1" />
+      <Local name="l_bQuit" type="bool" xsi:type="array" size="1" />
+      <Local name="l_i" type="num" xsi:type="array" size="1" />
+      <Local name="l_nEditNR" type="num" xsi:type="array" size="1" />
+      <Local name="l_nError" type="num" xsi:type="array" size="1" />
+      <Local name="l_nRevisionNR" type="num" xsi:type="array" size="1" />
+      <Local name="l_nStep" type="num" xsi:type="array" size="1" />
+      <Local name="l_nVersionNR" type="num" xsi:type="array" size="1" />
+      <Local name="l_nVersionNum" type="num" xsi:type="array" size="1" />
+      <Local name="l_sMessage" type="string" xsi:type="array" size="1" />
+      <Local name="l_sSubString" type="string" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+  //
+  l_nStep=20
+  l_bLock=false
+  l_bQuit=false
+  x_nError=0
+  do
+    switch l_nStep
+      //Version checking
+      case 0
+        // Software requires VAL3 version s7.6.0 or later with valtrack license
+        if l_bLock==false
+          call ut:_getVersion(l_nVersionNR,l_nRevisionNR,l_nEditNR,l_nError)
+          l_nVersionNum=(l_nVersionNR*100+l_nRevisionNR*10+l_nEditNR)
+          l_bLock=true
+          //? "version : "+toString("",l_nVersionNum)
+        endIf
+        if l_bLock==true
+          if (l_nVersionNum>=760)
+            l_nStep=10
+          else
+            l_nStep=50
+          endIf
+          l_bLock=false
+        endIf
+      break
+      // Check if valTrack Option is installed
+      case 10
+        if l_bLock==false
+          l_bLock=true
+        endIf
+        if l_bLock==true
+          if getVersion("valTrack")!=""
+            l_nStep=20
+          else
+            x_nError=47
+            sErrorMessage=lang:sListOfMessage[x_nError]
+            l_bQuit=true
+          endIf
+          l_bLock=false
+        endIf
+      break
+      // Initialize string and tools variables
+      // Load libraries
+      case 20
+        if l_bLock==false
+          //? getVersion("ArmType")
+          bIsScara=left(getVersion("ArmType"),2)=="rs"
+          bIsScara=left(getVersion("ArmType"),2)=="ts" or bIsScara
+          bIsScara=left(getVersion("ArmType"),2)=="tp" or bIsScara
+          if bIsScara==true
+            sGeometryLib=cfg:sGEOMETRYLIB_RS
+          else
+            sGeometryLib=cfg:sGEOMETRYLIB
+          endIf
+          //
+          // Initialise private Tool
+          tPointer.trsf=position(cfg:tPointer,flange)
+          //
+          // Load Geometry libray according to robot type (Scara/6axis)
+          l_nError=geometry:libLoad(cfg:sPATHTEMPLATE+sGeometryLib)
+          l_bLock=true
+        endIf
+        if l_bLock==true
+          if l_nError==0
+            l_nStep=30
+          else
+            // Prepare clear text error message
+            x_nError=33
+            l_sSubString=cfg:sPATHTEMPLATE+sGeometryLib
+            call ut:addStrToString(lang:sListOfMessage[x_nError],sErrorMessage,"",l_sSubString)
+            call ut:addNumToString(sErrorMessage,sErrorMessage,"*",l_nError)
+          endIf
+          l_bLock=false
+        endIf
+      break
+      // Buil List of IOs
+      case 30
+        if l_bLock==false
+          call buildOutputList()
+          l_bLock=true
+          l_bQuit=true
+        endIf
+      break
+      // Not a valid VAL3 version
+      case 50
+        if l_bLock==false
+          // Prepare clear text error message
+          x_nError=46
+          sErrorMessage=lang:sListOfMessage[x_nError]
+          l_bLock=true
+        endIf
+        l_bQuit=true
+      break
+      //
+    endSwitch
+    delay(0)
+  until (l_bQuit==true)
+end]]></Code>
+  </Program>
+</Programs>

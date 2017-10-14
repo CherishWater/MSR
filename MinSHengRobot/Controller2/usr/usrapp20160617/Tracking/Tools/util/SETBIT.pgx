@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="setBit" access="public">
+    <Description><![CDATA[set a bit in a num variable]]></Description>
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_bit" type="num" xsi:type="element" />
+      <Parameter name="x_return" type="num" xsi:type="array" use="reference" />
+    </Parameters>
+    <Locals>
+      <Local name="l_mask" type="num" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[
+begin
+  call bmask(x_bit,l_mask)
+  x_return=x_return+l_mask
+  if bDebug
+    putln("setBit(): "+toString("0.0",x_return))
+  endIf
+end
+]]></Code>
+  </Program>
+</Programs>

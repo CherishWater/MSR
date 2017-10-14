@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://www.staubli.com/robotics/VAL3/Project/3">
+  <Parameters version="s7.2.1" stackSize="5000" millimeterUnit="true" />
+  <Programs>
+    <Program file="computeFrame.pgx" />
+    <Program file="delete.pgx" />
+    <Program file="deleteItem.pgx" />
+    <Program file="duplicate.pgx" />
+    <Program file="find.pgx" />
+    <Program file="get.pgx" />
+    <Program file="getFrame.pgx" />
+    <Program file="getFrameId.pgx" />
+    <Program file="getFunctionEdit.pgx" />
+    <Program file="getFunctionSel.pgx" />
+    <Program file="getFunctionView.pgx" />
+    <Program file="getListItem.pgx" />
+    <Program file="getPoint.pgx" />
+    <Program file="getSize.pgx" />
+    <Program file="getSizeItem.pgx" />
+    <Program file="getTool.pgx" />
+    <Program file="getTrajItem.pgx" />
+    <Program file="getTrajType.pgx" />
+    <Program file="goTo.pgx" />
+    <Program file="insertItem.pgx" />
+    <Program file="load.pgx" />
+    <Program file="loadCycle.pgx" />
+    <Program file="new.pgx" />
+    <Program file="onEdit.pgx" />
+    <Program file="onEditItem.pgx" />
+    <Program file="onFunctionEdit.pgx" />
+    <Program file="onFunctionSel.pgx" />
+    <Program file="onFunctionView.pgx" />
+    <Program file="onInsert.pgx" />
+    <Program file="onProgEnd.pgx" />
+    <Program file="onRun.pgx" />
+    <Program file="onSave.pgx" />
+    <Program file="onStart.pgx" />
+    <Program file="onStop.pgx" />
+    <Program file="setFrameId.pgx" />
+    <Program file="setTool.pgx" />
+    <Program file="setTrajItem.pgx" />
+  </Programs>
+  <Database>
+    <Data file="trajectory.dtx" />
+  </Database>
+  <Libraries>
+    <Library alias="saveData" path="Disk://saveData/saveData.pjx" />
+    <Library alias="page" path="Disk://kernel/template/page/page.pjx" />
+    <Library alias="use" path="Disk://kernel/userPage/userPage.pjx" />
+  </Libraries>
+  <Types>
+    <Type name="TrajectoryItem" path="Disk://kernel/template/TrajectoryItem/TrajectoryItem.pjx" />
+  </Types>
+</Project>

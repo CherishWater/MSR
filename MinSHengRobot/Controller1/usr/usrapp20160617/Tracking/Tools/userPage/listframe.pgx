@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="listFrame" access="public">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_sTitle" type="string" xsi:type="element" />
+      <Parameter name="x_nX" type="num" xsi:type="element" />
+      <Parameter name="x_nY" type="num" xsi:type="element" />
+      <Parameter name="x_nDx" type="num" xsi:type="element" />
+      <Parameter name="x_nDy" type="num" xsi:type="element" />
+    </Parameters>
+    <Locals>
+      <Local name="l_nDx" type="num" xsi:type="array" size="1" />
+      <Local name="l_nDy" type="num" xsi:type="array" size="1" />
+      <Local name="i" type="num" xsi:type="array" size="1" />
+      <Local name="l_sStr" type="string" xsi:type="array" size="1" />
+      <Local name="l_sStrLine" type="string" xsi:type="array" size="1" />
+      <Local name="l_nValue" type="num" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[
+begin
+  //-----------------------------------------------------------------------
+  //Header begin
+  //Description of program
+  //  Create a list of data, displays the title sTitle, and draw the list
+  //  to the position pX and pY of the userPage (), of pDX length and height
+  //  pDY.
+  //
+  //Input parameters
+  //  num x_nX :
+  //    role : cursor column position : top left corner for the beginning of the list menu
+  //  num x_nY :
+  //    role : cursor row position : top left corner for the beginning of the list menu
+  //  num x_nDx :
+  //    role : width of the box
+  //  num x_nDY :
+  //    role : height of the box
+  //
+  //Example
+  //  call listFrame("UserPage",20,0,18,11)
+  //
+  //History
+  //  Creation : 28-04-08 - f.Rob
+  //Header end
+  //-----------------------------------------------------------------------
+  l_sStrLine="─────────────────────────────────────────"
+  l_nDx=x_nDx
+  l_nDy=x_nDy
+  //Top
+  //Cut the l_sStrLine at the width l_nDx
+  l_sStr="┌"+mid(l_sStrLine,l_nDx,0)+"┐"
+  //Displays the top line
+  gotoxy(x_nX,x_nY)
+  put(l_sStr)
+  l_nValue=x_nX+2
+  //Title
+  if x_sTitle!=""
+    call leftPos("┤"+x_sTitle+"├",l_nDx,x_sTitle)
+    gotoxy(x_nX+l_nDx-getDisplayLen(x_sTitle)+1,x_nY)
+    put(x_sTitle)
+  endIf
+  //Containt
+  for i=1 to l_nDy
+    l_nValue=x_nY+i
+    l_sStr="│"
+    gotoxy(x_nX,l_nValue)
+    put(l_sStr)
+    gotoxy(x_nX+l_nDx+1,l_nValue)
+    put(l_sStr)
+  endFor
+  //Bottom
+  l_nValue=x_nY+i
+  //Cut the l_sStrLine at the width l_nDx
+  l_sStr="└"+mid(l_sStrLine,l_nDx,0)+"┘"
+  //Displays the bottom line
+  gotoxy(x_nX,l_nValue)
+  put(l_sStr)
+end
+]]></Code>
+  </Program>
+</Programs>

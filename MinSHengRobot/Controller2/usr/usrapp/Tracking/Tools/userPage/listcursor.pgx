@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="listCursor" access="public">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_nView" type="num" xsi:type="element" />
+      <Parameter name="x_bShow" type="bool" xsi:type="element" />
+    </Parameters>
+    <Locals>
+      <Local name="l_nX" type="num" xsi:type="array" size="1" />
+      <Local name="l_nY" type="num" xsi:type="array" size="1" />
+      <Local name="l_sMessage" type="string" xsi:type="array" size="1" />
+      <Local name="l_bEmpty" type="bool" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[
+begin
+  //-----------------------------------------------------------------------
+  //Header begin
+  //Description of program
+  //  Place the cursor on the Item selected by x_nView and allows
+  //  to inverse the video.
+  //
+  //Input parameters
+  //  num x_nView :
+  //    role : contains the Item selected
+  //  num x_bShow :
+  //    role : Allows to inverse video
+  //    possible values : - true for inverse video
+  //                      - false font normal
+  //
+  //Example
+  //  call listCursor(2,l_bShow)
+  //
+  //History
+  //  Creation : 28-04-08 - f.Rob
+  //Header end
+  //-----------------------------------------------------------------------
+  call isListEmpty(l_bEmpty)
+  if !l_bEmpty
+    //The list is no empty
+    nView=x_nView
+    l_nX=nTopX+1
+    l_nY=nTopY+1+x_nView
+    if (nView+nFirst)>(size(sItems)-1)
+      //Formatting the item depending on the width of the list (nBottomX)
+      call strFill(sItems[size(sItems)-1],nBottomX,l_sMessage)
+    else
+      call strFill(sItems[nView+nFirst],nBottomX,l_sMessage)
+    endIf
+    gotoxy(l_nX,l_nY)
+    //Displays the Item
+    if (x_bShow==true)
+      //Inverse video
+      setTextMode(1)
+      put(l_sMessage)
+      setTextMode(0)
+    else
+      setTextMode(0)
+      put(l_sMessage)
+    endIf
+  endIf
+end
+]]></Code>
+  </Program>
+</Programs>

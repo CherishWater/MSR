@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="binToDec" access="public">
+    <Description><![CDATA[change binary string to num variable (e.g. "1001" => 9)]]></Description>
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_value" type="string" xsi:type="element" />
+      <Parameter name="x_return" type="num" xsi:type="array" use="reference" />
+    </Parameters>
+    <Locals>
+      <Local name="l_bit" type="num" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[
+begin
+  x_return=0
+  for l_bit=(len(x_value)-1) to 0 step -1
+    if mid(x_value,1,l_bit)=="1"
+      x_return=x_return+exp(((len(x_value)-1)-l_bit)*ln(2))
+    endIf
+  endFor
+  if bDebug
+    putln("binToDec(): "+x_value+" => "+toString("0.0",x_return))
+  endIf
+end
+]]></Code>
+  </Program>
+</Programs>

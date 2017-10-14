@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="getErrorMessage" access="public">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_sMessage" type="string" xsi:type="array" use="reference" />
+    </Parameters>
+    <Code><![CDATA[
+begin
+  // This programs returns a clear text about the last error code
+  //
+  // Input Param
+  // None
+  //
+  // Output Param
+  //  x_sMessage    : Error message
+  //
+  //Created 21/12/05                              C.CURRIVAND
+  //--------------------------------------------------------------
+  x_sMessage=sErrorMessage
+end
+]]></Code>
+  </Program>
+</Programs>

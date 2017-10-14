@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="buildOutputList" access="private" >
+    <Locals>
+      <Local name="l_bUnwantFound" type="bool" xsi:type="array" size="1" />
+      <Local name="l_i" type="num" xsi:type="array" size="1" />
+      <Local name="l_j" type="num" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+  // This program build a list of digital outputs installed on the 
+  // controler
+  //
+  //----------------------------------------------------------------
+  //
+  // This is the list of digital outputs not present on the controller
+  // and so we want to remove from the list returned by $listIOs
+  resize(sUnwantDOutputs,1,1)
+  l_i=0
+  sUnwantDOutputs[l_i]="world flange"
+  // BasicIO2
+  if ioStatus(out:b2Out0)<0
+    append(sUnwantDOutputs)
+    l_i=l_i+1
+    sUnwantDOutputs[l_i]="b2Out0 b2Out1 b2Out2 b2Out3 b2Out4 b2Out5 b2Out6 b2Out7 b2Out8 b2Out9 b2Out10 b2Out11 b2Out12 b2Out13 b2Out14 b2Out15"
+  endIf
+  // BasicIO1
+  if ioStatus(out:bOut0)<0
+    append(sUnwantDOutputs)
+    l_i=l_i+1
+    sUnwantDOutputs[l_i]="bOut0 bOut1 bOut2 bOut3 bOut4 bOut5 bOut6 bOut7 bOut8 bOut9 bOut10 bOut11 bOut12 bOut13 bOut14 bOut15"
+  endIf
+  // ARMIO
+  if ioStatus(out:cDout0)<0
+    append(sUnwantDOutputs)
+    l_i=l_i+1
+    sUnwantDOutputs[l_i]="cDout0 cDout1 cDout2 cDout3 cDout4 cDout5 cDout6 cDout7"
+  endIf
+  // Fast
+  if ioStatus(out:fOut0)<0
+    append(sUnwantDOutputs)
+    l_i=l_i+1
+    sUnwantDOutputs[l_i]="fOut0"
+  endIf
+  // ModuleIO
+  if ioStatus(out:mOut0)<0
+    append(sUnwantDOutputs)
+    l_i=l_i+1
+    sUnwantDOutputs[l_i]="mOut0 mOut1 mOut2 mOut3 mOut4 mOut5 mOut6 mOut7 mOut8 mOut9 mOut10 mOut11 mOut12 mOut13 mOut14 mOut15"
+    append(sUnwantDOutputs)
+    l_i=l_i+1
+    sUnwantDOutputs[l_i]="mOut16 mOut17 mOut18 mOut19 mOut20 mOut21 mOut22 mOut23 mOut24 mOut25 mOut26 mOut27 mOut28 mOut29 mOut30 mOut31"
+  endIf
+  //
+  out:$listIos(sDOutputsList)
+  // Set first Item of list to lang:sNOTDEFINED
+  if sDOutputsList[0]!=""
+    insert(sDOutputsList[0])
+  endIf
+  sDOutputsList[0]=lang:sNONE
+  //
+  //Erease unwanted not operational elements
+  l_i=0
+  while (l_i<=size(sDOutputsList)-1)
+    l_j=0
+    l_bUnwantFound=false
+    do
+      if find(sUnwantDOutputs[l_j],sDOutputsList[l_i])!=-1
+        // Unwanted IO found, so remove from list
+        delete(sDOutputsList[l_i])
+        l_bUnwantFound=true
+      else
+        l_j=l_j+1
+      endIf
+    until (l_j>(size(sUnwantDOutputs)-1) or (l_bUnwantFound==true))
+    // A wanted IO is found, keep it and check next IO in sDOutputsList
+    if l_bUnwantFound==false
+      l_i=l_i+1
+    endIf
+  endWhile
+  //
+end]]></Code>
+  </Program>
+</Programs>

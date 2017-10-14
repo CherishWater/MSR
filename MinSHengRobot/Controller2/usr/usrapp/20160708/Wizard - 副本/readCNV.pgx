@@ -1,0 +1,142 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="readCNV" access="private" >
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1" >
+      <Parameter name="x_nError" type="num" use="reference" xsi:type="array" dimensions="1" />
+    </Parameters>
+    <Locals>
+      <Local name="l_bQuit" type="bool" xsi:type="array" size="1" />
+      <Local name="l_nError" type="num" xsi:type="array" size="1" />
+      <Local name="l_nStep" type="num" xsi:type="array" size="1" />
+      <Local name="l_sValue" type="string" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+  // This program initializes the parameters of the conveyor library
+  // to be displayed in the Setting page of the user interface.
+  //
+  //   - Initializes List object fields (e.g. Encoder library)
+  //----------------------------------------------------------------
+  //
+  x_nError=0
+  l_nStep=0
+  // Read current value from conveyor library
+  resize(sCaption,1,pg:nNumOfTxtBox)
+  call pg:getCaption(sCaption)
+  //
+  l_bQuit=false
+  do
+    switch l_nStep
+      //*** FIELD ENCODER LIBRARY
+      case 0
+        // Initialize the List object
+        resize(sItemList,1,1)
+        if libList(cfg:sPATHENCODER,sItemList)==true
+          call pg:setListOfItems(0,sItemList,l_nError)
+        endIf
+        if l_nError!=0
+          l_bQuit=true
+          x_nError=l_nError
+        else
+          // Read name of associated Encoder library
+          l_sValue=cnv:sEncoderLib
+          call pg:setFieldValue(sCaption[0],l_sValue,l_nError)
+          l_nStep=10
+        endIf
+      break
+      //*** FIELD DETECTION LIBRARY
+      case 10
+        //Initialize the List object
+        resize(sItemList,1,1)
+        if libList(cfg:sPATHDETECTION,sItemList)==true
+          call pg:setListOfItems(1,sItemList,l_nError)
+        endIf
+        if l_nError!=0
+          l_bQuit=true
+          x_nError=l_nError
+        else
+          // Read name of associated Detection library
+          l_sValue=cnv:sDetectionLib
+          call pg:setFieldValue(sCaption[1],l_sValue,l_nError)
+          l_nStep=20
+        endIf
+      break
+      //*** FIELD CLOCK SIGNAL
+      case 20
+        //Initialize the List object
+        call pg:setListOfItems(8,sDOutputsList,l_nError)
+        if l_nError!=0
+          l_bQuit=true
+          x_nError=l_nError
+        else
+          //Force value
+          l_sValue=cnv:sClockSigName
+          call pg:setFieldValue(sCaption[8],l_sValue,l_nError)
+          l_nStep=30
+        endIf
+      break
+      //*** FIELD ThruUpLim
+      case 30
+        //Initialize the List object
+        call pg:setListOfItems(5,sDOutputsList,l_nError)
+        if l_nError!=0
+          l_bQuit=true
+          x_nError=l_nError
+        else
+          //Force value
+          l_sValue=cnv:sUpLimSigName
+          call pg:setFieldValue(sCaption[5],l_sValue,l_nError)
+          l_nStep=40
+        endIf
+      break
+      //*** FIELD ThruDwnLim
+      case 40
+        //Initialize the List object
+        call pg:setListOfItems(6,sDOutputsList,l_nError)
+        if l_nError!=0
+          l_bQuit=true
+          x_nError=l_nError
+        else
+          //Force value
+          l_sValue=cnv:sDwnLimSigName
+          call pg:setFieldValue(sCaption[6],l_sValue,l_nError)
+          l_nStep=50
+        endIf
+      break
+      //*** FIELD Event logging
+      case 50
+        if cnv:bLOG
+          l_sValue="TRUE"
+        else
+          l_sValue="FALSE"
+        endIf
+        call pg:setFieldValue(sCaption[11],l_sValue,l_nError)
+        l_nStep=60
+      break
+      // FURTHER FIELDS OF THE PAGE
+      case 60
+        // Height of the tracking window
+        call ut:_toString(cnv:nTrackWinHeight,"",l_sValue)
+        call pg:setFieldValue(sCaption[4],l_sValue,l_nError)
+        // Size of the queue
+        call ut:_toString(cnv:nBufferSize,"",l_sValue)
+        call pg:setFieldValue(sCaption[2],l_sValue,l_nError)
+        // Display ScaleFactor
+        call ut:_toString(cnv:nENCSCALEFACTOR,".7",l_sValue)
+        call pg:setFieldValue(sCaption[3],l_sValue,l_nError)
+        // Detection matching tolerance
+        call ut:_toString(cnv:nPosMatchTol,"",l_sValue)
+        call pg:setFieldValue(sCaption[7],l_sValue,l_nError)
+        // Clock period
+        call ut:_toString(cnv:nClockPeriod,"",l_sValue)
+        call pg:setFieldValue(sCaption[9],l_sValue,l_nError)
+        // latch lock distance
+        call ut:_toString(cnv:nLatchLockDist,"",l_sValue)
+        call pg:setFieldValue(sCaption[10],l_sValue,l_nError)
+        //
+        l_bQuit=true
+      break
+    endSwitch
+  until l_bQuit
+end]]></Code>
+  </Program>
+</Programs>

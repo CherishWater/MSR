@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="getTrackStatus" access="public" >
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1" >
+      <Parameter name="x_nTrackStatus" type="num" use="reference" xsi:type="array" dimensions="1" />
+    </Parameters>
+    <Code><![CDATA[begin
+  // This instruction returns the state of the last tracking move command.
+  //
+  // Input Param
+  //  x_sConveyorList  : List of conveyors to be created
+  //
+  // Output param
+  //  x_nTrackStatus : state of the last tracking move command
+  //              0  : there is no pending tracking move command
+  //              1  : a trackOn command is being executed
+  //              2  : a tracking move command (linear or circular) is being executed
+  //              3  : the arm is tracking a fixed point on a mobile frame
+  //             -1  : the tracking is in error
+  //
+  //----------------------------------------------------------------
+  //
+  x_nTrackStatus=$trackingState()
+  switch x_nTrackStatus
+    case -1
+      sErrorMessage=sErrMsgList[3]
+    break
+    case 0
+      sErrorMessage=sErrMsgList[1]
+    break
+    case 1,2,3
+      sErrorMessage=sErrMsgList[3+x_nTrackStatus]
+    break
+  endSwitch
+end]]></Code>
+  </Program>
+</Programs>

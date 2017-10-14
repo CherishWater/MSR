@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="setCalibrating" access="public" >
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1" >
+      <Parameter name="x_bMode" type="bool" use="value" xsi:type="element" dimensions="1" />
+    </Parameters>
+    <Code><![CDATA[begin
+  // If the input parameter x_bMode=true, the detection library "Socket"
+  //  is re-launched in calibration mode. If the input parameter 
+  //  x_bMode=false, the detection library "Socket" is set in normal
+  //  operation mode.
+  // When the detection library "Socket" is in calibration mode, the
+  //  conveyor library gets the latched encoder value from the encoder
+  //  library. When the detection library "Socket" isn't in calibration
+  //  mode, the conveyor library gets the latched encoder value from the
+  //  detection library "Socket".
+  // The detection library "Socket" must be set in calibration
+  //  mode when part’s detection is done with a simple detection device
+  //  such as an on/off sensor during calibration of the distance in
+  //  between the sensor and the pick/place position on the conveyor.
+  // This is also valid for any other detection library which name begins
+  //  with "Socket". For any other detection library, the latched encoder
+  //  value is given by the encoder library and this program has not use.
+  //
+  // Input Param  
+  //  x_bMode    : 
+  //        True = Any detection library which name begins with "Socket"
+  //                is re-launched in calibration mode.
+  //       False = Any detection library which name begins with "Socket"
+  //                is set in normal operation mode.
+  //
+  // Output Param
+  //  none       : 
+  //
+  //----------------------------------------------------------------
+  //
+  if left(sDetectionLib,6)=="Socket"
+    det:bCalibrating=x_bMode
+    if x_bMode
+      call det:resetTask()
+      wait(det:bTaskDetOK)
+    endIf
+  endIf
+end]]></Code>
+  </Program>
+</Programs>

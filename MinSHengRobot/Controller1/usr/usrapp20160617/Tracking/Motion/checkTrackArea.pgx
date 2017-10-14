@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="checkTrackArea" access="private" >
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1" >
+      <Parameter name="x_nConvNum" type="num" use="value" xsi:type="element" dimensions="1" />
+      <Parameter name="x_tActivTool" type="tool" use="value" xsi:type="element" dimensions="1" />
+      <Parameter name="x_nArea" type="num" use="reference" xsi:type="array" dimensions="1" />
+    </Parameters>
+    <Code><![CDATA[begin
+  switch x_nConvNum
+    case 0
+      call cnv0:checkTrackArea(x_tActivTool,x_nArea)
+    break
+    case 1
+      call cnv1:checkTrackArea(x_tActivTool,x_nArea)
+    break
+    default
+      x_nArea=-1
+    break
+  endSwitch
+end]]></Code>
+  </Program>
+</Programs>

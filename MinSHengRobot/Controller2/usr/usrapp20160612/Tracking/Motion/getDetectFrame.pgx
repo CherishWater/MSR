@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="getDetectFrame" access="public" >
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1" >
+      <Parameter name="x_nConvNum" type="num" use="value" xsi:type="element" dimensions="1" />
+      <Parameter name="x_fDetectFrame" type="frame" use="reference" xsi:type="element" dimensions="1" />
+      <Parameter name="x_fRefFrame" type="frame" use="value" xsi:type="element" dimensions="1" />
+      <Parameter name="x_nError" type="num" use="reference" xsi:type="element" dimensions="1" />
+    </Parameters>
+    <Code><![CDATA[begin
+  // This program returns the position and orientation of the detection
+  //  device frame in reference to the frame x_fRefFrame.
+  //
+  // Input Param
+  //  x_nConvNum : Conveyor number
+  //  x_fRefFrame: Reference frame from which the coordinates of
+  //                x_fDetection should be returned.
+  //
+  // Output param
+  //  x_fDetection: Coordinates of the detection device frame that have
+  //                 been taught during calibration.
+  //  x_nError    : Error code
+  //    0    --> No error
+  //    14   --> Conveyor library not started, the frame cannot be computed.
+  //
+  //----------------------------------------------------------------
+  //  
+  switch x_nConvNum
+    case 0
+      if cnv0:libExist("getDetectFrame()")
+        call cnv0:getDetectFrame(x_fDetectFrame,x_fRefFrame,x_nError)
+      else
+        nStatus=-1
+      endIf
+    break
+    case 1
+      if cnv1:libExist("getDetectFrame()")
+        call cnv1:getDetectFrame(x_fDetectFrame,x_fRefFrame,x_nError)
+      else
+        nStatus=-1
+      endIf
+    break
+  endSwitch
+end]]></Code>
+  </Program>
+</Programs>

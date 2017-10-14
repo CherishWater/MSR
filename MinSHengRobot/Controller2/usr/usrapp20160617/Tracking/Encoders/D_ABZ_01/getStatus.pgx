@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="getStatus" access="public">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_nStatus" type="num" xsi:type="array" use="reference" />
+    </Parameters>
+    <Locals>
+      <Local name="l_nStatus" type="num" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[
+begin
+  // This program returns the status of the encoder librairie
+  //
+  // Input Param
+  // None
+  //
+  // Output Param
+  //  x_nStatus    : Status of the encoder library
+  //
+  //Created 04-06-07                              C.CURRIVAND
+  //--------------------------------------------------------------
+  l_nStatus=taskStatus(sTASK)
+  switch l_nStatus
+    // Task not created (yet !)
+    case -1
+      x_nStatus=3999
+    break
+    // Task running
+    case 0,1
+      x_nStatus=0
+    break
+    // Run-time error
+    default
+      x_nStatus=3000+l_nStatus
+    break
+  endSwitch
+end
+]]></Code>
+  </Program>
+</Programs>

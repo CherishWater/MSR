@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://www.staubli.com/robotics/VAL3/Project/3">
+  <Parameters version="s7.6.4" stackSize="5000" millimeterUnit="true" />
+  <Programs>
+    <Program file="blow.pgx" />
+    <Program file="bypassPick.pgx" />
+    <Program file="cellManager.pgx" />
+    <Program file="getToolStatus.pgx" />
+    <Program file="goHome.pgx" />
+    <Program file="init.pgx" />
+    <Program file="initTracking.pgx" />
+    <Program file="isInSafetyArea.pgx" />
+    <Program file="modbusGet.pgx" />
+    <Program file="modbusSet.pgx" />
+    <Program file="OMAC_Abort.pgx" />
+    <Program file="OMAC_Hold.pgx" />
+    <Program file="OMAC_Main.pgx" />
+    <Program file="OMAC_Reset.pgx" />
+    <Program file="OMAC_Start.pgx" />
+    <Program file="OMAC_Stop.pgx" />
+    <Program file="OMAC_Unhold.pgx" />
+    <Program file="overflowPick.pgx" />
+    <Program file="Place.pgx" />
+    <Program file="productionCycle.pgx" />
+    <Program file="robot2PLC.pgx" />
+    <Program file="send2NextRob.pgx" />
+    <Program file="setAlarm.pgx" />
+    <Program file="setConvSpeed.pgx" />
+    <Program file="start.pgx" />
+    <Program file="stop.pgx" />
+    <Program file="trackErr_init.pgx" />
+    <Program file="trackingPick.pgx" />
+    <Program file="transferQueue.pgx" />
+  </Programs>
+  <Database>
+    <Data file="HIT_YD.dtx" />
+  </Database>
+  <Libraries>
+    <Library alias="mot" path="Disk://Tracking/Motion/Motion.pjx" />
+  </Libraries>
+  <Types>
+    <Type name="object" path="Disk://Tracking/Templates/object/object.pjx" />
+  </Types>
+</Project>

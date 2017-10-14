@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="SetPoint" access="public">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_nSelectData" type="num" xsi:type="element" />
+    </Parameters>
+    <Locals>
+      <Local name="l_nResult" type="num" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[
+begin
+  // This program initializes the locations of the library
+  // with the TRSF and CONFIG of the Swap library
+  //
+  //
+  // Created 29-11-05                                   C.CURRIVAND
+  //----------------------------------------------------------------
+  //
+  // Location to define conveyor's frame
+  l_nResult=bAnd(x_nSelectData,1)
+  if l_nResult==1
+    // Upstream ends
+    pWinUp[0].trsf=swap:trWinUp[0]
+    pWinUp[1].trsf=swap:trWinUp[1]
+    // Downstream ends
+    pWinDown[0].trsf=swap:trWinDown[0]
+    pWinDown[1].trsf=swap:trWinDown[1]
+    // Custom origin of the tracking window
+    pWinCenter.trsf=swap:trWinCenter
+    // Third location to define center table for circular tracking
+    pWinMiddle.trsf=swap:trWinMiddle
+    // Same process for point configuration
+    if bIsScara
+      pWinUp[0].config=swap:cWinUpRS[0]
+      pWinUp[1].config=swap:cWinUpRS[1]
+      pWinDown[0].config=swap:cWinDownRS[0]
+      pWinDown[1].config=swap:cWinDownRS[1]
+      pWinCenter.config=swap:cWinCenterRS
+      pWinMiddle.config=swap:cWinMiddleRS
+    else
+      pWinUp[0].config=swap:cWinUp[0]
+      pWinUp[1].config=swap:cWinUp[1]
+      pWinDown[0].config=swap:cWinDown[0]
+      pWinDown[1].config=swap:cWinDown[1]
+      pWinCenter.config=swap:cWinCenter
+      pWinMiddle.config=swap:cWinMiddle
+    endIf
+  endIf
+  // Location to define conveyor's frame
+  l_nResult=bAnd(x_nSelectData,2)
+  if l_nResult==2
+    pVision[0].trsf=swap:trVision[0]
+    pVision[1].trsf=swap:trVision[1]
+    pVision[2].trsf=swap:trVision[2]
+    if bIsScara
+      pVision[0].config=swap:cVisionRS[0]
+      pVision[1].config=swap:cVisionRS[1]
+      pVision[2].config=swap:cVisionRS[2]
+    else
+      pVision[0].config=swap:cVision[0]
+      pVision[1].config=swap:cVision[1]
+      pVision[2].config=swap:cVision[2]
+    endIf
+  endIf
+end
+]]></Code>
+  </Program>
+</Programs>

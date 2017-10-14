@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="moveRobot" access="private" >
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1" >
+      <Parameter name="x_pMoveTo" type="point" use="value" xsi:type="element" dimensions="1" />
+    </Parameters>
+    <Locals>
+      <Local name="l_bResult" type="bool" xsi:type="array" size="1" />
+      <Local name="l_jMoveTo" type="joint" xsi:type="array" size="1" />
+      <Local name="l_nValue" type="num" xsi:type="array" size="3" />
+      <Local name="l_pMoveTo" type="point" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+  nMotionError=0
+  // Check if destination is reachabled
+  l_pMoveTo=appro(here(tPointer,world),cfg:trApproach)
+  l_bResult=pointToJoint(tPointer,herej(),l_pMoveTo,l_jMoveTo)
+  if l_bResult==true
+    movel(l_pMoveTo,tPointer,mSlow)
+    l_pMoveTo=appro(x_pMoveTo,cfg:trApproach)
+    l_bResult=pointToJoint(tPointer,herej(),l_pMoveTo,l_jMoveTo)
+    if l_bResult==true
+      movej(l_pMoveTo,tPointer,mSlow)
+      l_pMoveTo=x_pMoveTo
+      l_bResult=pointToJoint(tPointer,herej(),l_pMoveTo,l_jMoveTo)
+      if l_bResult==true
+        movel(x_pMoveTo,tPointer,mSlow)
+      else
+        nMotionError=55
+      endIf
+    else
+      nMotionError=54
+    endIf
+  else
+    nMotionError=53
+  endIf
+  // Prepare clear text error message
+  if nMotionError!=0
+    l_nValue[0]=cfg:trApproach.x
+    l_nValue[1]=cfg:trApproach.y
+    l_nValue[2]=cfg:trApproach.z
+    call ut:addNumToString(lang:sListOfMessage[nMotionError],sErrorMessage,"*",l_nValue)
+  endIf
+end]]></Code>
+  </Program>
+</Programs>

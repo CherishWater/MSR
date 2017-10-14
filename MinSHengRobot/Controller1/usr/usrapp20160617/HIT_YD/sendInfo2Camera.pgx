@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="sendInfo2Camera" access="private" >
+    <Locals>
+      <Local name="l_ns" type="num" xsi:type="array" size="1" />
+      <Local name="l_sData" type="string" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+  l_sData=""
+  skToCamera="start"
+  l_ns=clock()
+  do
+    l_sData=skToCamera
+    if (clock()-l_ns>1)
+      call setAlarm(0)
+    endIf
+    delay(0)
+  until (true)
+
+end]]></Code>
+  </Program>
+</Programs>

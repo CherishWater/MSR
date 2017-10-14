@@ -1,0 +1,217 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<externList>
+  <data alias="cfg" type="bool" name="bLog" size="1" xsi:type="element" />
+  <data alias="cfg" type="num" name="nLOGMISC" size="1" xsi:type="element" />
+  <data alias="cfg" type="num" name="nLOGMOTION" size="1" xsi:type="element" />
+  <data alias="cfg" type="num" name="nLog" size="1" xsi:type="element" />
+  <data alias="cfg" type="num" name="nMAXCONVEYOR" size="1" xsi:type="element" />
+  <data alias="cfg" type="string" name="sPATHCONVEYOR" size="1" xsi:type="element" />
+  <data alias="cfg" type="string" name="sVERSION" size="1" xsi:type="element" />
+  <data alias="cnv0" type="bool" name="bLinear" size="1" xsi:type="element" />
+  <data alias="cnv0" type="frame" name="fConveyor" size="1" xsi:type="element" />
+  <data alias="cnv0" type="num" name="nConveyorSpeed" size="1" xsi:type="element" />
+  <data alias="cnv0" type="string" name="sDwnLimSigName" size="1" xsi:type="element" />
+  <data alias="cnv0" type="string" name="sUpLimSigName" size="1" xsi:type="element" />
+  <data alias="cnv1" type="bool" name="bLinear" size="1" xsi:type="element" />
+  <data alias="cnv1" type="frame" name="fConveyor" size="1" xsi:type="element" />
+  <data alias="cnv1" type="num" name="nConveyorSpeed" size="1" xsi:type="element" />
+  <data alias="cnv1" type="string" name="sDwnLimSigName" size="1" xsi:type="element" />
+  <data alias="cnv1" type="string" name="sUpLimSigName" size="1" xsi:type="element" />
+  <data alias="lang" type="string" name="sListOfMessage" size="72" xsi:type="array" />
+  <procedure>
+    <header>procedure ut:addStrToString(string x_sInString,string&amp; x_sOutString[1],string x_sDelimiter,string&amp; x_sSubString[1])</header>
+    <alias>ut</alias>
+  </procedure>
+  <procedure>
+    <header>procedure ut:addNumToString(string x_sInString,string&amp; x_sOutString[1],string x_sDelimiter,num&amp; x_nValue[1])</header>
+    <alias>ut</alias>
+  </procedure>
+  <procedure>
+    <header>procedure ut:_getVersion(num&amp; x_nVersion[1],num&amp; x_nRevision[1],num&amp; x_nEdit[1],num&amp; x_nError[1])</header>
+    <alias>ut</alias>
+  </procedure>
+  <procedure>
+    <header>procedure cnv1:whichObjectUsed(num&amp; x_nIdxInUse[1])</header>
+    <alias>cnv1</alias>
+  </procedure>
+  <procedure>
+    <header>procedure cnv1:teach(tool x_tTool,frame x_fFrame,point&amp; x_pLoc[1],num&amp; x_nError[1])</header>
+    <alias>cnv1</alias>
+  </procedure>
+  <procedure>
+    <header>procedure cnv1:setConveyor(frame&amp; x_fFrame)</header>
+    <alias>cnv1</alias>
+  </procedure>
+  <procedure>
+    <header>procedure cnv1:setCalibrating(bool x_bMode)</header>
+    <alias>cnv1</alias>
+  </procedure>
+  <procedure>
+    <header>procedure cnv1:reset()</header>
+    <alias>cnv1</alias>
+  </procedure>
+  <procedure>
+    <header>procedure cnv1:removePart()</header>
+    <alias>cnv1</alias>
+  </procedure>
+  <procedure>
+    <header>procedure cnv1:releaseObject(num x_nIdx)</header>
+    <alias>cnv1</alias>
+  </procedure>
+  <procedure>
+    <header>procedure cnv1:kill(num x_nConvNum)</header>
+    <alias>cnv1</alias>
+  </procedure>
+  <procedure>
+    <header>procedure cnv1:getStatus(num x_nConvNum,num&amp; x_nStatus[1])</header>
+    <alias>cnv1</alias>
+  </procedure>
+  <procedure>
+    <header>procedure cnv1:getObjectOffset(num x_nIdx,num&amp; x_nObjectOffset[1],num&amp; x_nError[1])</header>
+    <alias>cnv1</alias>
+  </procedure>
+  <procedure>
+    <header>procedure cnv1:getObjectLatch(num&amp; x_nLatchedValue[1],num&amp; x_nError[1])</header>
+    <alias>cnv1</alias>
+  </procedure>
+  <procedure>
+    <header>procedure cnv1:getObjectData(trsf&amp; x_trObject[1],num&amp; x_nError[1])</header>
+    <alias>cnv1</alias>
+  </procedure>
+  <procedure>
+    <header>procedure cnv1:getNextID(num&amp; x_nNextID[1])</header>
+    <alias>cnv1</alias>
+  </procedure>
+  <procedure>
+    <header>procedure cnv1:getErrorMessage(string&amp; x_sMessage[1])</header>
+    <alias>cnv1</alias>
+  </procedure>
+  <procedure>
+    <header>procedure cnv1:getDistance(point x_pLoc,num x_nTime,num&amp; x_nDist2Up[1],num&amp; x_nDist2Down[1],num&amp; x_nError[1])</header>
+    <alias>cnv1</alias>
+  </procedure>
+  <procedure>
+    <header>procedure cnv1:getDetectFrame(frame&amp; x_fDetection,frame x_fRefFrame,num&amp; x_nError)</header>
+    <alias>cnv1</alias>
+  </procedure>
+  <procedure>
+    <header>procedure cnv1:getDetectDist(num x_nIdx,num&amp; x_nDetectDist[1],num&amp; x_nError[1])</header>
+    <alias>cnv1</alias>
+  </procedure>
+  <procedure>
+    <header>procedure cnv1:getConvFrame(frame&amp; x_fConveyor,frame x_fRefFrame,num&amp; x_nError)</header>
+    <alias>cnv1</alias>
+  </procedure>
+  <procedure>
+    <header>procedure cnv1:flushQueue()</header>
+    <alias>cnv1</alias>
+  </procedure>
+  <procedure>
+    <header>procedure cnv1:enableQueue()</header>
+    <alias>cnv1</alias>
+  </procedure>
+  <procedure>
+    <header>procedure cnv1:disableQueue()</header>
+    <alias>cnv1</alias>
+  </procedure>
+  <procedure>
+    <header>procedure cnv1:create(num x_nConvNum)</header>
+    <alias>cnv1</alias>
+  </procedure>
+  <procedure>
+    <header>procedure cnv1:checkTrackArea(tool x_tActivTool,num&amp; x_nWrkZone[1])</header>
+    <alias>cnv1</alias>
+  </procedure>
+  <procedure>
+    <header>procedure cnv0:whichObjectUsed(num&amp; x_nIdxInUse[1])</header>
+    <alias>cnv0</alias>
+  </procedure>
+  <procedure>
+    <header>procedure cnv0:teach(tool x_tTool,frame x_fFrame,point&amp; x_pLoc[1],num&amp; x_nError[1])</header>
+    <alias>cnv0</alias>
+  </procedure>
+  <procedure>
+    <header>procedure cnv0:setConveyor(frame&amp; x_fFrame)</header>
+    <alias>cnv0</alias>
+  </procedure>
+  <procedure>
+    <header>procedure cnv0:setCalibrating(bool x_bMode)</header>
+    <alias>cnv0</alias>
+  </procedure>
+  <procedure>
+    <header>procedure cnv0:reset()</header>
+    <alias>cnv0</alias>
+  </procedure>
+  <procedure>
+    <header>procedure cnv0:removePart()</header>
+    <alias>cnv0</alias>
+  </procedure>
+  <procedure>
+    <header>procedure cnv0:releaseObject(num x_nIdx)</header>
+    <alias>cnv0</alias>
+  </procedure>
+  <procedure>
+    <header>procedure cnv0:kill(num x_nConvNum)</header>
+    <alias>cnv0</alias>
+  </procedure>
+  <procedure>
+    <header>procedure cnv0:getStatus(num x_nConvNum,num&amp; x_nStatus[1])</header>
+    <alias>cnv0</alias>
+  </procedure>
+  <procedure>
+    <header>procedure cnv0:getObjectOffset(num x_nIdx,num&amp; x_nObjectOffset[1],num&amp; x_nError[1])</header>
+    <alias>cnv0</alias>
+  </procedure>
+  <procedure>
+    <header>procedure cnv0:getObjectLatch(num&amp; x_nLatchedValue[1],num&amp; x_nError[1])</header>
+    <alias>cnv0</alias>
+  </procedure>
+  <procedure>
+    <header>procedure cnv0:getObjectData(trsf&amp; x_trObject[1],num&amp; x_nError[1])</header>
+    <alias>cnv0</alias>
+  </procedure>
+  <procedure>
+    <header>procedure cnv0:getNextID(num&amp; x_nNextID[1])</header>
+    <alias>cnv0</alias>
+  </procedure>
+  <procedure>
+    <header>procedure cnv0:getErrorMessage(string&amp; x_sMessage[1])</header>
+    <alias>cnv0</alias>
+  </procedure>
+  <procedure>
+    <header>procedure cnv0:getDistance(point x_pLoc,num x_nTime,num&amp; x_nDist2Up[1],num&amp; x_nDist2Down[1],num&amp; x_nError[1])</header>
+    <alias>cnv0</alias>
+  </procedure>
+  <procedure>
+    <header>procedure cnv0:getDetectFrame(frame&amp; x_fDetection,frame x_fRefFrame,num&amp; x_nError)</header>
+    <alias>cnv0</alias>
+  </procedure>
+  <procedure>
+    <header>procedure cnv0:getDetectDist(num x_nIdx,num&amp; x_nDetectDist[1],num&amp; x_nError[1])</header>
+    <alias>cnv0</alias>
+  </procedure>
+  <procedure>
+    <header>procedure cnv0:getConvFrame(frame&amp; x_fConveyor,frame x_fRefFrame,num&amp; x_nError)</header>
+    <alias>cnv0</alias>
+  </procedure>
+  <procedure>
+    <header>procedure cnv0:flushQueue()</header>
+    <alias>cnv0</alias>
+  </procedure>
+  <procedure>
+    <header>procedure cnv0:enableQueue()</header>
+    <alias>cnv0</alias>
+  </procedure>
+  <procedure>
+    <header>procedure cnv0:disableQueue()</header>
+    <alias>cnv0</alias>
+  </procedure>
+  <procedure>
+    <header>procedure cnv0:create(num x_nConvNum)</header>
+    <alias>cnv0</alias>
+  </procedure>
+  <procedure>
+    <header>procedure cnv0:checkTrackArea(tool x_tActivTool,num&amp; x_nWrkZone[1])</header>
+    <alias>cnv0</alias>
+  </procedure>
+</externList>

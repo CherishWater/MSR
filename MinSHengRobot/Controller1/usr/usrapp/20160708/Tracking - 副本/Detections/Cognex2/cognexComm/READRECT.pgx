@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="readRect" access="public">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="nHndl_" type="num" xsi:type="element" />
+      <Parameter name="x_sCol" type="string" xsi:type="element" />
+      <Parameter name="x_nRow" type="num" xsi:type="element" />
+      <Parameter name="trOrigin_" type="trsf" xsi:type="array" use="reference" />
+      <Parameter name="trSize_" type="trsf" xsi:type="array" use="reference" />
+      <Parameter name="x_bResult" type="bool" xsi:type="array" use="reference" />
+    </Parameters>
+    <Locals>
+      <Local name="l_bIsOK" type="bool" xsi:type="array" size="1" />
+      <Local name="l_bResult" type="bool" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[
+begin
+  // read X coordinate from spreadsheet
+  call readNumValue(nHndl_,x_sCol,x_nRow,trOrigin_.x,x_bResult)
+  if x_bResult
+    // increment column number
+    call _incrementCol(x_sCol,l_bIsOK)
+    if l_bIsOK
+      // read Y coordinate from spreadsheet
+      call readNumValue(nHndl_,x_sCol,x_nRow,trOrigin_.y,x_bResult)
+      if x_bResult
+        // read width from spreadsheet
+        call _incrementCol(x_sCol,l_bIsOK)
+        if l_bIsOK
+          call readNumValue(nHndl_,x_sCol,x_nRow,trSize_.x,x_bResult)
+          if x_bResult
+            // read height from spreadsheet
+            call _incrementCol(x_sCol,l_bIsOK)
+            call readNumValue(nHndl_,x_sCol,x_nRow,trSize_.y,x_bResult)
+            if x_bResult
+              // read RZ from spreadsheet
+              call _incrementCol(x_sCol,l_bIsOK)
+              if l_bIsOK
+                call readNumValue(nHndl_,x_sCol,x_nRow,trOrigin_.rz,x_bResult)
+              endIf
+            endIf
+          endIf
+        endIf
+      endIf
+    endIf 
+  endIf
+end
+]]></Code>
+  </Program>
+</Programs>

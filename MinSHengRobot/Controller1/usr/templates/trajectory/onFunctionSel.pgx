@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="onFunctionSel" access="public">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_nIndex" type="num" xsi:type="element" />
+      <Parameter name="x_sEvent" type="string" xsi:type="element" />
+      <Parameter name="x_nFunctionKey" type="num" xsi:type="element" />
+    </Parameters>
+    <Code><![CDATA[begin
+  //
+  // do on Key action
+  //
+  // x_nIndex = actual index item
+  // x_sEvent = actual event item
+  //
+  switch x_nFunctionKey
+    // F1 button
+    case 271
+    break
+    // F2 button
+    case 272
+    break
+    // F3 button
+    case 273
+    break
+    // F4 button
+    case 274
+    break
+    // F5 button
+    case 275
+    break
+    // F6 button
+    case 276
+    break
+    // F7 button
+    case 277
+    break
+    // F8 button
+    case 278
+    break
+  endSwitch   
+end
+      ]]></Code>
+  </Program>
+</Programs>

@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="_removeChar">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_sInString" type="string" xsi:type="element" />
+      <Parameter name="x_sChar" type="string" xsi:type="element" />
+      <Parameter name="x_nSelect" type="num" xsi:type="element" />
+      <Parameter name="x_sOutString" type="string" xsi:type="array" use="reference" />
+    </Parameters>
+    <Locals>
+      <Local name="l_i" type="num" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[
+begin
+  // This program removes the specified char from the string
+  //
+  // Input Param
+  //  x_sInString : String to work with
+  //  x_sChar     : Character to remove
+  //  x_nSelect   : Select how char must be removed
+  //              = 0 : Removes all char present in string
+  //              = 1 : Characters up to the first nonbreak character are removed
+  //                    from the input string
+  // Output Param
+  //  x_sOutString : String with specified char removed
+  //
+  //Created 21/12/05                              CCUR
+  //--------------------------------------------------------------
+  switch x_nSelect
+    case 0
+      x_sOutString=""
+      for l_i=0 to len(x_sInString)-1
+        if mid(x_sInString,1,l_i)!=x_sChar
+          x_sOutString=x_sOutString+mid(x_sInString,1,l_i)
+        endIf
+      endFor
+    break
+    case 1
+      while (left(x_sInString,1)==x_sChar)
+        x_sInString=delete(x_sInString,1,0)
+      endWhile
+      x_sOutString=x_sInString
+    break
+  endSwitch
+end
+]]></Code>
+  </Program>
+</Programs>

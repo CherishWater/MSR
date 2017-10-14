@@ -1,0 +1,233 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="DefineSettings" access="private" >
+    <Locals>
+      <Local name="l_bLock" type="bool" xsi:type="array" size="1" />
+      <Local name="l_bQuit" type="bool" xsi:type="array" size="1" />
+      <Local name="l_bRefresh" type="bool" xsi:type="array" size="1" />
+      <Local name="l_bResult" type="bool" xsi:type="array" size="1" />
+      <Local name="l_nError" type="num" xsi:type="array" size="1" />
+      <Local name="l_nKey" type="num" xsi:type="array" size="1" />
+      <Local name="l_nStep" type="num" xsi:type="array" size="1" />
+      <Local name="l_nStepPrev" type="num" xsi:type="array" size="1" />
+      <Local name="l_sEmpty" type="string" xsi:type="array" size="1" />
+      <Local name="l_sErrorMsg" type="string" xsi:type="array" size="1" />
+      <Local name="l_sLibraryName" type="string" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+  // This program guides the user through the differents
+  // step to define the geometry of the conveyor
+  //
+  // Created 23-02-05                                   C.CURRIVAND
+  //----------------------------------------------------------------
+  //
+  l_bQuit=false
+  l_bLock=false
+  l_nStep=0
+  l_sEmpty=""
+  cls()
+  do
+    if l_nStepPrev!=l_nStep
+      if cfg:bLog==true
+        logMsg("WZD(DefineSettings)>>Step :"+toString("",l_nStep))
+      endIf
+      l_bRefresh=true
+      l_nStepPrev=l_nStep
+    endIf
+    switch l_nStep
+      //
+      // Display page for general parameters
+      case 0
+        call lang:Page(50,l_sEmpty,-1,true,l_nKey)
+        l_sLibraryName=cfg:sSETTINGPATH+"SettingGEN"
+        call pg:create(l_sLibraryName,"",0,l_nError)
+        if l_nError!=0
+          call pg:getErrorMessage(sErrorMessage)
+          popUpMsg(sErrorMessage)
+          l_bQuit=true
+        else
+          // Read data from config library and push them into the page
+          call readCFG()
+          //
+          call pg:display(0,0,false)
+          call pg:handle(l_nKey)
+          switch l_nKey
+            // Encoder Parameters
+            case 4
+              l_nStep=10
+            break
+            // Detection Parameters
+            case 5
+              l_nStep=20
+            break
+            // Conveyor Parameters
+            case 6
+              l_nStep=30
+            break
+            // Cancel
+            case 8
+              l_bQuit=true
+            break
+          endSwitch
+          // If any other page has been selected
+          if l_nKey!=255
+            // Update config library
+            call writeCFG()
+            l_nError=cfg:libSave()
+            logMsg("WZD(DefineSettings)>>Save Config library:"+toString("",l_nError))
+            // Update Tool of the Wizard library
+            tPointer.trsf=cfg:tPointer.trsf
+          else
+            l_bQuit=true
+          endIf
+        endIf
+      break
+      //
+      // Display Encoder parameter
+      case 10
+        // Display
+        call lang:Page(51,l_sEmpty,-1,true,l_nKey)
+        l_sLibraryName=cfg:sSETTINGPATH+"SettingENC"
+        call pg:create(l_sLibraryName,"",0,l_nError)
+        if l_nError!=0
+          call pg:getErrorMessage(sErrorMessage)
+          popUpMsg(sErrorMessage)
+          l_bQuit=true
+        else
+          // Read parameter from conveyor library
+          call readENC()
+          call pg:display(0,0,false)
+          call pg:handle(l_nKey)
+          switch l_nKey
+            // General Parameters
+            case 2
+              l_nStep=0
+            break
+            // Detection Parameters
+            case 5
+              l_nStep=20
+            break
+            // Conveyor Parameters
+            case 6
+              l_nStep=30
+            break
+            // Cancel
+            case 8
+              l_bQuit=true
+            break
+          endSwitch
+          // If any other page has been selected
+          if l_nKey!=255
+            // Update parameter of encoder library
+            call writeENC()
+            l_nError=enc:libSave()
+            logMsg("WZD(DefineSettings)>>Save Encoder library "+cnv:sEncoderLib+" :"+toString("",l_nError))
+            l_nError=cnv:libSave()
+            logMsg("WZD(DefineSettings)>>Save Conveyor library "+cnv:sConveyorName+" :"+toString("",l_nError))
+          else
+            l_bQuit=true
+          endIf
+        endIf
+      break
+      //
+      // Display detection parameter
+      case 20
+        // Display
+        call lang:Page(52,l_sEmpty,-1,true,l_nKey)
+        l_sLibraryName=cfg:sSETTINGPATH+"SettingDET"
+        call pg:create(l_sLibraryName,"",0,l_nError)
+        if l_nError!=0
+          call pg:getErrorMessage(sErrorMessage)
+          popUpMsg(sErrorMessage)
+          l_bQuit=true
+        else
+          // Read parameter from conveyor library
+          call readDET()
+          call pg:display(0,0,false)
+          call pg:handle(l_nKey)
+          switch l_nKey
+            // General Parameters
+            case 2
+              l_nStep=0
+            break
+            // Encoder Parameters
+            case 4
+              l_nStep=10
+            break
+            // Conveyor Parameters
+            case 6
+              l_nStep=30
+            break
+            // Cancel
+            case 8
+              l_bQuit=true
+            break
+          endSwitch
+          // If any other page has been selected
+          if l_nKey!=255
+            // Update parameter of detection library
+            call writeDET()
+            l_nError=det:libSave()
+            logMsg("WZD(DefineSettings)>>Save detection library "+cnv:sDetectionLib+" :"+toString("",l_nError))
+          else
+            l_bQuit=true
+          endIf
+        endIf
+      break
+      //
+      // Display Conveyor parameter
+      case 30
+        // Display
+        call lang:Page(53,l_sEmpty,-1,true,l_nKey)
+        l_sLibraryName=cfg:sSETTINGPATH+"SettingCNV"
+        call pg:create(l_sLibraryName,"",2,l_nError)
+        if l_nError!=0
+          call pg:getErrorMessage(sErrorMessage)
+          popUpMsg(sErrorMessage)
+          l_bQuit=true
+        else
+          // Read parameter from conveyor library
+          call readCNV(l_nError)
+          call pg:display(0,0,false)
+          call pg:handle(l_nKey)
+          switch l_nKey
+            case -1
+              // do nothing
+            break
+            // General Parameters
+            case 2
+              l_nStep=0
+            break
+            // Encoder Parameters
+            case 4
+              l_nStep=10
+            break
+            // Detection Parameters
+            case 5
+              l_nStep=20
+            break
+            // Cancel
+            case 8
+              l_bQuit=true
+            break
+            default
+              l_bRefresh=false
+            break
+          endSwitch
+          // If any other page has been selected
+          if l_nKey!=255
+            // Update parameter of conveyor library
+            call writeCNV(l_nError)
+            l_nError=cnv:libSave()
+            logMsg("WZD(DefineSettings)>>Save Conveyor library "+cnv:sConveyorName+" :"+toString("",l_nError))
+          else
+            l_bQuit=true
+          endIf
+        endIf
+      break
+    endSwitch
+    delay(0)
+  until (l_bQuit==true)
+end]]></Code>
+  </Program>
+</Programs>

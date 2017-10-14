@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="txtBoxDynUpdate" access="public">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_sDynamicText" type="string" xsi:type="element" />
+    </Parameters>
+    <Code><![CDATA[
+begin
+  // This program updates the dynamic text of a text box message
+  //
+  // Input param
+  // x_nDynamicText    : Dynamic part of the message
+  //
+  //
+  // Created 23-02-05                           C.CURRIVAND
+  //------------------------------------------------------------------
+  call strAlign(x_sDynamicText,nTxtBoxWidth,"L"," ")
+  call type(nTxtBoxCol+1,nTxtBoxRow+size(sWrkString),x_sDynamicText)
+end
+]]></Code>
+  </Program>
+</Programs>

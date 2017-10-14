@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="_displayList" access="private" >
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1" >
+      <Parameter name="x_sDirectory" type="string" use="value" xsi:type="element" dimensions="1" />
+      <Parameter name="x_sTitle" type="string" use="value" xsi:type="element" dimensions="1" />
+      <Parameter name="x_nX" type="num" use="value" xsi:type="element" dimensions="1" />
+      <Parameter name="x_nY" type="num" use="value" xsi:type="element" dimensions="1" />
+      <Parameter name="x_nWidth" type="num" use="value" xsi:type="element" dimensions="1" />
+      <Parameter name="x_nHeight" type="num" use="value" xsi:type="element" dimensions="1" />
+    </Parameters>
+    <Locals>
+      <Local name="l_i" type="num" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+  // This program explores a directory, generates and display
+  // a list with the files included in that directory
+  //
+  // Input Param
+  // x_sDirectory : Directory to explore
+  //
+  // Output Param
+  //  x_nError    : Error code
+  //
+  // Created 23-02-05                                   C.CURRIVAND
+  //----------------------------------------------------------------
+  // Resize variable
+  resize(sItemList,1,1)
+  //
+  call up:listSetSize(x_nX,x_nY,x_nWidth,x_nHeight)
+  call up:listCreate(x_sTitle)
+  if libList(x_sDirectory,sItemList)==true
+    call up:listAdd(sItemList)
+    call up:listUpdate(0)
+  endIf
+end]]></Code>
+  </Program>
+</Programs>

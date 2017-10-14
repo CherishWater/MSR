@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="readStrValue" access="public">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="handle_" type="num" xsi:type="element" />
+      <Parameter name="x_sCellNumber" type="string" xsi:type="element" />
+      <Parameter name="value_" type="string" xsi:type="array" use="reference" />
+      <Parameter name="result_" type="bool" xsi:type="array" use="reference" />
+    </Parameters>
+    <Locals>
+      <Local name="strCell" type="string" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[
+begin
+  // read contents of a cell
+  // col_   : column of cell to read (column "A" -> 1, "B" -> 2, etc)
+  // row_   : row of cell to read
+  // value_ : contents of cell
+  // result_: returns true if operation succeeded
+  //          if false, check errorCode for error code of operation
+  //
+  nCommand[handle_]=coGV
+  //call coord2Cell(col_,row_,strCell)
+  //? "Command : gv"+x_sCellNumber
+  call sendCommand(handle_,"gv"+x_sCellNumber,result_)
+  if result_
+    call readSocket(handle_,value_,result_)
+  else
+    value_=""
+  endIf
+end
+]]></Code>
+  </Program>
+</Programs>

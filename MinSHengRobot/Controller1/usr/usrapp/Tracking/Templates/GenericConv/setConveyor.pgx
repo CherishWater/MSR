@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="setConveyor" access="public">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_fFrame" type="frame" xsi:type="element" use="reference" />
+    </Parameters>
+    <Code><![CDATA[
+begin
+  // This programs sets the input frame as conveyor 
+  //
+  // Input Param
+  //  x_fFrame   : Frame to be set as conveyor
+  //
+  // Output Param
+  //  none       : 
+  //
+  //----------------------------------------------------------------
+  //
+  // The frame may be already conveyor (previous run)
+  $setMobile(x_fFrame,false)
+  // Set frame as conveyor
+  $setConv(x_fFrame,enc:aiEncCurrentPos,"pos",{nENCSCALEFACTOR,0,0,0,0,0},nFirTime,nFirDelay)
+end
+]]></Code>
+  </Program>
+</Programs>

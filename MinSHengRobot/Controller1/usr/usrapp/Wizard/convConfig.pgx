@@ -1,0 +1,219 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="convConfig" access="private" >
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1" >
+      <Parameter name="x_nError" type="num" use="reference" xsi:type="element" dimensions="1" />
+    </Parameters>
+    <Locals>
+      <Local name="l_bLock" type="bool" xsi:type="array" size="1" />
+      <Local name="l_bQuit" type="bool" xsi:type="array" size="1" />
+      <Local name="l_bReport" type="bool" xsi:type="array" size="1" />
+      <Local name="l_nError" type="num" xsi:type="array" size="1" />
+      <Local name="l_nIdx" type="num" xsi:type="array" size="1" />
+      <Local name="l_nKeyPressed" type="num" xsi:type="array" size="1" />
+      <Local name="l_nLibNum" type="num" xsi:type="array" size="1" />
+      <Local name="l_nSocketIndex" type="num" xsi:type="array" size="1" />
+      <Local name="l_nStep" type="num" xsi:type="array" size="1" />
+      <Local name="l_sEmpty" type="string" xsi:type="array" size="1" />
+      <Local name="l_sItmSelected" type="string" xsi:type="array" size="1" />
+      <Local name="l_sSubString" type="string" xsi:type="array" size="1" />
+      <Local name="l_skVision" type="sio" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+  // This programs guides the user in the configuration of the
+  // conveyor library. The user will have to select an encoder
+  // library, a detection library, the profil of the conveyor
+  // (linear/circular)
+  //
+  // Output Param
+  // x_nError : Error Code
+  //      =0  --> No error
+  //      =-1 --> Process has been canceled
+  //      =31 --> Problem with selected encoder library
+  //      =32 --> Problem with selected detection library
+  //
+  //----------------------------------------------------------------
+  //
+  //***************************
+  //***** Initialisations *****
+  //***************************
+  l_bQuit=false
+  l_bLock=false
+  x_nError=0
+  //
+  //*************************
+  //*****   MAIN LOOP  ******
+  //*************************
+  //
+  l_sEmpty=""
+  do
+    switch l_nStep
+      // Select an encoder library
+      case 0
+        if l_bLock==false
+          call lang:Page(70,l_sEmpty,13,true,l_nKeyPressed)
+          call _displayList(cfg:sPATHENCODER,lang:sListOfMessage[10],23,2,15,7)
+          l_bLock=true
+        endIf
+        if l_bLock==true
+          call lang:Page(70,l_sEmpty,13,false,l_nKeyPressed)
+          call up:listEvent(l_nKeyPressed,l_nIdx,l_sItmSelected)
+          switch l_nKeyPressed
+            // Previous/Cancel
+            case 1,8
+              x_nError=-1
+              l_bQuit=true
+            break
+            // Select or Return
+            case 4,270
+              // try to load the selected encoder library
+              l_nError=enc:libLoad(cfg:sPATHENCODER+l_sItmSelected)
+              if l_nError==0
+                // Encoder lib is loadable, no problemo
+                cnv:sEncoderLib=l_sItmSelected
+                logMsg("Encoderlib : "+cnv:sEncoderLib)
+                l_nStep=10
+                l_bLock=false
+              else
+                // Error while loading encoder library
+                x_nError=31
+                l_sSubString=cfg:sPATHENCODER+l_sItmSelected
+                call ut:addStrToString(lang:sListOfMessage[x_nError],sErrorMessage,"",l_sSubString)
+                call ut:addNumToString(sErrorMessage,sErrorMessage,"",l_nError)
+                l_bQuit=true
+              endIf
+            break
+          endSwitch
+        endIf
+      break
+      //
+      // Select a Detection library
+      case 10
+        if l_bLock==false
+          call lang:Page(71,l_sEmpty,13,true,l_nKeyPressed)
+          call _displayList(cfg:sPATHDETECTION,lang:sListOfMessage[11],23,2,15,7)
+          l_bLock=true
+        endIf
+        if l_bLock==true
+          call lang:Page(71,l_sEmpty,13,false,l_nKeyPressed)
+          call up:listEvent(l_nKeyPressed,l_nIdx,l_sItmSelected)
+          switch l_nKeyPressed
+            // Previous
+            case 1
+              l_nStep=0
+              l_bLock=false
+            break
+            // Select or Return
+            case 4,270
+              // try to load the selected detection library
+              l_nError=det:libLoad(cfg:sPATHDETECTION+l_sItmSelected)
+              if l_nError==0
+                // Check the status of the socket needed for the selected detection library.
+                if left(l_sItmSelected,6)=="Cognex"
+                  // Read the number of the library (ex. Cognex1 or Cognex2)
+                  toNum(delete(l_sItmSelected,6,0),l_nLibNum,l_bReport)
+                  if !l_bReport
+                    l_nLibNum=1
+                  endIf
+                  // Check that the index of the variable exists on the library Tracking\io\sockets
+                  l_nSocketIndex=l_nLibNum-1
+                  if l_nSocketIndex>size(sck:skCognex)-1
+                    x_nError=32
+                    call ut:addNumToString(lang:sListOfMessage[68],sErrorMessage,"",l_nSocketIndex)
+                    l_bQuit=true
+                    // Check if the socket exists
+                  elseIf ioStatus(sck:skCognex[l_nSocketIndex])<0
+                    x_nError=32
+                    call ut:addNumToString(lang:sListOfMessage[56],sErrorMessage,"",l_nLibNum)
+                    l_bQuit=true
+                  endIf
+                elseIf left(l_sItmSelected,6)=="Socket"
+                  // Read the number of the library (ex. Socket1 or Socket2)
+                  toNum(delete(l_sItmSelected,6,0),l_nLibNum,l_bReport)
+                  if !l_bReport
+                    l_nLibNum=1
+                  endIf
+                  // Check that the index of the variable exists on the library Tracking\io\sockets
+                  l_nSocketIndex=l_nLibNum-1
+                  if l_nSocketIndex>size(sck:skFromRobot)-1
+                    x_nError=32
+                    call ut:addNumToString(lang:sListOfMessage[69],sErrorMessage,"",l_nSocketIndex)
+                    l_bQuit=true
+                    // Check if the socket exists
+                  elseIf ioStatus(sck:skFromRobot[l_nSocketIndex])<0
+                    x_nError=32
+                    call ut:addNumToString(lang:sListOfMessage[61],sErrorMessage,"",l_nLibNum)
+                    call ut:addNumToString(sErrorMessage,sErrorMessage,"",l_nLibNum)
+                    l_bQuit=true
+                  endIf
+                endIf
+                if l_nError==0
+                  // Detection lib is loadable.
+                  cnv:sDetectionLib=l_sItmSelected
+                  logMsg("Detectionlib : "+cnv:sDetectionLib)
+                  l_nStep=15
+                  l_bLock=false
+                endIf
+              else
+                // Error while loading detection library
+                x_nError=32
+                l_sSubString=cfg:sPATHENCODER+l_sItmSelected
+                call ut:addStrToString(lang:sListOfMessage[x_nError],sErrorMessage,"",l_sSubString)
+                call ut:addNumToString(sErrorMessage,sErrorMessage,"",l_nError)
+                l_bQuit=true
+              endIf
+            break
+            // Cancel
+            case 8
+              x_nError=-1
+              l_bQuit=true
+            break
+          endSwitch
+        endIf
+      break
+      case 15
+        geometry:bLinear=true
+        l_bQuit=true
+      break
+      // Select Linear/Circular conveyor
+      case 20
+        if l_bLock==false
+          call lang:Page(72,l_sEmpty,13,true,l_nKeyPressed)
+          call up:listSetSize(23,2,15,5)
+          call up:listCreate(lang:sListOfMessage[12])
+          call up:listAdd(lang:sLinear)
+          call up:listAdd(lang:sCircular)
+          call up:listUpdate(0)
+          l_bLock=true
+        endIf
+        if l_bLock==true
+          call lang:Page(72,l_sEmpty,13,false,l_nKeyPressed)
+          call up:listEvent(l_nKeyPressed,l_nIdx,l_sItmSelected)
+          switch l_nKeyPressed
+            // Previous
+            case 1
+              l_nStep=10
+              l_bLock=false
+            break
+            // Select or Return
+            case 4,270
+              geometry:bLinear=(l_sItmSelected==lang:sLinear)
+              l_bQuit=true
+              l_bLock=false
+            break
+            // Cancel
+            case 8
+              x_nError=-1
+              l_bQuit=true
+            break
+          endSwitch
+        endIf
+      break
+      default
+      break
+    endSwitch
+    delay(0)
+  until (l_bQuit==true)
+end]]></Code>
+  </Program>
+</Programs>

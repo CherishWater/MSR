@@ -1,0 +1,157 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="listEvent" access="public">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_nKey" type="num" xsi:type="element" />
+      <Parameter name="x_nIndex" type="num" xsi:type="array" use="reference" />
+      <Parameter name="x_sItem" type="string" xsi:type="array" use="reference" />
+    </Parameters>
+    <Locals>
+      <Local name="l_nSize" type="num" xsi:type="array" size="1" />
+      <Local name="l_bEmpty" type="bool" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[
+begin
+  //-----------------------------------------------------------------------
+  //Header begin
+  //Description of program
+  //  Read events from the keyboard and update the menu:  selected Items,
+  //  cursor position.
+  //  Return the selected Items and this name.
+  //
+  //Input parameters
+  //  num x_nKey :
+  //    role : Key pressed
+  //Output parameters
+  //  num x_nIndex :
+  //    role : Contains the number of the selected Item
+  //  string x_sItem :
+  //    role : Contains the name of the selected Item
+  //
+  //Example
+  //  call listEvent()
+  //
+  //History
+  //  Creation : 28-04-08 - f.Rob
+  //Header end
+  //-----------------------------------------------------------------------
+  call isListEmpty(l_bEmpty)
+  if !l_bEmpty
+    //The list is no empty
+    l_nSize=size(sItems)-1
+    //Check the overFlow
+    l_nSize=size(sItems)-1
+    //Test if the selected element is in the list
+    if (nFirst+nView>l_nSize)
+      //Reset the value
+      nFirst=nView=0
+    endIf
+    //Security...
+    switch (x_nKey)
+      //Up
+      case 261
+        //Test if the cursor is not on the top of the menu
+        if ((nView-1)>=0)
+          call listCursor(nView,false)
+          //Update the cursor of menu
+          nView=nView-1
+          call listCursor(nView,true)
+          //Print the scroll
+        else
+          if nView==0
+            //Scrool up
+            if ((nFirst-1)>=0)
+              nFirst=nFirst-1
+              //Move the Menu for obtain the Item number nFirst
+              //on the top
+              call listUpdate(nFirst)
+            else
+              //Go to the end of the menu
+              if nView+nFirst!=l_nSize
+                call listCursor(nView,false)
+                call selectNewField(l_nSize,nFirst+nView,nView)
+              endIf
+            endIf
+          endIf
+        endIf
+      break
+      //Down
+      case 266
+        //Test if the cursor is not on the bottom of the menu
+        if ((nView+nFirst+1)<size(sItems))
+          //No need to scrool only change cursor position
+          if ((nView+1)<nListHeight)
+            call listCursor(nView,false)
+            nView=nView+1
+            call listCursor(nView,true)
+            //Print the scroll
+          else
+            //Move UP
+            nFirst=nFirst+1
+            //Move the Menu for obtain the Item number nFirst
+            //on the top
+            call listUpdate(nFirst)
+          endIf
+        else
+          //Go to the top of the menu
+          if !(nView==0 and nFirst==0)
+            call listCursor(nView,false)
+            nView=0
+            call listUpdate(0)
+          endIf
+        endIf
+      break
+      //Page Up
+      case 262
+        if !(nView==0 and nFirst==0)
+          call listCursor(nView,false)
+          if ((nFirst+nView-nListHeight)>=0)
+            //Move one page up
+            call selectNewField(nFirst+nView-nListHeight,nFirst+nView,nView)
+          else
+            //Go to home
+            nView=0
+            call listUpdate(0)
+          endIf
+        endIf
+      break
+      //Page Down
+      case 267
+        if nView+nFirst!=l_nSize
+          call listCursor(nView,false)
+          if ((nView+nFirst+nListHeight)<size(sItems)-1)
+            //Move one page down
+            call selectNewField(nFirst+nView+nListHeight,nFirst+nView,nView)
+          else
+            //Go to the end
+            call selectNewField(l_nSize,nFirst+nView,nView)
+          endIf
+        endIf
+      break
+      //End
+      case 269
+        if nView+nFirst!=l_nSize
+          //Move to end
+          call listCursor(nView,false)
+          call selectNewField(l_nSize,nFirst+nView,nView)
+        endIf
+      break
+      //Home
+      case 265
+        if !(nView==0 and nFirst==0)
+          //Move to home
+          call listCursor(nView,false)
+          nView=0
+          call listUpdate(0)
+        endIf
+      break
+      default
+      break
+    endSwitch
+    x_nIndex=nFirst+nView
+    x_sItem=sItems[x_nIndex]
+  endIf
+end
+]]></Code>
+  </Program>
+</Programs>

@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="robot2PLC" access="private" >
+    <Locals>
+      <Local name="l_nLocalNum" type="num" xsi:type="array" size="1" />
+      <Local name="l_nNextNum" type="num" xsi:type="array" size="1" />
+      <Local name="l_ns" type="num" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+  l_nLocalNum=-1
+  while true
+    //
+
+    wait(dPlaceDone[0]==true or dPlaceDone[1]==true or dPlaceDone[2]==true or dPlaceDone[3]==true)
+    //
+    l_ns=clock()
+    do
+      delay(0)
+    until clock()-l_ns>0.25
+
+    if (dPlaceDone[0]==true)
+      dPlaceDone[0]=false
+    elseIf (dPlaceDone[1]==true)
+      dPlaceDone[1]=false
+    elseIf (dPlaceDone[2]==true)
+      dPlaceDone[2]=false
+    elseIf (dPlaceDone[3]==true)
+      dPlaceDone[3]=false
+    else
+      dPlaceDone[0]=false
+      dPlaceDone[1]=false
+      dPlaceDone[2]=false
+      dPlaceDone[3]=false
+    endIf
+    //
+    sClient=toString("",nPlaceCycleNum)
+    //    if (l_nLocalNum!=nPlaceCycleNum)
+    //      //
+    //      sClient=toString("",nPlaceCycleNum)
+    //      l_nLocalNum=nPlaceCycleNum
+    //    endIf
+
+    nTestData[0]=nPlaceCycleNum
+    nTestData[1]=asc(sSecondRStatus,0)-48
+    nTestData[3]=nTestData[0]-nTestData[1]
+  endWhile
+end]]></Code>
+  </Program>
+</Programs>

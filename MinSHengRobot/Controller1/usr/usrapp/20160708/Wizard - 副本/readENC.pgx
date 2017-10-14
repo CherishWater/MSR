@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="readENC" access="private" >
+    <Locals>
+      <Local name="l_nError" type="num" xsi:type="array" size="1" />
+      <Local name="l_nValue" type="num" xsi:type="array" size="1" />
+      <Local name="l_sValue" type="string" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+  // Read current value from conveyor library
+  resize(sCaption,1,pg:nNumOfTxtBox)
+  call pg:getCaption(sCaption)
+  // LatchPeriod
+  call ut:_toString(enc:nLatchPeriod,"",l_sValue)
+  call pg:setFieldValue(sCaption[0],l_sValue,l_nError)
+  // Encoder Resolution
+  call enc:getResolution(cnv:nENCRESOLUTION)
+  call ut:_toString(cnv:nENCRESOLUTION,"",l_sValue)
+  call pg:setFieldValue(sCaption[1],l_sValue,l_nError)
+  // Display filter length
+  call ut:_toString(cnv:nFirOrdre,"",l_sValue)
+  call pg:setFieldValue(sCaption[2],l_sValue,l_nError)
+  // display filter delay
+  call ut:_toString(cnv:nFirDelay*1000,"",l_sValue)
+  call pg:setFieldValue(sCaption[3],l_sValue,l_nError)
+end]]></Code>
+  </Program>
+</Programs>

@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="convCreate" access="private" >
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1" >
+      <Parameter name="x_sFileName" type="string" use="value" xsi:type="element" dimensions="1" />
+      <Parameter name="x_nError" type="num" use="reference" xsi:type="array" dimensions="1" />
+    </Parameters>
+    <Locals>
+      <Local name="l_nError" type="num" xsi:type="array" size="1" />
+      <Local name="l_sMessage" type="string" xsi:type="array" size="1" />
+      <Local name="l_sSubString" type="string" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+  // This program creates/stores a conveyor library on the flash disk
+  //
+  // Input Param
+  // x_sFileName    : Name of the file for the conveyor library
+  //
+  // Input Param
+  // x_nError      : Error code
+  //        0  ->  No Error (success)
+  //       35  -> Error while deleting existing conveyor library
+  //       36  -> Error while storing new conveyor library
+  //       36  -> Error while storing geometry lib
+  //
+  // Created 23-02-05                                   C.CURRIVAND
+  //----------------------------------------------------------------
+  //
+  x_nError=0
+  l_sSubString=cfg:sPATHCONVEYOR+x_sFileName
+  call ut:addStrToString(lang:sListOfMessage[34],l_sMessage,"",l_sSubString)
+  call up:txtBoxDyn(l_sMessage,3,5,38)
+  call up:txtBoxDynUpdate(lang:sListOfMessage[17])
+  l_nError=libDelete(cfg:sPATHCONVEYOR+x_sFileName)
+  if l_nError==0
+    call up:txtBoxDynUpdate(lang:sListOfMessage[18])
+    // Setup geometry lib in the conveyor library
+    cnv:sGeometryLib=sGeometryLib
+    cnv:sConveyorName=x_sFileName
+    l_nError=cnv:libSave(cfg:sPATHCONVEYOR+x_sFileName)
+    if l_nError==0
+      call up:txtBoxDynUpdate(lang:sListOfMessage[19])
+      geometry:bIsScara=bIsScara
+      call geometry:SetPoint(3)
+      l_nError=geometry:libSave(cfg:sPATHCONVEYOR+x_sFileName+"\"+sGeometryLib)
+      if l_nError!=0
+        // Delete created file(s) if error occured
+        libDelete(cfg:sPATHCONVEYOR+x_sFileName)
+        // Prepare clear text error message
+        x_nError=37
+        l_sSubString=cfg:sPATHCONVEYOR+x_sFileName+"\"+sGeometryLib
+        call ut:addStrToString(lang:sListOfMessage[x_nError],l_sMessage,"",l_sSubString)
+        call ut:addNumToString(l_sMessage,sErrorMessage,"*",l_nError)
+      endIf
+    else
+      // Delete created file(s) if error occured
+      libDelete(cfg:sPATHCONVEYOR+x_sFileName)
+      // Prepare clear text error message
+      x_nError=36
+      l_sSubString=cfg:sPATHCONVEYOR+x_sFileName
+      call ut:addStrToString(lang:sListOfMessage[x_nError],l_sMessage,"",l_sSubString)
+      call ut:addNumToString(l_sMessage,sErrorMessage,"*",l_nError)
+    endIf
+  else
+    // Prepare clear text error message
+    x_nError=35
+    l_sSubString=cfg:sPATHCONVEYOR+x_sFileName
+    call ut:addStrToString(lang:sListOfMessage[x_nError],l_sMessage,"",l_sSubString)
+    call ut:addNumToString(l_sMessage,sErrorMessage,"*",l_nError)
+  endIf
+end]]></Code>
+  </Program>
+</Programs>

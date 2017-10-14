@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="waitCharOnSk">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_sCharacter" type="string" xsi:type="element" />
+    </Parameters>
+    <Locals>
+      <Local name="l_nAsciiCode" type="num" xsi:type="array" size="1" />
+      <Local name="l_sCharRead" type="string" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[
+begin
+  // This program reads character by character on the socket until
+  //  it finds a specific character. The socket must be a socket
+  //  server with timeout=0
+  //
+  // Input Param
+  //  x_sCharacter : Character to find
+  //
+  // Output Param
+  //  none         : 
+  //
+  //----------------------------------------------------------------
+  //
+  l_sCharRead=""
+  //
+  // Read character by character until finds specific character
+  while l_sCharRead!=x_sCharacter
+    // Reads one character from socket
+    sioGet(skFromRobot,l_nAsciiCode)
+    l_sCharRead=chr(l_nAsciiCode)
+  endWhile
+  //
+end
+]]></Code>
+  </Program>
+</Programs>

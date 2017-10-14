@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="robot2PC" access="private" >
+    <Code><![CDATA[begin
+
+  clearBuffer(sktoPC)
+  //设置终止符 $
+  sioCtrl(sktoPC,"endOfString",36)
+  sktoPC="run"
+
+  delay(0.5)
+  bIsConnectPC=true
+  while true
+
+    if (bIsConnectPC==true)
+      sDataPC=sktoPC
+    endIf
+    delay(0)
+  endWhile
+
+end]]></Code>
+  </Program>
+</Programs>

@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="init">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_nEncNum" type="num" xsi:type="element" />
+      <Parameter name="x_sTask" type="string" xsi:type="element" />
+    </Parameters>
+    <Code><![CDATA[
+begin
+  //
+  //***************************
+  //***** Numerical value *****
+  //***************************
+  nPresetPos=0
+  // -- Max value of Starc encoder input in degree:
+  // internal counter is signed 32 bits
+  nMAXCOUNT=(power(2,31))*360/(4*nEncResolution)
+  nMINCOUNT=-nMAXCOUNT
+  //
+  //***************************
+  //********* Strings *********
+  //***************************
+  sTASK=x_sTask+toString("",x_nEncNum)
+  sEncNum="ENC"+toString("",x_nEncNum)
+  //
+  //***************************
+  //* INITIALIZATION  SECTION *
+  //***************************
+  //-- Detection of rising edge on encoder latch input
+  bMemoLatchState=diEncLatched
+  //-- Select if position capture INPUT occurs on rising/falling edge
+  //   bLatchLevel=true --> position capture on rising edge
+  //   bLatchLevel=false --> position capture on falling edge
+  //        if position capture OUTPUT occurs on falling edge
+  //        CHANGE the logic of the output (doClock=false --> true) 
+  //        in the program conveyor of the conveyor lib
+  bLatchLevel=!doLatchEdgFall
+  //-- Part has been latched
+  bPartLatched=false
+  //
+  // Preset encoder counter
+  aioSet(aoPresetPos,nPresetPos)
+  doEnablePreset=true
+  wait(doEnablePreset==false)
+  // Reset latch register
+  doEnableLatch=false
+  // Initialize encoder values
+  nEncLatchedVal=nEncValue=0
+  //
+  bLatchEnabled=true
+end
+]]></Code>
+  </Program>
+</Programs>

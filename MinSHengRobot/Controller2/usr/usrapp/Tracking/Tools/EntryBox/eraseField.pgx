@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="eraseField">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_nColumn" type="num" xsi:type="element" />
+    </Parameters>
+    <Locals>
+      <Local name="l_bOk" type="bool" xsi:type="array" size="1" />
+      <Local name="l_nFieldLength" type="num" xsi:type="array" size="1" />
+      <Local name="l_sDisplay" type="string" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[
+begin
+  // This program erases an area of the screen where the textBox value
+  // should be displayed. The area start at column number passed as parameter
+  //
+  // Input Param
+  // x_nColumn  : Column to start erasing
+  //
+  //Created 21/12/05                              CCUR
+  //--------------------------------------------------------------
+  l_sDisplay=" "
+  toNum(pw:sTxtBoxLen[nFocused],l_nFieldLength,l_bOk)
+  call ut:strAlign(l_sDisplay,l_nFieldLength,"R"," ")
+  gotoxy(x_nColumn,nTxtPosY[nFocused])
+  put(l_sDisplay)
+end
+]]></Code>
+  </Program>
+</Programs>

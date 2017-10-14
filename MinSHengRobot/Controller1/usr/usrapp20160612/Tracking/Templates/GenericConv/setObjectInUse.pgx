@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="setObjectInUse" access="public">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_nIdx" type="num" xsi:type="element" />
+    </Parameters>
+    <Code><![CDATA[
+begin
+  // This programs is used to count how many users have accessed
+  // to the data of an object in the queue
+  //
+  // Input param
+  //  x_nIdx       : Index of the object in the queue
+  //
+  // Output param
+  //  none
+  //
+  // Created 25-09-07                                   C.CURRIVAND
+  //----------------------------------------------------------------
+  //
+  nNumbOfUser[x_nIdx]=nNumbOfUser[x_nIdx]+1
+end
+]]></Code>
+  </Program>
+</Programs>

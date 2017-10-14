@@ -1,0 +1,117 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="convLoad" access="private" >
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1" >
+      <Parameter name="x_sLibName" type="string" use="value" xsi:type="element" dimensions="1" />
+      <Parameter name="x_nError" type="num" use="reference" xsi:type="element" dimensions="1" />
+    </Parameters>
+    <Locals>
+      <Local name="l_bReport" type="bool" xsi:type="array" size="1" />
+      <Local name="l_nError" type="num" xsi:type="array" size="1" />
+      <Local name="l_nLibNum" type="num" xsi:type="array" size="1" />
+      <Local name="l_nSocketIndex" type="num" xsi:type="array" size="1" />
+      <Local name="l_sFileToLoad" type="string" xsi:type="array" size="1" />
+      <Local name="l_sMessage" type="string" xsi:type="array" size="1" />
+      <Local name="l_sSubString" type="string" xsi:type="array" size="1" />
+      <Local name="l_skVision" type="sio" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+  // Program to load a conveyor library into the memory
+  //
+  // Input Param
+  //  x_sLibName  : name of the library to load
+  //
+  //  Output Param
+  // x_nError     : error code
+  //
+  //----------------------------------------------------------------
+  //
+  x_nError=0
+  l_sSubString=cfg:sPATHCONVEYOR+x_sLibName
+  call ut:addStrToString(lang:sListOfMessage[48],l_sMessage,"",l_sSubString)
+  call up:txtBoxDyn(l_sMessage,3,5,38)
+  // Loading conveyor library
+  l_sFileToLoad=cfg:sPATHCONVEYOR+x_sLibName
+  l_nError=cnv:libLoad(l_sFileToLoad)
+  if l_nError==0
+    call up:txtBoxDynUpdate(lang:sListOfMessage[49])
+    //Init conveyor library: Init variables and loads its libraries
+    call cnv:init(0,l_nError)
+    //If no error for the conveyor libraries: loads the same libraries 
+    //  for the Wizard
+    if l_nError==0
+      // Load geometry lib
+      call up:txtBoxDynUpdate(lang:sListOfMessage[50]+" "+cnv:sGeometryLib)
+      l_sFileToLoad=cfg:sPATHCONVEYOR+x_sLibName+"\"+cnv:sGeometryLib
+      l_nError=geometry:libLoad(l_sFileToLoad)
+      if l_nError==0
+        call geometry:GetPoint(3)
+        // Load encoder lib
+        call up:txtBoxDynUpdate(lang:sListOfMessage[51]+" "+cnv:sEncoderLib)
+        l_nError=enc:libLoad(cfg:sPATHENCODER+cnv:sEncoderLib)
+        if l_nError==0
+          // Loading associated detection library
+          call up:txtBoxDynUpdate(lang:sListOfMessage[52]+" "+cnv:sDetectionLib)
+          l_sFileToLoad=cfg:sPATHDETECTION+cnv:sDetectionLib
+          l_nError=det:libLoad(l_sFileToLoad)
+          if l_nError!=0
+            x_nError=32
+          else
+            // Check the status of the socket needed for the selected detection library.
+            if left(cnv:sDetectionLib,6)=="Cognex"
+              // Read the number of the library (ex. Cognex1 or Cognex2)
+              toNum(delete(cnv:sDetectionLib,6,0),l_nLibNum,l_bReport)
+              if !l_bReport
+                l_nLibNum=1
+              endIf
+              // Check that the index of the variable exists on the library Tracking\io\sockets
+              l_nSocketIndex=l_nLibNum-1
+              if l_nSocketIndex>size(sck:skCognex)-1
+                x_nError=-1
+                call ut:addNumToString(lang:sListOfMessage[70],sErrorMessage,"",l_nSocketIndex)
+                // Check if the socket exists
+              elseIf ioStatus(sck:skCognex[l_nSocketIndex])<0
+                x_nError=-1
+                call ut:addNumToString(lang:sListOfMessage[57],sErrorMessage,"",l_nLibNum)
+              endIf
+            elseIf left(cnv:sDetectionLib,6)=="Socket"
+              // Read the number of the library (ex. Socket1 or Socket2)
+              toNum(delete(cnv:sDetectionLib,6,0),l_nLibNum,l_bReport)
+              if !l_bReport
+                l_nLibNum=1
+              endIf
+              // Check that the index of the variable exists on the library Tracking\io\sockets
+              l_nSocketIndex=l_nLibNum-1
+              if l_nSocketIndex>size(sck:skFromRobot)-1
+                x_nError=-1
+                call ut:addNumToString(lang:sListOfMessage[71],sErrorMessage,"",l_nSocketIndex)
+                // Check if the socket exists
+              elseIf ioStatus(sck:skFromRobot[l_nSocketIndex])<0
+                x_nError=-1
+                call ut:addNumToString(lang:sListOfMessage[62],sErrorMessage,"",l_nLibNum)
+                call ut:addNumToString(sErrorMessage,sErrorMessage,"",l_nLibNum)
+              endIf
+            endIf
+          endIf
+        else
+          x_nError=31
+        endIf
+      else
+        x_nError=33
+      endIf
+    else
+      // get error message of the conveyor library
+      x_nError=-1
+      call cnv:getErrorMessage(sErrorMessage)
+    endIf
+  else
+    x_nError=30
+  endIf
+  if x_nError>0
+    // Prepare clear text error message
+    call ut:addStrToString(lang:sListOfMessage[x_nError],sErrorMessage,"",l_sFileToLoad)
+    call ut:addNumToString(sErrorMessage,sErrorMessage,"*",l_nError)
+  endIf
+end]]></Code>
+  </Program>
+</Programs>

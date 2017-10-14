@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="overflowPick" access="private" >
+    <Locals>
+      <Local name="l_nConvNum" type="num" xsi:type="array" size="1" />
+      <Local name="l_nConvSpeed" type="num" xsi:type="array" size="1" />
+      <Local name="l_nConvSpeedOld" type="num" xsi:type="array" size="1" />
+      <Local name="l_nDistDown" type="num" xsi:type="array" size="1" />
+      <Local name="l_nDistUp" type="num" xsi:type="array" size="1" />
+      <Local name="l_nEncLatchVal" type="num" xsi:type="array" size="1" />
+      <Local name="l_nError" type="num" xsi:type="array" size="1" />
+      <Local name="l_nLimCrossPer" type="num" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+  // This program removes all the objects from the conveyor’s queue
+  //  that the robot is not going to work with. It removes the
+  //  objects by overflow or by bypass.
+  // The use of this program on a task allows to remove the
+  //  unnecessary objects from the conveyor’s queue while the robot
+  //  is working with a previous object.
+  // If the variable bTransferData is set to true, the program will
+  //  send the objects to the transfer queue before removing the
+  //  objects from the conveyor’s queue.
+  // If the variable bSetConvSpeed is set to true, the program will
+  //  reduce/stop the conveyor to avoid that an object leaves the
+  //  tracking window.
+  //
+  // Input parameters
+  //  None            :
+  //
+  // Output parameters
+  //  None            :
+  //
+  //----------------------------------------------------------------
+  //
+  l_nConvNum=0
+  l_nConvSpeed=0
+  l_nConvSpeedOld=0
+  //
+  do
+    //
+    // Takes control of the Pick conveyor queue
+    setMutex(_bMutexCnvQueue[l_nConvNum])
+    //
+    // Remove objects by Bypass
+    if nBypass[l_nConvNum]>0 and _nCntBypassed[l_nConvNum]==0
+      if _bOverflowed and false
+        _bOverflowed=false
+        _nCntBypassed=nBypass
+      else
+        call bypassPick()
+      endIf
+      //call bypassPick()
+    endIf
+    //
+    // Check if there is an object on the conveyor’s queue
+    if _nID[l_nConvNum]==-1
+      call mot:getNextID(l_nConvNum,_nID[l_nConvNum])
+    endIf
+    //
+    // If there is an object on the conveyor’s queue: Remove the object from the conveyor’s
+    //  queue if the object has passed the downstream limit (overflow) or, if the variable
+    //  setConvSpeed is set to true, stop the conveyor before the object crosses the downstream limit.
+    if _nID[l_nConvNum]!=-1
+      // Recover next object transformation from the stack
+      call mot:getObjectData(l_nConvNum,pPick.trsf,l_nError)
+      call mot:getDistance(l_nConvNum,pPick,0,l_nDistUp,l_nDistDown,l_nError)
+      // Reduce/stop the speed of the conveyor when the object is in between the two middle limits.
+      //  The value of the speed is calculated as a percentage of the nominal speed. The percentage
+      //  is proportional to the distance of the object to the middle limits, 100% when the object
+      //  is at the first middle limit and 0% when the object is at the second middle limit.
+      if bSetConvSpeed[l_nConvNum] and l_nDistDown<nWaitDistToDown[l_nConvNum]
+        l_nLimCrossPer=max((nWaitDistToUp[l_nConvNum,2]-l_nDistUp)/(nWaitDistToUp[l_nConvNum,2]-nWaitDistToUp[l_nConvNum,1]),0)
+        l_nConvSpeed=l_nLimCrossPer*nNomConvSpeed[l_nConvNum]
+        if l_nConvSpeedOld!=l_nConvSpeed
+          call setConvSpeed(l_nConvNum,sel(l_nDistUp>nWaitDistToUp[l_nConvNum,1],l_nConvSpeed,nNomConvSpeed[l_nConvNum]))
+          l_nConvSpeedOld=l_nConvSpeed
+        endIf
+      else
+        // Remove objects by Overflow
+        if (l_nDistUp>nWaitDistToUp[l_nConvNum,1])
+          //
+          // Send object to the next robot
+          if bTransferData[l_nConvNum]
+            call mot:getObjectLatch(l_nConvNum,l_nEncLatchVal,l_nError)
+            call send2NextRob(l_nConvNum,_nID[l_nConvNum],pPick.trsf,l_nEncLatchVal)
+          endIf
+          //
+          // Remove object from conveyor's queue
+          call mot:removePart(l_nConvNum)
+          _nID[l_nConvNum]=-1
+          pPick.trsf={0,0,0,0,0,0}
+          _bOverflowed=true
+          _nCntTransfered[l_nConvNum]=_nCntTransfered[l_nConvNum]+1
+        endIf
+      endIf
+    else
+      // No object available => full speed on the conveyor
+      l_nConvSpeed=nNomConvSpeed[l_nConvNum]
+      if bSetConvSpeed[l_nConvNum] and l_nConvSpeedOld!=l_nConvSpeed
+        call setConvSpeed(l_nConvNum,l_nConvSpeed)
+        l_nConvSpeedOld=l_nConvSpeed
+      endIf
+    endIf
+    //
+    // Release control of the Pick conveyor queue.
+    _bMutexCnvQueue[l_nConvNum]=false
+    //
+    delay(0)
+  until false
+end]]></Code>
+  </Program>
+</Programs>

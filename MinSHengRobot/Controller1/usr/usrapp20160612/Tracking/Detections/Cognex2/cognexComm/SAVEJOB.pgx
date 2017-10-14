@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="saveJob" access="public">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="handle_" type="num" xsi:type="element" />
+      <Parameter name="value_" type="string" xsi:type="element" />
+      <Parameter name="result_" type="bool" xsi:type="array" use="reference" />
+    </Parameters>
+    <Code><![CDATA[
+begin
+  // save the current job to given file
+  nCommand[handle_]=coTF
+  call sendCommand(handle_,"tf"+value_,result_)
+end
+]]></Code>
+  </Program>
+</Programs>

@@ -1,0 +1,165 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="cellManager" access="private" >
+    <Locals>
+      <Local name="l_jHere" type="joint" xsi:type="array" size="1" />
+      <Local name="l_nConvSpeedOld" type="num" xsi:type="array" size="1" />
+      <Local name="l_nErr" type="num" xsi:type="array" size="1" />
+      <Local name="l_nI" type="num" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+  // This program is the cell manager, it manage:
+  //  -  Variable initializing
+  //  -  Launch Tracking
+  //  -  Arm Power
+  //  -  Robot home position
+  //  -  Launch user’s tasks, kills and re-launch user’s task in case of tracking error
+  //  -  Displays cycle times and counters.
+  //
+  // Input parameters
+  //  None            :
+  //
+  // Output parameters
+  //  None            :
+  //
+  //----------------------------------------------------------------
+  //
+
+  //  //Launch queue transfer tasks
+  //  if _bTransferData[0]
+  //    taskCreate "TransferQueue1",100,transferQueue(0)
+  //  endIf
+  //  // Task to remove picking positions that have pass the downstream limit while the robot is placing a part.
+  //  taskCreate "overflowPick",100,overflowPick()
+
+  // Task for production cycle
+  if taskStatus("productionCycle")>=0
+    taskKill("productionCycle")
+  endIf
+  wait(taskStatus("productionCycle")<0)
+  taskCreate "productionCycle",100,productionCycle()
+
+
+  // Task to set the blow on the tool for a defined period of time
+  if taskStatus("blow")>=0
+    taskKill("blow")
+  endIf
+  wait(taskStatus("blow")<0)
+  taskCreate "blow",100,blow()
+  wait(taskStatus("blow")==1)
+  //
+  if taskStatus("sRobot2fRobot")>=0
+    taskKill("sRobot2fRobot")
+  endIf
+  wait(taskStatus("sRobot2fRobot")<0)
+  taskCreate "sRobot2fRobot",100,sRobot2fRobot()
+  //
+  if taskStatus("robot2PLC")>=0
+    taskKill("robot2PLC")
+  endIf
+  wait(taskStatus("robot2PLC")<0)
+  taskCreate "robot2PLC",100,robot2PLC()
+
+  //OMAC进程:Running
+  _nOmacStat=3
+
+  //
+  //  //Init conveyor speed
+  //  call setConvSpeed(0,nNomConvSpeed[0])
+  //  l_nConvSpeedOld[0]=nNomConvSpeed[0]
+  //
+  // Main loop
+  do
+    // Enable Power
+    if isPowered()==false and esStatus()!=2
+      if _nOmacStat==3
+        enablePower()
+        delay(0.5)
+      endIf
+    endIf
+    //
+    // Set conveyor speed to the nominal value if the conveyor speed is not controlled by the tasks
+    //  overflowPick and overflowPlace
+    if bSetConvSpeed[0]
+      l_nConvSpeedOld[0]=0
+    else
+      if l_nConvSpeedOld[0]!=nNomConvSpeed[0]
+        call setConvSpeed(0,nNomConvSpeed[0])
+        l_nConvSpeedOld[0]=nNomConvSpeed[0]
+      endIf
+    endIf
+
+    if _nOmacStat==3
+      //task TransferQueue1 error management,auto recover
+      if bTransferData[0]
+        if taskStatus("TransferQueue1")!=1
+          logMsg("TransferQueue1任务错误")
+          taskKill("TransferQueue1")
+          wait(taskStatus("TransferQueue1")==-1)
+          taskCreate "TransferQueue1",100,transferQueue(0)
+          wait(taskStatus("TransferQueue1")==1)
+          logMsg("TransferQueue1自动恢复")
+        endIf
+      endIf
+      //task TransferQueue1 error management,auto recover
+      if taskStatus("overflowPick")!=1
+        logMsg("overflowPick任务错误")
+        taskKill("overflowPick")
+        wait(taskStatus("overflowPick")==-1)
+        taskCreate "overflowPick",100,overflowPick()
+        wait(taskStatus("overflowPick")==1)
+        logMsg("overflowPick自动恢复")
+      endIf
+      // Tracking error management
+      if isSettled()==true and $trackingState()==-1
+        if _nOmacStat==3
+          if _bIsPicking==true
+            logMsg("抓取时跟踪错误")
+          endIf
+          if _bIsPlacing==true
+            logMsg("放件时运动错误")
+          endIf
+          //记录跟踪错误次数
+          _nTrackErr=_nTrackErr+1
+          stopMove()
+          resetMotion()
+          call trackErr_init()
+          autoConnectMove(true)
+          l_jHere=herej()
+          l_jHere.j3=jHome.j3
+          movej(l_jHere,tGripper,mNomSpeed)
+          movej(jHome,tGripper,mNomSpeed)
+          _bSentToHome=true
+          //          //Launch queue transfer tasks
+          //          if _bTransferData[0]
+          //            taskCreate "TransferQueue1",100,transferQueue(0)
+          //          endIf
+          //          // Task to remove picking positions that have pass the downstream limit while the robot is placing a part.
+          //          taskCreate "overflowPick",100,overflowPick()
+          // Task for production cycle
+
+          if taskStatus("productionCycle")>=0
+            taskKill("productionCycle")
+          endIf
+          wait(taskStatus("productionCycle")<0)
+          taskCreate "productionCycle",100,productionCycle()
+          wait(taskStatus("productionCycle")==1)
+        endIf
+      endIf
+    endIf
+    //
+    //show cv speed
+    if _bConvExist
+      call mot:getConvSpeed(0,_nConvSpd,l_nErr)
+      gotoxy(0,0)
+      put("                    ")
+      gotoxy(0,0)
+      put("传送带速度："+toString("",_nConvSpd)+" mm/s")
+    endIf
+
+
+    delay(0)
+  until false
+end]]></Code>
+  </Program>
+</Programs>

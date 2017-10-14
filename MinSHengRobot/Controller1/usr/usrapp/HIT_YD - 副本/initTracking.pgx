@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="initTracking" access="private" >
+    <Locals>
+      <Local name="l_nConvNum" type="num" xsi:type="array" size="1" />
+      <Local name="l_nError" type="num" xsi:type="array" size="1" />
+      <Local name="l_sErrorMessage" type="string" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+  // This program initializes all tracking variables and launches all tracking tasks
+  //
+  // Input parameters
+  //  None            :
+  //
+  // Output parameters
+  //  None            :
+  //
+  //----------------------------------------------------------------
+  //
+  // Load motion library
+  l_nError=mot:libLoad("Tracking\Motion")
+  if l_nError!=0
+    popUpMsg("Error while loading motion library: "+toString("",l_nError))
+  endIf
+  //
+  // Start the libraries to perform conveyor tracking
+  call mot:create(sConveyorList)
+  //
+  // Waits until all tasks are up and running
+  for l_nConvNum=0 to size(sConveyorList)-1
+    do
+      call mot:getStatus(l_nConvNum,l_nError)
+      delay(0)
+    until (l_nError==0)
+  endFor
+  _bConvExist=true
+  //
+  //Reads the position of the frames defined with the Wizard, 
+  //for all conveyors on the conveyor list
+  for l_nConvNum=0 to size(sConveyorList)-1
+    // Get the conveyor frame
+    call mot:getConvFrame(l_nConvNum,fConveyor[l_nConvNum],world,l_nError)
+    if l_nError!=0
+      call mot:getErrorMessage(l_sErrorMessage)
+      popUpMsg(l_sErrorMessage)
+    endIf
+    //
+    // Get the detection frame
+    call mot:getDetectFrame(l_nConvNum,fDetection[l_nConvNum],world,l_nError)
+    if l_nError!=0
+      call mot:getErrorMessage(l_sErrorMessage)
+      popUpMsg(l_sErrorMessage)
+    endIf
+  endFor
+  //
+end]]></Code>
+  </Program>
+</Programs>

@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="_recordLoc" access="private" >
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1" >
+      <Parameter name="x_tool" type="tool" use="value" xsi:type="element" dimensions="1" />
+      <Parameter name="x_frame" type="frame" use="value" xsi:type="element" dimensions="1" />
+      <Parameter name="x_TRSF" type="trsf" use="reference" xsi:type="array" dimensions="1" />
+      <Parameter name="x_CFG" type="config" use="reference" xsi:type="array" dimensions="1" />
+    </Parameters>
+    <Code><![CDATA[begin
+  // This program records the position and the configuration
+  // of the robot's tool in the frame passed as parameter.
+  //
+  // Input Param
+  //  x_frame : reference frame in which position must be recorded
+  //  x_tool  :
+  //
+  // Output Param
+  // x_TRSF : Position
+  // x_CFG  : Configuration
+  //
+  // Created 16-01-06                                   C.CURRIVAND
+  //----------------------------------------------------------------
+  x_TRSF=position(here(x_tool,x_frame),x_frame)
+  x_CFG=config(herej())
+end]]></Code>
+  </Program>
+</Programs>

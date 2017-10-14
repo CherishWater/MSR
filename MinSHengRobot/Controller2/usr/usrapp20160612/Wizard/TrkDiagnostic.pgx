@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="TrkDiagnostic" access="private" >
+    <Locals>
+      <Local name="lLatchDuration" type="num" xsi:type="array" size="1" />
+      <Local name="lTps" type="num" xsi:type="array" size="1" />
+      <Local name="l_bQuit" type="bool" xsi:type="array" size="1" />
+      <Local name="l_bRefresh" type="bool" xsi:type="array" size="1" />
+      <Local name="l_i" type="num" xsi:type="array" size="1" />
+      <Local name="l_nCounter" type="num" xsi:type="array" size="1" />
+      <Local name="l_nEncVal" type="num" xsi:type="array" size="1" />
+      <Local name="l_nID" type="num" xsi:type="array" size="1" />
+      <Local name="l_nKeyPressed" type="num" xsi:type="array" size="1" />
+      <Local name="l_nState" type="num" xsi:type="array" size="1" />
+      <Local name="l_sEmpty" type="string" xsi:type="array" size="1" />
+      <Local name="l_y" type="num" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+  l_sEmpty=""
+  // Display diagnostic page
+  call lang:Page(40,l_sEmpty,3,true,l_nKeyPressed)
+  //main loop
+  l_bQuit=false
+  l_i=0
+  l_y=1
+  do
+    //Instantaneous encoder value
+    //call up:typeLen(31,1,toString("",dbg:nEncoderValue),9)
+    //
+    // Filtered encoder Value
+    //call up:typeLen(31,4,toString("",dbg:nFiltered),9)
+    //
+    //Conveyor speed
+    //call up:typeLen(31,7,toString("3",dbg:nConvSpeed),3)
+    //
+    // update Stack informations
+    //    if l_i<dbg:nIdxPush
+    //      call up:typeLen(2,l_y+l_i,toString("",dbg:nID[l_i]),3)
+    //      call up:typeLen(13,l_y+l_i,toString("",dbg:nLatchedVal[l_i]),9)
+    //
+    //      call up:typeLen(21,l_y+l_i,toString("",dbg:nOffset[l_i]),3)
+    //    else
+    //      call up:type(0,l_y+l_i,"                             ")
+    //    endIf
+    l_i=(l_i+1)%(min(5,nStackSize))
+    //
+    // Stack indexes
+    //    call up:typeLen(31,10,toString("2",dbg:nIdxPush),2)
+    //    call up:typeLen(31,12,toString("2",dbg:nIdxPull),2)
+    //
+    // Check if FKEy pressed
+    call lang:Page(40,l_sEmpty,14,false,l_nKeyPressed)
+    l_bQuit=(l_nKeyPressed==8)
+    //
+    // for multitasking
+    delay(0)
+  until l_bQuit==true
+  cls()
+end]]></Code>
+  </Program>
+</Programs>

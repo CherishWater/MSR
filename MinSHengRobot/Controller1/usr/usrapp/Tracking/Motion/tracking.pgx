@@ -1,0 +1,116 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="tracking" access="private" >
+    <Locals>
+      <Local name="l_i" type="num" xsi:type="array" size="1" />
+      <Local name="l_nError" type="num" xsi:type="array" size="1" />
+      <Local name="l_nObjectOffset" type="num" xsi:type="array" size="1" />
+      <Local name="l_nPopUpTime" type="num" xsi:type="array" size="1" />
+      <Local name="l_sAlterInfo" type="string" xsi:type="array" size="1" />
+      <Local name="l_sMsgPrev" type="string" xsi:type="array" size="1" />
+      <Local name="l_str" type="string" xsi:type="array" size="1" />
+      <Local name="l_trConvVel" type="trsf" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+  l_str=l_sAlterInfo=l_sMsgPrev=""
+  l_nPopUpTime=clock()
+  //
+  // Main loop
+  while !bStopAll
+    //
+    // Tracking
+    l_str=""
+    if bLizOK and !bReset
+      //
+      ///***** Conveyors speed
+      for l_i=0 to size(fConveyor)-1
+        l_nError=$getConvVel(fConveyor[l_i],l_trConvVel)
+        // l_nError = No error
+        // l_nError = -1 if the frame is not a conveyor (static frame)
+        // l_nError = -2 if the frame is a mobile frame
+        if l_nError==0
+          nConveyorSpeed[l_i]=l_trConvVel.x
+        else
+          nConveyorSpeed[l_i]=0
+        endIf
+        call setConvSpeed(l_i,l_nError)
+      endFor
+      //
+      //***** CHECK ROBOT POSITION
+      for l_i=0 to size(nTrackingZone)-1
+        if bThruUpEnabled[l_i] or bThruDwnEnabled[l_i]
+          call checkTrackArea(l_i,tTool,nTrackingZone[l_i])
+          if nTrackingZone[l_i]!=nTrackZonPrev[l_i]
+            //
+            // Crossing Upstream limit ?
+            if nTrackingZone[l_i]==1
+              if (bThruUpEnabled[l_i])
+                call setSignal(bThruUpEnabled[l_i],doThruUpLimit[l_i])
+                l_str="MOT(tracking)>>Robot has crossed the upstream limit,STOP"
+              endIf
+              // Crossing Downstream limit ?
+            elseIf nTrackingZone[l_i]==3
+              if (bThruDwnEnabled[l_i])
+                call setSignal(bThruDwnEnabled[l_i],doThruDwnLimit[l_i])
+                l_str="MOT(tracking)>>Robot has crossed the downstream limit,STOP"
+              endIf
+            endIf
+            //
+            // Reset output(s)
+            if (nTrackingZone[l_i]!=1) and (bThruUpEnabled[l_i]==true)
+              call resetSignal(bThruUpEnabled[l_i],doThruUpLimit[l_i])
+              if nTrackingZone[l_i]==2
+                l_str="MOT(tracking)>>Robot is entering Tracking area,Reset Output ThruUp"
+              else
+                l_str="MOT(tracking)>>Reset Output ThruUp"
+              endIf
+            endIf
+            if (nTrackingZone[l_i]!=3) and (bThruDwnEnabled[l_i]==true)
+              call resetSignal(bThruDwnEnabled[l_i],doThruDwnLimit[l_i])
+              if nTrackingZone[l_i]==2
+                l_str="MOT(tracking)>>Robot is entering Tracking area,Reset Output ThruDown"
+              else
+                l_str="MOT(tracking)>>Reset Output ThruDown"
+              endIf
+            endIf
+            // Output message to telnet
+            if bAnd(cfg:nLog,cfg:nLOGMOTION)==cfg:nLOGMOTION
+              ? l_str
+            endIf
+            nTrackZonPrev[l_i]=nTrackingZone[l_i]
+          endIf
+        endIf
+      endFor
+      //*****
+    elseIf bReset
+      // release all objects
+      for l_i=0 to size(nLinkedTo)-1
+        if nLinkedTo[l_i]!=-1
+          call releaseObject(l_i)
+        endIf
+      endFor
+      bReset=false
+    elseIf !bLizOK
+      //Not valTrack license installed
+      if clock()-l_nPopUpTime>10
+        popUpMsg("The valTrack license is not installed or the time for the demo period has expired")
+        l_nPopUpTime=clock()
+      endIf
+    endIf
+    //
+    l_str=getVersion("valTrack")
+    bLizOK=(l_str=="enabled") or ((find(l_str,"demo")!=-1) and (roundDown(clock()/3600)<2))
+    //
+    l_sAlterInfo="MOT(tracking)>>TrackingState: "+toString("0",$trackingState())
+    // Output message for logger
+    if bAnd(cfg:nLog,cfg:nLOGMOTION)==cfg:nLOGMOTION
+      if l_sAlterInfo!=l_sMsgPrev
+        ? l_sAlterInfo
+        l_sMsgPrev=l_sAlterInfo
+      endIf
+    endIf
+    delay(0)
+  endWhile
+end]]></Code>
+  </Program>
+</Programs>

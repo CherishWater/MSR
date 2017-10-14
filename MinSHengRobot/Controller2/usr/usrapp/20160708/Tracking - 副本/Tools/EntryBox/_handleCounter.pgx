@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="_handleCounter">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_nKeypressed" type="num" xsi:type="element" />
+      <Parameter name="x_nCounter" type="num" xsi:type="array" use="reference" />
+      <Parameter name="x_nMin" type="num" xsi:type="element" />
+      <Parameter name="x_nMax" type="num" xsi:type="element" />
+      <Parameter name="x_bRollover" type="bool" xsi:type="element" />
+    </Parameters>
+    <Code><![CDATA[
+begin
+  //This program increments or decrements the value of an input variable according to
+  // a keypressed. This is mainly used in an ASCII interface to handle the pointer of the
+  // different fields
+  //
+  //Input param
+  //   x_nKeypressed    : Number of key pressed
+  //   x_nCounter       : Input variable to increment/decrement
+  //   x_nMin           : Minimal value for x_counter
+  //   x_nMax           : Maximal value for x_counter
+  //
+  //OUTPUT PARAM  x_counter: New value of considered variable
+  //
+  //Created 21/12/05                              CCUR
+  //--------------------------------------------------------------
+  //
+  switch x_nKeypressed
+    // Arrow up,left
+    case 261,264,260
+      x_nCounter=x_nCounter-1
+      if x_nCounter<x_nMin
+        x_nCounter=sel(x_bRollover,x_nMax,x_nMin)
+      endIf
+    break
+    // Arrow Down,right
+    case 266,268,259
+      x_nCounter=x_nCounter+1
+      if x_nCounter>x_nMax
+        x_nCounter=sel(x_bRollover,x_nMin,x_nMax)
+      endIf
+    break
+  endSwitch
+end
+]]></Code>
+  </Program>
+</Programs>

@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="trackOn" access="public" >
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1" >
+      <Parameter name="x_nConvNum" type="num" use="value" xsi:type="element" dimensions="1" />
+      <Parameter name="x_pLoc" type="point" use="value" xsi:type="element" dimensions="1" />
+      <Parameter name="x_tTool" type="tool" use="value" xsi:type="element" dimensions="1" />
+      <Parameter name="x_mDesc" type="mdesc" use="value" xsi:type="element" dimensions="1" />
+      <Parameter name="x_nMoveID" type="num" use="reference" xsi:type="element" dimensions="1" />
+      <Parameter name="x_nError" type="num" use="reference" xsi:type="array" dimensions="1" />
+    </Parameters>
+    <Locals>
+      <Local name="l_bErrorLogged" type="bool" xsi:type="array" size="1" />
+      <Local name="l_bQuit" type="bool" xsi:type="array" size="1" />
+      <Local name="l_i" type="num" xsi:type="array" size="1" />
+      <Local name="l_nDetectDist" type="num" xsi:type="array" size="1" />
+      <Local name="l_nError" type="num" xsi:type="array" size="1" />
+      <Local name="l_nIdxInUse" type="num" xsi:type="array" size="1" />
+      <Local name="l_nLatchedValue" type="num" xsi:type="array" size="1" />
+      <Local name="l_trDetectPos" type="trsf" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+  // This program executes the synchronization motion with the conveyor.
+  //
+  // Input Param
+  //  x_nConvNum : Conveyor number
+  //  x_pLoc     : Location to reach
+  //  x_tTool    : Tool for motion
+  //  x_nMoveID  : ID of the movement on the motion stack
+  //  x_mDesc    : Motion descriptor
+  //
+  // Output Param
+  //  x_nError  : Error code
+  //            = 0 : No error
+  //            = 1 : No object ID selected
+  //            = 3 : Bad conveyor number
+  //
+  //----------------------------------------------------------------
+  //
+  x_nError=0
+  //
+  if bLizOK==true
+    call whichObjectUsed(x_nConvNum,l_nIdxInUse,x_nError)
+    if x_nError==0
+      // Check if an object is in use (user must have invoked getNextID)
+      if l_nIdxInUse!=-1
+        tTool.trsf=position(x_tTool,flange)
+        mTrackOn=x_mDesc
+        if mTrackOn.blend==joint
+          mTrackOn.blend=Cartesian
+        endIf
+        nCnvSynch=x_nConvNum
+        // Search an available mobile frame
+        l_i=0
+        l_bQuit=false
+        l_bErrorLogged=false
+        call getDetectDist(nCnvSynch,l_nIdxInUse,l_nDetectDist,l_nError)
+        call getObjectLatch(nCnvSynch,l_nLatchedValue,l_nError)
+        l_trDetectPos={l_nDetectDist,0,0,0,0,0}
+        do
+          //  Use this mobile frame if it is not in use, else increase the frame index.
+          if $setMobile(fMobileFrame[l_i],false)
+            // which object in the queue is going to be tracked ?
+            nPosInQueue[l_i]=l_nIdxInUse
+            // Link mobile frame to the conveyor
+            link(fMobileFrame[l_i],fConveyor[x_nConvNum])
+            // Start moving the mobile frame.
+            // The initMobile return true if it succeeded.
+            wait($initMobile(fMobileFrame[l_i],l_trDetectPos,l_nLatchedValue))
+            // record on which mobile frame robot will synchronize
+            nMobFrameSync=l_i
+            // record to which conveyor, the mobile frame is linked
+            nLinkedTo[l_i]=nCnvSynch
+            if bAnd(cfg:nLog,cfg:nLOGMOTION)==cfg:nLOGMOTION
+              ? "MOT(trackOn)>>Create mobile frame "+toString("",l_i)
+            endIf
+            l_bQuit=true
+          else
+            l_i=l_i+1
+            if l_i==nMAXMOBILEFRAME
+              //  If there isn't any mobile frame available is because
+              //    they are all used by a movement which is still at the 
+              //    motion stack. In other words, there has been too many 
+              //    trackOn without waitEndMove in between them.
+              l_i=0
+              if (bAnd(cfg:nLog,cfg:nLOGMOTION)==cfg:nLOGMOTION) and !l_bErrorLogged
+                ? "MOT(trackOn)>>Not mobile frame available at this time"
+                l_bErrorLogged=true
+              endIf
+            endIf
+          endIf
+          delay(0)
+        until l_bQuit
+        //
+        // Check robot type
+        if bIsScara
+          // Link location to the mobile frame
+          link(pTrackOn_RS,fMobileFrame[nMobFrameSync])
+          pTrackOn_RS.trsf=position(x_pLoc,fConveyor[nCnvSynch])
+          pTrackOn_RS.config=x_pLoc.config
+          x_nMoveID=$trackOn(pTrackOn_RS,x_tTool,mTrackOn)
+        else
+          // Link location to the mobile frame
+          link(pTrackOn,fMobileFrame[nMobFrameSync])
+          pTrackOn.trsf=position(x_pLoc,fConveyor[nCnvSynch])
+          pTrackOn.config=x_pLoc.config
+          x_nMoveID=$trackOn(pTrackOn,x_tTool,mTrackOn)
+        endIf
+        //
+        //
+        if bAnd(cfg:nLog,cfg:nLOGMOTION)==cfg:nLOGMOTION
+          ? "MOT(trackOn)>>Synchronisation motion requested"
+        endIf
+      else
+        if bAnd(cfg:nLog,cfg:nLOGMOTION)==cfg:nLOGMOTION
+          ? "MOT(trackOn)>>Invalid object ID,conveyor"+toString("",x_nConvNum)
+        endIf
+        x_nError=1
+      endIf
+    else
+      if bAnd(cfg:nLog,cfg:nLOGMOTION)==cfg:nLOGMOTION
+        ? "MOT(trackOn)>>Invalid conveyor number: "+toString("",x_nConvNum)
+      endIf
+      x_nError=3
+    endIf
+  endIf
+end]]></Code>
+  </Program>
+</Programs>

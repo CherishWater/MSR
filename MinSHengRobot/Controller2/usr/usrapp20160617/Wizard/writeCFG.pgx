@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="writeCFG" access="private" >
+    <Locals>
+      <Local name="l_bResult" type="bool" xsi:type="array" size="1" />
+      <Local name="l_nError" type="num" xsi:type="array" size="1" />
+      <Local name="l_nItem" type="num" xsi:type="array" size="1" />
+      <Local name="l_sValue" type="string" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+  l_nItem=0
+  // Update Tool value with data entered by user
+  resize(sCaption,1,pg:nNumOfTxtBox)
+  call pg:getCaption(sCaption)
+  //X
+  call pg:getFieldValue(sCaption[l_nItem],l_sValue,l_nError)
+  toNum(l_sValue,cfg:tPointer.trsf.x,l_bResult)
+  l_nItem=l_nItem+1
+  //Y
+  call pg:getFieldValue(sCaption[l_nItem],l_sValue,l_nError)
+  toNum(l_sValue,cfg:tPointer.trsf.y,l_bResult)
+  l_nItem=l_nItem+1
+  //Z
+  call pg:getFieldValue(sCaption[l_nItem],l_sValue,l_nError)
+  toNum(l_sValue,cfg:tPointer.trsf.z,l_bResult)
+  l_nItem=l_nItem+1
+  //RX
+  call pg:getFieldValue(sCaption[l_nItem],l_sValue,l_nError)
+  toNum(l_sValue,cfg:tPointer.trsf.rx,l_bResult)
+  l_nItem=l_nItem+1
+  //RY
+  call pg:getFieldValue(sCaption[l_nItem],l_sValue,l_nError)
+  toNum(l_sValue,cfg:tPointer.trsf.ry,l_bResult)
+  l_nItem=l_nItem+1
+  //RZ
+  call pg:getFieldValue(sCaption[l_nItem],l_sValue,l_nError)
+  toNum(l_sValue,cfg:tPointer.trsf.rz,l_bResult)
+  l_nItem=l_nItem+1
+  // Approach TRSF
+  // X value
+  call pg:getFieldValue(sCaption[l_nItem],l_sValue,l_nError)
+  toNum(l_sValue,cfg:trApproach.x,l_bResult)
+  l_nItem=l_nItem+1
+  // Y value
+  call pg:getFieldValue(sCaption[l_nItem],l_sValue,l_nError)
+  toNum(l_sValue,cfg:trApproach.y,l_bResult)
+  l_nItem=l_nItem+1
+  // Z value
+  call pg:getFieldValue(sCaption[l_nItem],l_sValue,l_nError)
+  toNum(l_sValue,cfg:trApproach.z,l_bResult)
+  l_nItem=l_nItem+1
+  // Enable event logging
+  call pg:getFieldValue(sCaption[l_nItem],l_sValue,l_nError)
+  toNum(l_sValue,cfg:nLog,l_bResult)
+end]]></Code>
+  </Program>
+</Programs>

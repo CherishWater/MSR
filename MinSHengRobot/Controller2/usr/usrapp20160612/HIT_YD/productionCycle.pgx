@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="productionCycle" access="private" >
+    <Locals>
+      <Local name="l_bPartDone" type="bool" xsi:type="array" size="1" />
+      <Local name="l_sToolStatus" type="string" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+  // This program is the main cycle. It pick on part from the input
+  // conveyor and places it on an empty cavity on the output conveyor.
+  //
+  // Input parameters
+  //  None            :
+  //
+  // Output parameters
+  //  None            :
+  //
+  //----------------------------------------------------------------
+  //
+  // In order to improve cycle time, vacuum is always on, even while
+  //  placing a part. To place a part, the blow is activated for a
+  //  short period of time when the robot arrives to the place position.
+  //
+  // Main loop
+
+  call getToolStatus(l_sToolStatus)
+  if (!bPickDetection and _bPartInTool==true) or (bPickDetection and l_sToolStatus=="PartInTool")
+    call place()
+  endIf
+  //---------------------------------------------------------------------//
+  do
+    //Takes control of the Pick conveyor queue.
+    setMutex(_bMutexCnvQueue[0])
+    do
+      call trackingPick(l_bPartDone)
+      delay(0)
+    until l_bPartDone
+    // Release control of the Pick conveyor queue.
+    _bMutexCnvQueue[0]=false
+
+    //
+    call place()
+    //
+    delay(0)
+  until _bEndCycle
+  _bEndCycle=true
+  //
+end]]></Code>
+  </Program>
+</Programs>

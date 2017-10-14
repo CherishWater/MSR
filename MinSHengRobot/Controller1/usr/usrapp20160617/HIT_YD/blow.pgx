@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="blow" access="private" >
+    <Code><![CDATA[begin
+  // This program set the Blow of the tool for _nBlowDelay seconds.
+  //
+  // Input parameters
+  //  None            :
+  //
+  // Output parameters
+  //  None            :
+  //
+  //----------------------------------------------------------------
+  //
+  do
+    wait(_nBlowDelay>0)
+    dVacuum=false
+    dBlow=true
+    delay(_nBlowDelay)
+    dBlow=false
+    _nBlowDelay=0
+    delay(0)
+  until false
+end]]></Code>
+  </Program>
+</Programs>

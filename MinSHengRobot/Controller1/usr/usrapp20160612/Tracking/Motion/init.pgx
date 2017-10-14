@@ -1,0 +1,184 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="init" access="private" >
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1" >
+      <Parameter name="x_sConveyorList" type="string" use="reference" xsi:type="array" dimensions="1" />
+      <Parameter name="x_nError" type="num" use="reference" xsi:type="array" dimensions="1" />
+    </Parameters>
+    <Locals>
+      <Local name="l_i" type="num" xsi:type="array" size="1" />
+      <Local name="l_nEditNR" type="num" xsi:type="array" size="1" />
+      <Local name="l_nError" type="num" xsi:type="array" size="1" />
+      <Local name="l_nMaxConveyor" type="num" xsi:type="array" size="1" />
+      <Local name="l_nRevisionNR" type="num" xsi:type="array" size="1" />
+      <Local name="l_nValue" type="num" xsi:type="array" size="2" />
+      <Local name="l_nVersionNR" type="num" xsi:type="array" size="1" />
+      <Local name="l_nVersionNum" type="num" xsi:type="array" size="1" />
+      <Local name="l_sFileToLoad" type="string" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+  // This is the initialisation routine of the motion library
+  // It mainly loads and starts the conveyor libraries
+  //
+  // Input Param
+  //  x_sConveyorList  : List of conveyors to be created
+  //
+  // Output Param
+  //  x_nError : Error code
+  //         =0: No Error
+  //         =11: Not compatible with VAL3 version
+  //         =12: Maximum number of conveyor is exceeded
+  //         =13: At least one conveyor library couldn't be loaded/started
+  //         =14: Could not initialize mobile frames
+  //
+  //----------------------------------------------------------------
+  //
+  //$setCartTrkLim(string sParamName, num nValue)
+  //This instruction sets default cartesian parameters for tracking moves
+  //(movelt, movect). These default parameters are those used in the 
+  //motion descriptor for accel, vel and decel (100%).
+  //sParamName is either "tvel", "rvel", "tacc", "racc", "tdec" or "rdec".
+  //nValue is the value of the parameter, in user units.  
+  //
+  x_nError=0
+  // Log VALTRACK version
+  logMsg(lang:sListOfMessage[67]+" "+cfg:sVERSION)
+  // Check VAL3 version
+  call ut:_getVersion(l_nVersionNR,l_nRevisionNR,l_nEditNR,l_nError)
+  l_nVersionNum=(l_nVersionNR*100+l_nRevisionNR*10+l_nEditNR)
+  // Library is compatible with VAL3 version s7.6.0 or later
+  if (l_nVersionNum>=760) or (bSkipVersionChk)
+    // Check Arm Identity
+    bIsScara=left(getVersion("ArmType"),2)=="rs"
+    bIsScara=left(getVersion("ArmType"),2)=="ts" or bIsScara
+    bIsScara=left(getVersion("ArmType"),2)=="tp" or bIsScara
+    //
+    l_nMaxConveyor=size(x_sConveyorList)
+    //
+    // Check number of conveyor
+    if l_nMaxConveyor<=cfg:nMAXCONVEYOR
+      //
+      resize(bThruUpEnabled,1,l_nMaxConveyor)
+      resize(bThruDwnEnabled,1,l_nMaxConveyor)
+      resize(doThruUpLimit,1,l_nMaxConveyor)
+      resize(doThruDwnLimit,1,l_nMaxConveyor)
+      resize(nTrackingZone,1,l_nMaxConveyor)
+      resize(nTrackZonPrev,1,l_nMaxConveyor)
+      for l_i=0 to l_nMaxConveyor-1
+        bThruUpEnabled[l_i]=bThruDwnEnabled[l_i]=false
+        nTrackingZone[l_i]=nDEFAULTTRKZONE
+        nTrackZonPrev[l_i]=nDEFAULTTRKZONE
+      endFor
+      // Check if conveyor libraries exist
+      // If YES, start conveyor library
+      l_nError=0
+      l_i=0
+      while (l_i<=l_nMaxConveyor-1) and (l_nError==0)
+        l_sFileToLoad=cfg:sPATHCONVEYOR+x_sConveyorList[l_i]
+        switch l_i
+          case 0
+            l_nError=cnv0:libLoad(l_sFileToLoad)
+            if l_nError==0
+              resize(sConveyorList,1,1)
+              resize(bLinear,1,1)
+              resize(fConveyor,1,1)
+              resize(nConveyorSpeed,1,1)
+              call cnv0:create(0)
+              sConveyorList[l_i]=x_sConveyorList[l_i]
+              fConveyor[l_i]=cnv0:fConveyor
+              bLinear[l_i]=cnv0:bLinear
+              //-- Link signal for Upstream limit violation
+              getData("out:"+cnv0:sUpLimSigName,doThruUpLimit[l_i])
+              bThruUpEnabled[l_i]=(ioStatus(doThruUpLimit[l_i])>=0)
+              //-- Link signal for Downstream limit violation
+              getData("out:"+cnv0:sDwnLimSigName,doThruDwnLimit[l_i])
+              bThruDwnEnabled[l_i]=(ioStatus(doThruDwnLimit[l_i])>=0)
+            endIf
+          break
+          case 1
+            l_nError=cnv1:libLoad(l_sFileToLoad)
+            if l_nError==0
+              resize(sConveyorList,1,2)
+              resize(bLinear,1,2)
+              resize(fConveyor,1,2)
+              resize(nConveyorSpeed,1,2)
+              call cnv1:create(1)
+              sConveyorList[l_i]=x_sConveyorList[l_i]
+              fConveyor[l_i]=cnv1:fConveyor
+              bLinear[l_i]=cnv1:bLinear
+              //-- Link signal for Upstream limit violation
+              getData("out:"+cnv1:sUpLimSigName,doThruUpLimit[l_i])
+              bThruUpEnabled[l_i]=(ioStatus(doThruUpLimit[l_i])>=0)
+              //-- Link signal for Downstream limit violation
+              getData("out:"+cnv1:sDwnLimSigName,doThruDwnLimit[l_i])
+              bThruDwnEnabled[l_i]=(ioStatus(doThruDwnLimit[l_i])>=0)
+            endIf
+          break
+        endSwitch
+        if l_nError!=0
+          x_nError=13
+          call ut:addStrToString(sErrMsgList[x_nError],sErrorMessage,"",l_sFileToLoad)
+          l_nValue[0]=l_i
+          l_nValue[1]=l_nError
+          call ut:addNumToString(sErrorMessage,sErrorMessage,"*",l_nValue)
+        endIf
+        l_i=l_i+1
+      endWhile
+    else
+      x_nError=12
+      l_nValue[0]=cfg:nMAXCONVEYOR
+      call ut:addNumToString(sErrMsgList[x_nError],sErrorMessage,"*",l_nValue)
+    endIf
+    //
+    //***************************
+    //*****   Numerics     ******
+    //***************************
+    //--- Number of mobile frames. 
+    nMAXMOBILEFRAME=10
+    // -- Number of the frame on which robot is currently synchronised
+    nMobFrameSync=-1
+    //
+    resize(nLinkedTo,1,nMAXMOBILEFRAME)
+    resize(nPosInQueue,1,nMAXMOBILEFRAME)
+    for l_i=0 to nMAXMOBILEFRAME-1
+      nLinkedTo[l_i]=-1
+      nPosInQueue[l_i]=-1
+    endFor
+    nCnvSynch=0
+    //
+    //***************************
+    //*****    Boolean     ******
+    //***************************
+    //
+    // -- Used to stop all the task started by this library
+    bStopAll=false
+    // -- Used to reset the tracking libraries without killing every tasks
+    bReset=false
+    //
+    bLizOK=true
+    //
+    //
+    //***************************
+    //*****    Frames      ******
+    //***************************
+    for l_i=0 to size(fConveyor)-1
+      // Define frame as conveyor
+      call setConveyor(l_i,fConveyor[l_i])
+    endFor
+    //
+    resize(fMobileFrame,1,nMAXMOBILEFRAME)
+    for l_i=0 to nMAXMOBILEFRAME-1
+      link(fMobileFrame[l_i],fConveyor[0])
+      if !$setMobile(fMobileFrame[l_i],true)
+        x_nError=14
+        l_nValue[0]=l_i
+        call ut:addNumToString(sErrMsgList[x_nError],sErrorMessage,"*",l_nValue)
+      endIf
+    endFor
+  else
+    x_nError=11
+    sErrorMessage=sErrMsgList[x_nError]
+  endIf
+end]]></Code>
+  </Program>
+</Programs>

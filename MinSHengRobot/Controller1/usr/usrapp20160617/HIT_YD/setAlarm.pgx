@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="setAlarm" access="private" >
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1" >
+      <Parameter name="x_nNum" type="num" use="value" xsi:type="element" dimensions="1" />
+    </Parameters>
+    <Code><![CDATA[begin
+  if (x_nNum==0)
+    dAlarm[0]=true
+    dAlarm[1]=false
+    dAlarm[2]=false
+    dAlarm[3]=false
+    dAlarm[4]=false
+    dAlarm[5]=false
+    dAlarm[6]=false
+    dAlarm[7]=false
+  elseIf (x_nNum==1)
+    dAlarm[0]=false
+    dAlarm[1]=true
+    dAlarm[2]=false
+    dAlarm[3]=false
+    dAlarm[4]=false
+    dAlarm[5]=false
+    dAlarm[6]=false
+    dAlarm[7]=false
+  elseIf (x_nNum==2)
+    dAlarm[0]=false
+    dAlarm[1]=false
+    dAlarm[2]=true
+    dAlarm[3]=false
+    dAlarm[4]=false
+    dAlarm[5]=false
+    dAlarm[6]=false
+    dAlarm[7]=false
+  elseIf (x_nNum==3)
+    dAlarm[0]=false
+    dAlarm[1]=false
+    dAlarm[2]=true
+    dAlarm[3]=false
+    dAlarm[4]=false
+    dAlarm[5]=false
+    dAlarm[6]=false
+    dAlarm[7]=false
+  elseIf (x_nNum==4)
+    dAlarm[0]=false
+    dAlarm[1]=false
+    dAlarm[2]=false
+    dAlarm[3]=false
+    dAlarm[4]=true
+    dAlarm[5]=false
+    dAlarm[6]=false
+    dAlarm[7]=false
+  elseIf (x_nNum==5)
+    dAlarm[0]=false
+    dAlarm[1]=false
+    dAlarm[2]=false
+    dAlarm[3]=false
+    dAlarm[4]=false
+    dAlarm[5]=true
+    dAlarm[6]=false
+    dAlarm[7]=false
+  elseIf (x_nNum==6)
+    dAlarm[0]=false
+    dAlarm[1]=false
+    dAlarm[2]=false
+    dAlarm[3]=false
+    dAlarm[4]=false
+    dAlarm[5]=false
+    dAlarm[6]=true
+    dAlarm[7]=false
+  elseIf (x_nNum==7)
+    dAlarm[0]=false
+    dAlarm[1]=false
+    dAlarm[2]=false
+    dAlarm[3]=false
+    dAlarm[4]=false
+    dAlarm[5]=false
+    dAlarm[6]=false
+    dAlarm[7]=true
+  else
+
+  endIf
+end]]></Code>
+  </Program>
+</Programs>

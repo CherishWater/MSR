@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://www.staubli.com/robotics/VAL3/Project/3">
+  <Parameters version="s7.1" stackSize="5000" millimeterUnit="true" />
+  <Programs>
+    <Program file="_decode.pgx" />
+    <Program file="_str2Array.pgx" />
+    <Program file="clear.pgx" />
+    <Program file="displayMenu.pgx" />
+    <Program file="DisplayPt.pgx" />
+    <Program file="fhmns.pgx" />
+    <Program file="GetFKey.pgx" />
+    <Program file="getView.pgx" />
+    <Program file="hmns.pgx" />
+    <Program file="isListEmpty.pgx" />
+    <Program file="leftPos.pgx" />
+    <Program file="listadd.pgx" />
+    <Program file="listcreate.pgx" />
+    <Program file="listcursor.pgx" />
+    <Program file="listdel.pgx" />
+    <Program file="listempty.pgx" />
+    <Program file="listevent.pgx" />
+    <Program file="listframe.pgx" />
+    <Program file="listins.pgx" />
+    <Program file="listredraw.pgx" />
+    <Program file="listSetSize.pgx" />
+    <Program file="listupdate.pgx" />
+    <Program file="midPos.pgx" />
+    <Program file="msgBox.pgx" />
+    <Program file="msgBoxDisplay.pgx" />
+    <Program file="nullKey.pgx" />
+    <Program file="printScroll.pgx" />
+    <Program file="read.pgx" />
+    <Program file="rightPos.pgx" />
+    <Program file="selectNewField.pgx" />
+    <Program file="setString.pgx" />
+    <Program file="setView.pgx" />
+    <Program file="start.pgx" />
+    <Program file="stop.pgx" />
+    <Program file="strAlign.pgx" />
+    <Program file="strfill.pgx" />
+    <Program file="strfillchr.pgx" />
+    <Program file="strlength.pgx" />
+    <Program file="txtBoxDyn.pgx" />
+    <Program file="txtBoxDynUpdate.pgx" />
+    <Program file="type.pgx" />
+    <Program file="typeBool.pgx" />
+    <Program file="typeCenter.pgx" />
+    <Program file="typeDio.pgx" />
+    <Program file="typeLen.pgx" />
+    <Program file="typeMenu.pgx" />
+  </Programs>
+  <Database>
+    <Data file="userPage.dtx" />
+  </Database>
+  <Libraries />
+</Project>

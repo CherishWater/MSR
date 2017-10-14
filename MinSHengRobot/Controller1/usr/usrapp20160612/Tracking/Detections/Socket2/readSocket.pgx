@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="readSocket">
+    <Description><![CDATA[This program sends a telegram via a socket client call robot2.]]></Description>
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_nID" type="num" xsi:type="element" use="reference" />
+      <Parameter name="x_trObjectPos" type="trsf" xsi:type="element" use="reference" />
+      <Parameter name="x_nLatchedValue" type="num" xsi:type="element" use="reference" />
+      <Parameter name="x_nError" type="num" xsi:type="element" use="reference" />
+    </Parameters>
+    <Code><![CDATA[
+begin
+  // This program gets the parts sent by the other robot. 
+  //  The parts arrive via a socket on a telegram with the format
+  //  {ID=i,X=x.xxx,Y=y.yyy,RZ=r.rrr,L=l.llllll},
+  //  where "{" is the initial character, "i" is the ID of the
+  //  detected object, "x.xxx" is the value on X, "y.yyy" is the
+  //  value on Y, "r.rrr" is the value on RZ, "l.llllll" is the
+  //  latched encoder value, "," is the separator character and "}"
+  //  is the end character. At the end, it sends the character "$" 
+  //  as confirmation of good reception.
+  // The format of the telegram is defined at the program 
+  //  sendToNextRobot at the Motion library.
+  //
+  // Input Param
+  //  none       : 
+  //
+  // Output Param
+  //  x_nID         : ID of the detected object
+  //  x_trObjectPos : Transformation of the detected object
+  //  x_nEncLatchVal: Encoder latched value of the detected object
+  //  x_nError      :
+  //              0 = no error, one part detected.
+  //             >1 = Number of parameters in error with in the
+  //                   telegram read. It wasn't possible to fully
+  //                   convert into a numerical value one of the
+  //                   parameter within the telegram.
+  //
+  //----------------------------------------------------------------
+  //
+  //Init Variables
+  x_nID=0
+  x_trObjectPos={0,0,0,0,0,0}
+  x_nLatchedValue=0
+  x_nError=0
+  //
+  // Looks for int Character
+  call waitCharOnSk("{")
+  //
+  // Looks for beginig of first value
+  call waitCharOnSk("=")
+  //
+  // Recover ID value
+  call readValFromSk(",",x_nID,x_nError)
+  if x_nError>0
+    logMsg(sDetNum+"(readSocket)>>"+sErrorCode[1])
+  endIf
+  //
+  // Looks for beginig of next value
+  call waitCharOnSk("=")
+  //
+  // Recover X value
+  call readValFromSk(",",x_trObjectPos.x,x_nError)
+  if x_nError>0
+    logMsg(sDetNum+"(readSocket)>>"+sErrorCode[2])
+  endIf
+  //
+  // Looks for beginig of next value
+  call waitCharOnSk("=")
+  //
+  // Recover Y value
+  call readValFromSk(",",x_trObjectPos.y,x_nError)
+  if x_nError>0
+    logMsg(sDetNum+"(readSocket)>>"+sErrorCode[3])
+  endIf
+  //
+  // Looks for beginig of next value
+  call waitCharOnSk("=")
+  //
+  //Recover RZ value
+  call readValFromSk(",",x_trObjectPos.rz,x_nError)
+  if x_nError>0
+    logMsg(sDetNum+"(readSocket)>>"+sErrorCode[4])
+  endIf
+  //
+  // Looks for beginig of next value
+  call waitCharOnSk("=")
+  //
+  // Recover ecoder latched value
+  call readValFromSk("}",x_nLatchedValue,x_nError)
+  if x_nError>0
+    logMsg(sDetNum+"(readSocket)>>"+sErrorCode[5])
+  endIf
+  //
+  // Sends the character "$" as confirmation of good reception.
+  sioSet(skFromRobot,asc("$",0))
+  //
+end
+]]></Code>
+  </Program>
+</Programs>

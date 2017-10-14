@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="reset" access="public" >
+    <Description><![CDATA[Reset the tracking libraries without killing every task(s)]]></Description>
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1" >
+      <Parameter name="x_nConvNum" type="num" use="value" xsi:type="element" dimensions="1" />
+      <Parameter name="x_nError" type="num" use="reference" xsi:type="array" dimensions="1" />
+    </Parameters>
+    <Code><![CDATA[begin
+  // This program resets the conveyor library
+  //
+  // Input Param
+  //  x_nConvNum  : Number of the conveyor
+  //
+  // Output Param
+  //  x_nError    : Error code
+  //    0    --> No error
+  //    3    --> Invalid conveyor number
+  //
+  //----------------------------------------------------------------
+  //
+  bReset=true
+  x_nError=0
+  switch x_nConvNum
+    case 0
+      call cnv0:reset()
+    break
+    case 1
+      call cnv1:reset()
+    break
+    default
+      x_nError=3
+    break
+  endSwitch
+end]]></Code>
+  </Program>
+</Programs>

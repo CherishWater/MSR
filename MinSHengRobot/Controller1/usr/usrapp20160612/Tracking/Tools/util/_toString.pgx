@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="_toString" access="public">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_nValue" type="num" xsi:type="element" />
+      <Parameter name="x_sFormat" type="string" xsi:type="element" />
+      <Parameter name="x_string" type="string" xsi:type="array" use="reference" />
+    </Parameters>
+    <Locals>
+      <Local name="l_nPos" type="num" xsi:type="array" size="1" />
+      <Local name="l_string" type="string" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[
+begin
+  l_string=toString(x_sFormat,x_nValue)
+  l_nPos=find(l_string," ")
+  if l_nPos!=-1
+    x_string=delete(l_string,len(l_string)-l_nPos,l_nPos)
+  else
+    x_string=l_string
+  endIf
+end
+]]></Code>
+  </Program>
+</Programs>

@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="typeLen" access="public">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_nX" type="num" xsi:type="element" />
+      <Parameter name="x_nY" type="num" xsi:type="element" />
+      <Parameter name="x_sMessage" type="string" xsi:type="element" />
+      <Parameter name="x_nLength" type="num" xsi:type="element" />
+    </Parameters>
+    <Code><![CDATA[
+begin
+  //-----------------------------------------------------------------------
+  //Header begin
+  //Description of program
+  //  Displays one message to pX column and pY Line.
+  //  If the length of the message is less than x_nLen, the characters are replaced
+  //  by spaces otherwise the message will be truncated.
+  //
+  //Input parameters
+  //  num x_nX :
+  //    role : cursor column
+  //  num x_nY :
+  //    role : cursor row
+  //  string x_sMessage :
+  //    role : message that you want to display
+  //  num x_nLength :
+  //    role : max length of the message
+  //
+  //Example
+  //  call typeLen(2,5,"Hello",10)
+  //
+  //History
+  //  Creation : 28-04-08 - f.Rob
+  //Header end
+  //-----------------------------------------------------------------------
+  call strlength(x_sMessage,x_nLength)
+  call type(x_nX,x_nY,x_sMessage)
+end
+]]></Code>
+  </Program>
+</Programs>

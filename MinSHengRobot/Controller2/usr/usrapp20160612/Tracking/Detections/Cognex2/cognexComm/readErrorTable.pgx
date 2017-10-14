@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="readErrorTable">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="errorNum_" type="num" xsi:type="element" />
+      <Parameter name="msgTable_" type="string" xsi:type="array" use="reference" />
+      <Parameter name="msg_" type="string" xsi:type="array" use="reference" />
+    </Parameters>
+    <Code><![CDATA[
+begin
+  // get error message of the last cognex command from error message table
+  errorNum_=abs(errorNum_)
+  if (errorNum_>=0) and (errorNum_<size(msgTable_))
+    msg_=msgTable_[errorNum_]
+    if len(msg_)<2
+      msg_="Unknown error"
+    endIf
+  else
+    msg_="Unknown error"
+  endIf
+end
+]]></Code>
+  </Program>
+</Programs>

@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="moveTo" access="private" >
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1" >
+      <Parameter name="x_trMoveTo" type="trsf" use="value" xsi:type="element" dimensions="1" />
+      <Parameter name="x_cMoveTo" type="config" use="value" xsi:type="element" dimensions="1" />
+      <Parameter name="x_nFlagStep" type="num" use="reference" xsi:type="array" dimensions="1" />
+    </Parameters>
+    <Locals>
+      <Local name="l_bResult" type="bool" xsi:type="array" size="1" />
+      <Local name="l_nKeyPressed" type="num" xsi:type="array" size="1" />
+      <Local name="l_nMotionStatus" type="num" xsi:type="array" size="1" />
+      <Local name="l_nState" type="num" xsi:type="array" size="1" />
+      <Local name="l_pMoveTo" type="point" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+  l_pMoveTo=here(tPointer,world)
+  // Check workingmode (must be in jog/Point)
+  workingMode(l_nState)
+  if (l_nState>0) and (l_nState!=nMANUAL_HOLD)
+    call up:msgBox(lang:sListOfMessage[40+l_nState],36,lang:sMenu[1],l_nKeyPressed)
+    x_nFlagStep=-1
+  else
+    l_pMoveTo.trsf=x_trMoveTo
+    l_pMoveTo.config=x_cMoveTo
+    taskCreate "motion",20,moveRobot(l_pMoveTo)
+    // wait until task is created
+    wait(taskStatus("motion")==1)
+    do
+      l_nMotionStatus=taskStatus("motion")
+    until (l_nMotionStatus==-1) or (l_nMotionStatus>1)
+    // started task stopped because of run-rime error
+    if l_nMotionStatus>1
+      taskKill("motion")
+      wait(taskStatus("motion")==-1)
+    elseIf nMotionError!=0
+      call up:msgBox(sErrorMessage,36,lang:sMenu[1],l_nKeyPressed)
+      x_nFlagStep=-1
+      nMotionError=0
+    endIf
+  endIf
+end]]></Code>
+  </Program>
+</Programs>

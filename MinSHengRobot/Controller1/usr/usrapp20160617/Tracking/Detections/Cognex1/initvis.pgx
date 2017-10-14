@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="initvis" access="private" >
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1" >
+      <Parameter name="x_bResult" type="bool" use="reference" xsi:type="array" dimensions="1" />
+    </Parameters>
+    <Locals>
+      <Local name="l_bResult" type="bool" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+  // Initialize cognex communication library
+  call cam:init()
+  x_bResult=true
+  clearBuffer(skVision)
+  put("logging in to camera...")
+  // log in to camera using socket cognex1 and return a handle in hCamTable
+  //
+  call cam:login(skVision,"admin","",hCamTable,l_bResult)
+  if l_bResult
+    putln("ok")
+  else
+    call cam:getErrorMessage(hCamTable,strError)
+    putln("failed: "+strError)
+    x_bResult=false
+  endIf
+  call cam:getOnline(hCamTable,l_bResult)
+  if !l_bResult
+    putln("Camera is not online")
+    x_bResult=false
+  endIf
+end]]></Code>
+  </Program>
+</Programs>

@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="resetTask" access="public">
+    <Code><![CDATA[
+begin
+  // This program kills and re-launch detection library without
+  //  doing an initialization of variables.
+  //
+  // Input Param
+  //  none       :
+  //
+  // Output Param
+  //  none       :
+  //
+  //----------------------------------------------------------------
+  //
+  taskKill(sTASK)
+  bTaskDetOK=false
+  //
+  taskCreate sTASK,100,detection()
+  //
+end
+]]></Code>
+  </Program>
+</Programs>

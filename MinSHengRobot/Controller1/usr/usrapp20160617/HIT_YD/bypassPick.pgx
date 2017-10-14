@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="bypassPick" access="private" >
+    <Locals>
+      <Local name="l_nConvNum" type="num" xsi:type="array" size="1" />
+      <Local name="l_nDistToDown" type="num" xsi:type="array" size="1" />
+      <Local name="l_nDistToUp" type="num" xsi:type="array" size="1" />
+      <Local name="l_nEncLatchVal" type="num" xsi:type="array" size="1" />
+      <Local name="l_nError" type="num" xsi:type="array" size="1" />
+      <Local name="l_nMoveID" type="num" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+  // This program removes from the conveyor’s queue as many objects
+  //  as defined with the nBypass variable.
+  // If the variable bTransferData is set to true, the program will
+  //  send the objects to the transfer queue before removing the
+  //  objects from the conveyor’s queue.
+  // The parts removed from the conveyor’s queue by this program are
+  //  not picked by this robot.
+  //
+  // Input parameters
+  //  None            :
+  //
+  // Output parameters
+  //  None            :
+  //
+  //----------------------------------------------------------------
+  //
+  l_nConvNum=0
+  //
+  do
+    //
+    // Wait until an object is present in the queue
+    do
+      call mot:getNextID(l_nConvNum,_nID[l_nConvNum])
+      if _nID[l_nConvNum]==-1 and !_bIsPlacing and !_bSentToHome
+        call goHome(l_nMoveID)
+      endIf
+    until _nID[l_nConvNum]!=-1
+    //
+    // Recover next point transformation from the stack
+    call mot:getObjectData(l_nConvNum,pPick.trsf,l_nError)
+    //
+    // Send part to the next robot
+    if bTransferData[l_nConvNum]
+      call mot:getObjectLatch(l_nConvNum,l_nEncLatchVal,l_nError)
+      call send2NextRob(l_nConvNum,_nID[l_nConvNum],pPick.trsf,l_nEncLatchVal)
+    endIf
+    //
+    // Wait until the object has leave the vision area before
+    //  removing it from the queue. Removing the object from the
+    //  queue before it leaves the vision area could have as a
+    //  consequence that the object is stacked again in the queue
+    //  if the vision system sends to the robot two times the same
+    //  object.
+    do
+      call mot:getDistance(l_nConvNum,pPick,0,l_nDistToUp,l_nDistToDown,l_nError)
+      if l_nDistToUp<nWaitDistToUp[l_nConvNum,0]+nWaitDist2Up4BP[l_nConvNum] and !_bIsPlacing and !_bSentToHome
+        //call goHome(l_nMoveID)
+      endIf
+    until l_nDistToUp>nWaitDistToUp[l_nConvNum,0]+nWaitDist2Up4BP[l_nConvNum]
+    //
+    // Remove object from conveyor's queue
+    call mot:removePart(l_nConvNum)
+    _nID[l_nConvNum]=-1
+    pPick.trsf={0,0,0,0,0,0}
+    //
+    _nCntBypassed[l_nConvNum]=_nCntBypassed[l_nConvNum]+1
+    _nCntTransfered[l_nConvNum]=_nCntTransfered[l_nConvNum]+1
+    //
+  until _nCntBypassed[l_nConvNum]>=nBypass[l_nConvNum]
+  //
+end]]></Code>
+  </Program>
+</Programs>

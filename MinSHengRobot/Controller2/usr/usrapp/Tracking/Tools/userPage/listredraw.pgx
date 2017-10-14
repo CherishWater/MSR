@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="listRedraw" access="public">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_nFirst" type="num" xsi:type="element" />
+    </Parameters>
+    <Code><![CDATA[
+begin
+  //-----------------------------------------------------------------------
+  //Header begin
+  //Description of program
+  //  Redraw the list in the userPage from the element number.
+  //  pFirst of the list.
+  //
+  //Input parameters
+  //  num x_nFirst :
+  //    role : Defines the first element of the list
+  //
+  //Example
+  //  call listRedraw(1)
+  //
+  //History
+  //  Creation : 28-04-08 - f.Rob
+  //Header end
+  //-----------------------------------------------------------------------
+  call listFrame(sTitle,nTopX,nTopY,nBottomX,nListHeight)
+  call listUpdate(x_nFirst)
+end
+]]></Code>
+  </Program>
+</Programs>

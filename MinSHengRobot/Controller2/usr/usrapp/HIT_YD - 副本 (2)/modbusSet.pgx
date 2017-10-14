@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="modbusSet" access="private" >
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1" >
+      <Parameter name="x_nNum" type="num" use="value" xsi:type="element" dimensions="1" />
+    </Parameters>
+    <Code><![CDATA[begin
+  //通信正常，系统运行
+  if (x_nNum==1)
+    dStartState[0]=true
+    dStartState[1]=false
+    dStartState[2]=true
+    dStartState[3]=false
+    //通信正常，系统停止
+  elseIf (x_nNum==2)
+    dStartState[0]=true
+    dStartState[1]=false
+    dStartState[2]=false
+    dStartState[3]=true
+    //通信正常，系统复位
+  elseIf (x_nNum==3)
+    dStartState[0]=true
+    dStartState[1]=true
+    dStartState[2]=false
+    dStartState[3]=false
+    //0 通信准备，系统停止
+  else
+    dStartState[0]=true
+    dStartState[1]=false
+    dStartState[2]=false
+    dStartState[3]=true
+  endIf
+end]]></Code>
+  </Program>
+</Programs>

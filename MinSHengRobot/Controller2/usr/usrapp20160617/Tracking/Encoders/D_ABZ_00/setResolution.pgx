@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="setResolution" access="public" >
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1" >
+      <Parameter name="x_nResolution" type="num" use="value" xsi:type="element" dimensions="1" />
+    </Parameters>
+    <Code><![CDATA[begin
+  // This routine sets the encoder resolution
+  //
+  // Input Param
+  //    x_nEncResolution  : Encoder resolution.
+  //
+  // Output Param
+  //    none
+  //
+  //----------------------------------------------------------------
+  //
+  if ioStatus(aoEncResolution)>=0
+    aioSet(aoEncResolution,x_nResolution)
+    nEncResolution=x_nResolution
+  endIf
+end]]></Code>
+  </Program>
+</Programs>

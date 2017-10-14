@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="getOnline" access="public">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="handle_" type="num" xsi:type="element" />
+      <Parameter name="result_" type="bool" xsi:type="array" use="reference" />
+    </Parameters>
+    <Code><![CDATA[
+begin
+  // get mode of camera
+  // result_ : true -> camera is online
+  //         : false -> camera is offline
+  call sendCommand(handle_,"go",result_)
+end
+]]></Code>
+  </Program>
+</Programs>

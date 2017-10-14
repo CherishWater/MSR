@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="create" access="public">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_nConvNum" type="num" xsi:type="element" />
+    </Parameters>
+    <Locals>
+      <Local name="l_nError" type="num" xsi:type="array" size="1" />
+      <Local name="l_nValue" type="num" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[
+begin
+  call init(x_nConvNum,l_nError)
+  if l_nError==0
+    //
+    call enc:getResolution(l_nValue)
+    if roundDown(l_nValue)!=roundDown(nENCRESOLUTION)
+      call enc:setResolution(nENCRESOLUTION)
+      popUpMsg("Warning: a change has been detected in the encoder resolution.  The calibration of your conveyor may be not valid anymore")
+    else
+    endIf
+    // Start encoder
+    call enc:create(x_nConvNum,sTASK[1])
+    // Start management of conveyor queue
+    taskCreate sTASK[0]+toString("",x_nConvNum),100,conveyor()
+    //Start Detection
+    call det:create(x_nConvNum,sTASK[2])
+  endIf
+end
+]]></Code>
+  </Program>
+</Programs>

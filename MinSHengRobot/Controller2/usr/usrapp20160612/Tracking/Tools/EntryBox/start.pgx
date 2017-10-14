@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="start">
+    <Locals>
+      <Local name="l_nError" type="num" xsi:type="array" size="1" />
+      <Local name="l_nKey" type="num" xsi:type="array" size="1" />
+      <Local name="l_sCaption" type="string" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[
+begin
+  cls()
+  userPage()
+  // Load the EntryBox library
+  call create("EntryBox\EBDefinition","",0,l_nError)
+  if l_nError!=0
+    popUpMsg(sErrorMessage)
+  endIf
+  //
+  call getCaption(l_sCaption)
+  // Set the default value of the boolean Textbox to TRUE
+  call setFieldValue("Boolean :",pw:sTRUE,l_nError)
+  if l_nError!=0
+    popUpMsg(sErrorMessage)
+  endIf
+  // Display the EntryBox with a surrounding frame
+  call display(1,1,true)
+  // Manage the EntryBox
+  call handle(l_nKey)
+  popUpMsg("You have pressed function Key number "+toString("",l_nKey))
+  //
+  cls()
+end
+]]></Code>
+  </Program>
+</Programs>

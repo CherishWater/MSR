@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="getMaxNumOfPart" access="public" >
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1" >
+      <Parameter name="x_nMaxNumOfPart" type="num" use="reference" xsi:type="array" dimensions="1" />
+    </Parameters>
+    <Code><![CDATA[begin
+  // This program returns the size of the buffer
+  // The buffer size represents the maximum number of parts
+  // that can be simultaneously detected by the detection device
+  x_nMaxNumOfPart=nMaxNumOfObject
+end]]></Code>
+  </Program>
+</Programs>

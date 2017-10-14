@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="clear" access="public">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_nX" type="num" xsi:type="element" />
+      <Parameter name="x_nY" type="num" xsi:type="element" />
+    </Parameters>
+    <Locals>
+      <Local name="i" type="num" xsi:type="array" size="1" />
+      <Local name="lLen" type="num" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[
+begin
+  //-----------------------------------------------------------------------
+  //Header begin
+  //Description of program
+  //  Erase the pY line from the column pX of the userPage.
+  //
+  //Input parameters
+  //  num x_nX :
+  //    role : Cursor column
+  //    possible value : 0 to 39
+  //  num x_nY :
+  //    role : Cursor row
+  //    possible value : 0 to 13
+  //
+  //Example
+  //  call clear(15,8)
+  //
+  //History
+  //  Creation : 28-04-08 - f.Rob
+  //Header end
+  //-----------------------------------------------------------------------
+  call typeLen(x_nX,x_nY," ",40-x_nX)
+  gotoxy(x_nX,x_nY)
+end
+]]></Code>
+  </Program>
+</Programs>

@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="isInSafetyArea" access="private" >
+    <Locals>
+      <Local name="l_jHere" type="jointRs" xsi:type="array" size="1" />
+      <Local name="l_pCurrent" type="pointRs" xsi:type="array" size="1" />
+      <Local name="l_sData" type="string" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+  do
+    l_pCurrent=here(flange,world)
+    //**************************************************//
+    //******** 用来判断机器人是否在安全工作空间 ********//
+    //**************************************************//
+    if (l_pCurrent.trsf.y>=nSafeMaxY or l_pCurrent.trsf.y<=nSafeMinY or l_pCurrent.trsf.x>=nSafeMaxX or l_pCurrent.trsf.x<=nSafeMinX) and _nOmacStat==3
+      aioSet(aRbAlarm,10)
+      call setAlarm(7)
+      popUpMsg("机器人超出安全工作空间！")
+      logMsg("机器人超出安全工作空间！")
+      call OMAC_Abort()
+    endIf
+
+    l_sData=skToCamera
+    if (l_sData=="failed")
+      call setAlarm(0)
+    endIf
+    delay(0)
+  until false
+end]]></Code>
+  </Program>
+</Programs>

@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="sendCommand">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="handle_" type="num" xsi:type="element" />
+      <Parameter name="cmd_" type="string" xsi:type="element" />
+      <Parameter name="result_" type="bool" xsi:type="array" use="reference" />
+    </Parameters>
+    <Locals>
+      <Local name="msg" type="string" xsi:type="array" size="1" />
+      <Local name="dummy" type="bool" xsi:type="array" size="1" />
+      <Local name="str" type="string" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[
+begin
+  // send native command to camera and read command execution result
+  call writeSocket(handle_,cmd_)
+  call readSocket(handle_,msg,result_)
+  str=toNum(msg,errorCode[handle_],dummy)
+  result_=errorCode[handle_]==1
+  if bDebug
+    call getErrorMessage(handle_,msg)
+    putln("result: "+msg)
+  endIf
+end
+]]></Code>
+  </Program>
+</Programs>

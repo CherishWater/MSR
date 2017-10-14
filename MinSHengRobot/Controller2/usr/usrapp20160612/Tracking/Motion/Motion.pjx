@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Project xmlns="http://www.staubli.com/robotics/VAL3/Project/3" >
+  <Parameters version="s7.6.2" stackSize="5000" millimeterUnit="true" />
+  <Programs>
+    <Program file="checkTrackArea.pgx" />
+    <Program file="create.pgx" />
+    <Program file="disableQueue.pgx" />
+    <Program file="enableQueue.pgx" />
+    <Program file="flushQueue.pgx" />
+    <Program file="getConvFrame.pgx" />
+    <Program file="getConvSpeed.pgx" />
+    <Program file="getDetectDist.pgx" />
+    <Program file="getDetectFrame.pgx" />
+    <Program file="getDistance.pgx" />
+    <Program file="getErrorMessage.pgx" />
+    <Program file="getNextID.pgx" />
+    <Program file="getObjectData.pgx" />
+    <Program file="getObjectLatch.pgx" />
+    <Program file="getObjectOffset.pgx" />
+    <Program file="getRobotArea.pgx" />
+    <Program file="getStatus.pgx" />
+    <Program file="getTrackStatus.pgx" />
+    <Program file="getVersion.pgx" />
+    <Program file="init.pgx" />
+    <Program file="kill.pgx" />
+    <Program file="moveC.pgx" />
+    <Program file="moveL.pgx" />
+    <Program file="releaseObject.pgx" />
+    <Program file="removePart.pgx" />
+    <Program file="reset.pgx" />
+    <Program file="resetSignal.pgx" />
+    <Program file="sendToNextRobot.pgx" />
+    <Program file="setCalibrating.pgx" />
+    <Program file="setConvSpeed.pgx" />
+    <Program file="setConveyor.pgx" />
+    <Program file="setSignal.pgx" />
+    <Program file="start.pgx" />
+    <Program file="stop.pgx" />
+    <Program file="teach.pgx" />
+    <Program file="trackOff.pgx" />
+    <Program file="trackOffJ.pgx" />
+    <Program file="trackOn.pgx" />
+    <Program file="trackOnJ.pgx" />
+    <Program file="trackStopMove.pgx" />
+    <Program file="tracking.pgx" />
+    <Program file="whichObjectUsed.pgx" />
+  </Programs>
+  <Database>
+    <Data file="Motion.dtx" />
+  </Database>
+  <Libraries>
+    <Library alias="cfg" path="Disk://Tracking/config/config.pjx" autoload="true" password="" />
+    <Library alias="cnv0" path="Disk://Tracking/Templates/GenericConv/GenericConv.pjx" autoload="true" password="" />
+    <Library alias="cnv1" path="Disk://Tracking/Templates/GenericConv/GenericConv.pjx" autoload="true" password="" />
+    <Library alias="ut" path="Disk://Tracking/Tools/util/util.pjx" autoload="true" password="" />
+    <Library alias="out" path="Disk://Tracking/io/outputs/outputs.pjx" autoload="true" password="" />
+    <Library alias="lang" path="Disk://Tracking/language/english/english.pjx" autoload="true" password="" />
+  </Libraries>
+  <Types>
+  </Types>
+</Project>

@@ -1,0 +1,208 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="DefineScaleFact" access="private" >
+    <Locals>
+      <Local name="l_bLock" type="bool" xsi:type="array" size="1" />
+      <Local name="l_bQuit" type="bool" xsi:type="array" size="1" />
+      <Local name="l_bRefresh" type="bool" xsi:type="array" size="1" />
+      <Local name="l_nCustomCod" type="num" xsi:type="array" size="1" />
+      <Local name="l_nDist" type="num" xsi:type="array" size="1" />
+      <Local name="l_nEncDelta" type="num" xsi:type="array" size="1" />
+      <Local name="l_nEncVal" type="num" xsi:type="array" size="2" />
+      <Local name="l_nError" type="num" xsi:type="array" size="1" />
+      <Local name="l_nIdx" type="num" xsi:type="array" size="1" />
+      <Local name="l_nKeyPressed" type="num" xsi:type="array" size="1" />
+      <Local name="l_nStep" type="num" xsi:type="array" size="1" />
+      <Local name="l_pLoc" type="point" xsi:type="array" size="2" />
+      <Local name="l_sCustomTxt" type="string" xsi:type="array" size="3" />
+      <Local name="l_sEmpty" type="string" xsi:type="array" size="1" />
+      <Local name="l_sFileName" type="string" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+  // This program will guide the user through the Scale factor
+  // definition sequence
+  //
+  // Created 23-02-05                                   C.CURRIVAND
+  //----------------------------------------------------------------
+  //
+  cls()
+  l_pLoc[0]=here(flange,world)
+  l_pLoc[1]=here(flange,world)
+  l_bQuit=false
+  l_bLock=false
+  l_bRefresh=true
+  l_nStep=0
+  l_sEmpty=""
+  // Start encoder task
+  call enc:create(0,"encoder")
+  // Setup Jog context
+  $jogContext(tPointer,world,0)
+  do
+    //------------------
+    // USER INTERFACE
+    //------------------
+    switch l_nStep
+      // Define upsteam location
+      case 0
+        lang:trTrsf[0]=position(here(tPointer,world),world)
+        call enc:getValue(false,l_nEncVal[0])
+        l_sCustomTxt[0]=toString(".2",l_nEncVal[0])
+        call lang:Page(10,l_sCustomTxt,9,l_bRefresh,l_nKeyPressed)
+        l_bRefresh=false
+        switch l_nKeyPressed
+          // next
+          case 7
+            l_pLoc[0]=here(tPointer,world)
+            // Read encoder position
+            call enc:getValue(false,l_nEncVal[0])
+            l_nStep=10
+            l_bRefresh=true
+          break
+          // cancel
+          case 8
+            l_bQuit=true
+          break
+        endSwitch
+      break
+      // Run conveyor to downstream limit
+      case 10
+        call lang:Page(11,l_sEmpty,9,l_bRefresh,l_nKeyPressed)
+        l_bRefresh=false
+        switch l_nKeyPressed
+          //          // previous
+          //          case 1
+          //            l_nStep=0
+          //            l_bRefresh=true
+          //          break
+          // next
+          case 7
+            l_nStep=20
+            l_bRefresh=true
+          break
+          // cancel
+          case 8
+            l_bQuit=true
+          break
+        endSwitch
+      break
+      // Teach downstream location
+      case 20
+        lang:trTrsf[0]=position(here(tPointer,world),world)
+        call enc:getValue(false,l_nEncVal[1])
+        l_sCustomTxt[0]=toString(".2",l_nEncVal[1])
+        call lang:Page(12,l_sCustomTxt,18,l_bRefresh,l_nKeyPressed)
+        l_bRefresh=false
+        switch l_nKeyPressed
+          // previous
+          case 1
+            l_nStep=10
+            l_bRefresh=true
+          break
+          // next
+          case 7
+            l_pLoc[1]=here(tPointer,world)
+            l_nEncDelta=l_nEncVal[1]-l_nEncVal[0]
+            l_nStep=sel(abs(l_nEncDelta)>1,40,30)
+            l_bRefresh=true
+          break
+          // cancel
+          case 8
+            l_bQuit=true
+          break
+        endSwitch
+      break
+      // Computation not possible
+      case 30
+        call lang:Page(14,l_sEmpty,8,l_bRefresh,l_nKeyPressed)
+        l_nStep=sel(l_nKeyPressed==1,20,30)
+        l_bQuit=(l_nKeyPressed==8)
+        l_bRefresh=(l_nStep==20)
+      break
+      // Perform computation
+      case 40
+        l_nDist=distance(position(l_pLoc[0],world),position(l_pLoc[1],world))
+        l_sCustomTxt=toString(".3",l_nDist/l_nEncDelta)
+        call lang:Page(13,l_sCustomTxt,18,l_bRefresh,l_nKeyPressed)
+        l_bRefresh=false
+        switch l_nKeyPressed
+          //Previous
+          case 1
+            l_nStep=20
+            l_bRefresh=true
+          break
+          // next
+          case 7
+            l_nStep=60
+            l_bLock=false
+          break
+          // cancel
+          case 8
+            l_bQuit=true
+          break
+        endSwitch
+      break
+      // Select file name
+      case 50
+        if l_bLock==false
+          cls()
+          call _displayList(cfg:sPATHCONVEYOR,lang:sListOfMessage[9],23,2,15,7)
+          call lang:Page(15,l_sEmpty,sel(len(sItemList[0])!=0,19,20),true,l_nKeyPressed)
+          l_nError=-1
+          l_bLock=true
+        endIf
+        if l_bLock==true
+          call lang:Page(15,l_sEmpty,sel(len(sItemList[0])!=0,19,20),false,l_nKeyPressed)
+          call up:listEvent(l_nKeyPressed,l_nIdx,l_sFileName)
+          switch l_nKeyPressed
+            // previous
+            case 1
+              l_nStep=40
+              l_bRefresh=true
+            break
+            // New
+            case 2
+              call convGetName(l_sFileName)
+              l_nStep=60
+              l_bLock=false
+            break
+            // Select or Return
+            case 4,270
+              if l_sFileName!=sConveyorFile
+                // to be handle completly,geometry...
+                l_nError=cnv:libLoad(cfg:sPATHCONVEYOR+"\"+l_sFileName)
+              endIf
+              l_nStep=60
+              l_bLock=false
+            break
+            // Cancel
+            case 8
+              l_bQuit=true
+            break
+          endSwitch
+        endIf
+      break
+      // Store data to file
+      case 60
+        cnv:nENCSCALEFACTOR=l_nDist/l_nEncDelta
+        l_sFileName=sConveyorFile
+        //? "DefinedScaleFactor:ConveyorName : "+sConveyorFile
+        call convCreate(l_sFileName,l_nError)
+        if l_nError==0
+          // success
+          call up:txtBoxDynUpdate(lang:sListOfMessage[15])
+          delay(1)
+          sConveyorFile=l_sFileName
+        else
+          cls()
+          call up:msgBox(sErrorMessage,36,lang:sMenu[1],l_nError)
+        endIf
+        l_bQuit=true
+      break
+    endSwitch
+    delay(0)
+  until (l_bQuit==true)
+  call enc:kill()
+  cls()
+end]]></Code>
+  </Program>
+</Programs>

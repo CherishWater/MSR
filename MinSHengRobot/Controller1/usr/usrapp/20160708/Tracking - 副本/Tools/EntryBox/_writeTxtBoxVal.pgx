@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="_writeTxtBoxVal">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_nIndex" type="num" xsi:type="element" />
+      <Parameter name="x_nDisplay" type="num" xsi:type="element" />
+      <Parameter name="x_sAlign" type="string" xsi:type="element" />
+    </Parameters>
+    <Locals>
+      <Local name="l_bOk" type="bool" xsi:type="array" size="1" />
+      <Local name="l_nTxtBoxLen" type="num" xsi:type="array" size="1" />
+      <Local name="l_sValToDisplay" type="string" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[
+begin
+  // This program displays the content of the selected textbox item
+  //
+  // Input Param
+  //  x_nIndex    : Number of the textbox to display
+  //  x_nDisplay : property of the display
+  //       =0   : Normal video
+  //       =1   : Inverse video
+  //       =2   : written in normal video with one selected char inverted
+  //  x_sAlign    : text alignment (R=right,L=Left,C=Centered)
+  //
+  // Output Param
+  //  x_Error : Error code
+  //
+  //Created 21/12/05                              CCUR
+  //--------------------------------------------------------------
+  // Get length of the string to display
+  toNum(pw:sTxtBoxLen[x_nIndex],l_nTxtBoxLen,l_bOk)
+  l_sValToDisplay=pw:sTxtBoxVal[x_nIndex]
+  call ut:strAlign(l_sValToDisplay,l_nTxtBoxLen,x_sAlign," ")
+  gotoxy(nTxtPosX[x_nIndex]+len(pw:sTxtBoxCaption[x_nIndex]),nTxtPosY[x_nIndex])
+  switch x_nDisplay
+    // Normal video
+    case 0
+      setTextMode(0)
+      //put (pw:sTxtBoxVal[x_nIndex])
+      put(l_sValToDisplay)
+    break
+    // Inverse video
+    case 1
+      setTextMode(1)
+      //put (pw:sTxtBoxVal[x_nIndex])
+      put(l_sValToDisplay)
+      setTextMode(0)
+    break
+    // Custom
+    case 2
+    break
+  endSwitch
+end
+]]></Code>
+  </Program>
+</Programs>

@@ -1,0 +1,163 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="sendToNextRobot" access="public" >
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1" >
+      <Parameter name="x_sSocketClient" type="sio" use="value" xsi:type="element" dimensions="1" />
+      <Parameter name="x_nTimeOut" type="num" use="value" xsi:type="element" dimensions="1" />
+      <Parameter name="x_nID" type="num" use="value" xsi:type="element" dimensions="1" />
+      <Parameter name="x_trObjectPos" type="trsf" use="value" xsi:type="element" dimensions="1" />
+      <Parameter name="x_nLatchedValue" type="num" use="value" xsi:type="element" dimensions="1" />
+      <Parameter name="x_nError" type="num" use="reference" xsi:type="element" dimensions="1" />
+    </Parameters>
+    <Locals>
+      <Local name="l_i" type="num" xsi:type="array" size="1" />
+      <Local name="l_nAsciiCode" type="num" xsi:type="array" size="1" />
+      <Local name="l_nClock" type="num" xsi:type="array" size="1" />
+      <Local name="l_nNumCharRead" type="num" xsi:type="array" size="1" />
+      <Local name="l_nNumCharWrite" type="num" xsi:type="array" size="1" />
+      <Local name="l_sCharRead" type="string" xsi:type="array" size="1" />
+      <Local name="l_sString" type="string" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+  // This program sends a telegram via a socket client.
+  // The telegram contains all the information of a detected object,
+  //  this information is meant to be used by a detection library of
+  //  another robot. The detection library "Socket" uses this information.
+  // The format of the telegram is:
+  //  {ID=i,X=x.xxx,Y=y.yyy,RZ=r.rrr,L=l.llllll}, where "{" is the initial
+  //  character, "i" is the ID of the detected object, "x.xxx" is the
+  //  value on X, "y.yyy" is the value on Y, "r.rrr" is the value on
+  //  RZ, "l.llllll" is the latched encoder value, "," is the separator
+  //  character and "}" is the end character. At the end, it waits for the
+  //  character "$" as confirmation of good reception.
+  //
+  // Input Param
+  //  x_sSocketClient : Socket client used to send the message.
+  //  x_nTimeOut      : Timeout for the socket client to read/write one
+  //                     character.
+  //  x_nID           : ID of the detected object.
+  //  x_trObjectPos   : Transformation of the detected object.
+  //  x_nEncLatchVal  : Latched encoder value of the detected object.
+  //
+  // Output Param
+  //  x_nError        :
+  //                0 = No error, message sent.
+  //                1 = The socket sent as a parameter is not working.
+  //                     Bad link or device in error. 
+  //                2 = Message not sent. Timeout expired. The other robot 
+  //                     is not present on the network.
+  //                3 = Timeout expired. The other robot is not working
+  //                     with the detection library "Socket".
+  //                4 = Message sent but the server from the other robot
+  //                     didn't acknowledge reception before expiration
+  //                     of timeout.
+  //
+  //----------------------------------------------------------------
+  //
+  x_nError=0
+  //
+  // Check if the socket "sent as a parameter is working.
+  if ioStatus(x_sSocketClient)<0
+    x_nError=1
+    popUpMsg(lang:sListOfMessage[63])
+    if bAnd(cfg:nLog,cfg:nLOGMISC)==cfg:nLOGMISC
+      ? "MOT(sendToNextRobot)>> "+lang:sListOfMessage[63]
+    endIf
+    return
+  endIf
+  //
+  // Defines the timeout on the socket.
+  sioCtrl(x_sSocketClient,"timeout",x_nTimeOut)
+  // Test if the other robot is connected to the network and if the
+  //  application is running with the detection library "Socket".
+  l_nNumCharWrite=sioSet(x_sSocketClient,13)
+  if l_nNumCharWrite==-1
+    // Timeout expired. The other robot is not present on the network.
+    x_nError=2
+    popUpMsg(lang:sListOfMessage[64])
+    if bAnd(cfg:nLog,cfg:nLOGMISC)==cfg:nLOGMISC
+      ? "MOT(sendToNextRobot)>> "+lang:sListOfMessage[64]
+    endIf
+    return
+  elseIf l_nNumCharWrite==0
+    // Timeout expired. The other robot is not working with the detection
+    //  library "Socket".
+    x_nError=3
+    popUpMsg(lang:sListOfMessage[65])
+    if bAnd(cfg:nLog,cfg:nLOGMISC)==cfg:nLOGMISC
+      ? "MOT(sendToNextRobot)>> "+lang:sListOfMessage[65]
+    endIf
+    clearBuffer(x_sSocketClient)
+    return
+  endIf
+  // After re-launching the application on the other robot, a few extra
+  //  character are needed to establish a good connection.
+  for l_i=1 to 5
+    l_nNumCharWrite=sioSet(x_sSocketClient,13)
+  endFor
+  //
+  // Builds up telegram.
+  l_sString="{ID="
+  l_sString=l_sString+toString("",x_nID)
+  l_sString=l_sString+",X="
+  l_sString=l_sString+toString(".3",x_trObjectPos.x)
+  l_sString=l_sString+",Y="
+  l_sString=l_sString+toString(".3",x_trObjectPos.y)
+  l_sString=l_sString+",RZ="
+  l_sString=l_sString+toString(".3",x_trObjectPos.rz)
+  l_sString=l_sString+",L="
+  l_sString=l_sString+toString(".6",x_nLatchedValue)
+  l_sString=l_sString+"}"
+  //
+  // Sends telegram character by character.
+  for l_i=0 to len(l_sString)-1
+    l_nNumCharWrite=sioSet(x_sSocketClient,asc(l_sString,l_i))
+    if l_nNumCharWrite==-1
+      // Timeout expired. The other robot is not present on the network.
+      x_nError=2
+      popUpMsg(lang:sListOfMessage[64])
+      if bAnd(cfg:nLog,cfg:nLOGMISC)==cfg:nLOGMISC
+        ? "MOT(sendToNextRobot)>> "+lang:sListOfMessage[64]
+      endIf
+      return
+    elseIf l_nNumCharWrite==0
+      // Timeout expired. The other robot is not working with the detection
+      //  library "Socket".
+      x_nError=3
+      popUpMsg(lang:sListOfMessage[65])
+      if bAnd(cfg:nLog,cfg:nLOGMISC)==cfg:nLOGMISC
+        ? "MOT(sendToNextRobot)>> "+lang:sListOfMessage[65]
+      endIf
+      clearBuffer(x_sSocketClient)
+      return
+    endIf
+  endFor
+  //
+  // Waits for character "confirmation of good reception".
+  l_sCharRead=""
+  do
+    // Reads one character from socket
+    l_nNumCharRead=sioGet(x_sSocketClient,l_nAsciiCode)
+    // If one character read
+    if l_nNumCharRead==1
+      l_sCharRead=chr(l_nAsciiCode)
+    else
+      // The server from the other robot didn't acknowledge reception
+      //  before expiration of timeout.
+      x_nError=4
+      popUpMsg(lang:sListOfMessage[66])
+      if bAnd(cfg:nLog,cfg:nLOGMISC)==cfg:nLOGMISC
+        ? "MOT(sendToNextRobot)>> "+lang:sListOfMessage[66]
+      endIf
+      return
+    endIf
+  until l_sCharRead=="$"
+  //
+  if bAnd(cfg:nLog,cfg:nLOGMISC)==cfg:nLOGMISC
+    ? "MOT(sendToNextRobot)>> Message sent: "
+    ? l_sString
+  endIf
+  //
+end]]></Code>
+  </Program>
+</Programs>

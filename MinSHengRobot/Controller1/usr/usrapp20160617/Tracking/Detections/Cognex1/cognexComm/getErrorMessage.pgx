@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="getErrorMessage" access="public">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="handle_" type="num" xsi:type="element" />
+      <Parameter name="msg_" type="string" xsi:type="array" use="reference" />
+    </Parameters>
+    <Code><![CDATA[
+begin
+  // get clear text error message of last executed command
+  if errorCode[handle_]==1
+    msg_="success"
+  else
+    switch nCommand[handle_]
+      case 1
+        // coGV
+        call readErrorTable(errorCode[handle_],tabGV,msg_)
+      break
+      case 2
+        // coSO
+        call readErrorTable(errorCode[handle_],tabSO,msg_)
+      break
+      case 3
+        // coSI
+        call readErrorTable(errorCode[handle_],tabSI,msg_)
+      break
+      case 4
+        // coSF
+        call readErrorTable(errorCode[handle_],tabSF,msg_)
+      break
+      case 5
+        // coSS
+        call readErrorTable(errorCode[handle_],tabSS,msg_)
+      break
+      case 6
+        // coSW
+        call readErrorTable(errorCode[handle_],tabSW,msg_)
+      break
+      case 7
+        // coSE
+        call readErrorTable(errorCode[handle_],tabSE,msg_)
+      break
+      case 8
+        // coLO
+        call readErrorTable(errorCode[handle_],tabLO,msg_)
+      break
+      case 9
+        // coLF
+        call readErrorTable(errorCode[handle_],tabLF,msg_)
+      break
+      case 10
+        // coGF
+        call readErrorTable(errorCode[handle_],tabGF,msg_)
+      break
+      case 11
+        // coTF
+        call readErrorTable(errorCode[handle_],tabTF,msg_)
+      break
+      default
+        msg_="Unknown error code"
+      break
+    endSwitch
+  endIf
+end
+]]></Code>
+  </Program>
+</Programs>

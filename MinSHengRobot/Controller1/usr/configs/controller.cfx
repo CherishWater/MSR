@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<controller>
+  <Bool name="buildBio" value="false" />
+  <Bool name="buildBio2" value="false" />
+  <Bool name="buildMio" value="false" />
+  <String name="testMode" value="Demo" />
+  <Bool name="buildCio" value="false" />
+  <String name="cioBoardConfig" value="" />
+  <Bool name="buildSerial1" value="false" />
+  <Bool name="buildSerial2" value="false" />
+  <Bool name="buildStarc2" value="true" />
+  <starc2Slot index="0" board="DUAL-ABZ-CODERS-" />
+  <starc2Slot index="1" board="" />
+  <starc2Slot index="2" board="" />
+  <String name="valTrack" value="Demo" />
+</controller>

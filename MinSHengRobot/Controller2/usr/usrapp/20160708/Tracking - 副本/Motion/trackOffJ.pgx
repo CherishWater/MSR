@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="trackOffJ" access="public" >
+    <Description><![CDATA[Perform motion to de-synchronize from conveyor to a joint location]]></Description>
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1" >
+      <Parameter name="x_jLoc" type="joint" use="value" xsi:type="element" dimensions="1" />
+      <Parameter name="x_tTool" type="tool" use="value" xsi:type="element" dimensions="1" />
+      <Parameter name="x_mDesc" type="mdesc" use="value" xsi:type="element" dimensions="1" />
+      <Parameter name="x_nMoveID" type="num" use="reference" xsi:type="element" dimensions="1" />
+      <Parameter name="x_nError" type="num" use="reference" xsi:type="array" dimensions="1" />
+    </Parameters>
+    <Locals>
+      <Local name="l_bLock" type="num" xsi:type="array" size="1" />
+      <Local name="l_nStep" type="num" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+  // This program executes the motion to leave the conveyor
+  //  to a joint location
+  //
+  // Input Param
+  //  x_jLoc    : Joint location to reach
+  //  x_tTool   : Tool for motion
+  //  x_nMoveID : ID of the movement on the motion stack
+  //  x_mDesc   : Motion descriptor
+  //
+  // Output Param
+  //  x_nError : Error code
+  //            = 0 : No error
+  //            = 1 : No object ID selected
+  //
+  //----------------------------------------------------------------
+  //
+  x_nError=0
+  // Check if the robot is synchronized (user must have invoked trackOn)
+  if nMobFrameSync>=0
+    tTool.trsf=position(x_tTool,flange)
+    mTrackOff=x_mDesc
+    if mTrackOff.blend==joint
+      mTrackOff.blend=Cartesian
+    endIf
+    x_nMoveID=$trackOff(x_jLoc,x_tTool,mTrackOff)
+    // Robot is not synchronized with any conveyor
+    nMobFrameSync=-1
+    //
+    if bAnd(cfg:nLog,cfg:nLOGMOTION)==cfg:nLOGMOTION
+      logMsg("MOT(trackOff)>>Request to desynchronize from conveyor"+toString("2",nCnvSynch))
+    endIf
+  else
+    x_nError=1
+    if cfg:bLog
+      logMsg("MOT(trackOff)>>Robot is not synchronised with conveyor"+toString("2",nCnvSynch))
+    endIf
+  endIf
+end]]></Code>
+  </Program>
+</Programs>

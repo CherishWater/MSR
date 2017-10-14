@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="strAlign" access="public">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_sStrIn" type="string" xsi:type="array" use="reference" />
+      <Parameter name="x_nLength" type="num" xsi:type="element" />
+      <Parameter name="x_sAlign" type="string" xsi:type="element" />
+      <Parameter name="x_sChar" type="string" xsi:type="element" />
+    </Parameters>
+    <Locals>
+      <Local name="l_i" type="num" xsi:type="array" size="1" />
+      <Local name="l_nToAdd" type="num" xsi:type="array" size="1" />
+      <Local name="l_nAscii" type="num" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[
+begin
+  // This program modify the input string to align it
+  // left,right or centered
+  //
+  // Input Param
+  // x_sStrIn   : Input string to modify
+  // x_nLength  : Length of the output string
+  // x_sAlign   : Align mode
+  //                  : C-c = Centered
+  //                    L-l = Align Left
+  //                    R-r = Align Right
+  //Created 13/03/04                              C.CURRIVAND
+  //--------------------------------------------------------------
+  switch asc(x_sAlign,0)
+    // Centered
+    case 67,99
+    break
+    // Left
+    case 76,108
+      if len(x_sStrIn)<x_nLength
+        l_nToAdd=x_nLength-len(x_sStrIn)
+        for l_i=1 to l_nToAdd
+          x_sStrIn=x_sStrIn+x_sChar
+        endFor
+      else
+        x_sStrIn=mid(x_sStrIn,x_nLength,0)
+      endIf
+    break
+    // Right
+    case 82,114
+      if len(x_sStrIn)<x_nLength
+        l_nToAdd=x_nLength-len(x_sStrIn)
+        for l_i=1 to l_nToAdd
+          x_sStrIn=x_sChar+x_sStrIn
+        endFor
+      else
+        x_sStrIn=mid(x_sStrIn,x_nLength,0)
+      endIf
+    break
+  endSwitch
+end
+]]></Code>
+  </Program>
+</Programs>

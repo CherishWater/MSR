@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="getFunctionSel" access="public">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_sName" type="string" xsi:type="array" use="reference" />
+    </Parameters>
+    <Code><![CDATA[begin
+  //
+  // define your message for the 
+  // function KEY
+  // 
+  // NOTE is an ARRAY[0..7]
+  //
+  // example:
+  // x_sName[1]="DEMO"
+  // active the F2 button
+  //
+end
+      ]]></Code>
+  </Program>
+</Programs>

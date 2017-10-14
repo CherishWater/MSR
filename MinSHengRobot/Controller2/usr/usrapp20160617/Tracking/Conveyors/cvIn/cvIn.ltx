@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<externList>
+  <data alias="cfg" type="bool" name="bLog" size="1" xsi:type="element" />
+  <data alias="cfg" type="num" name="nLOGDETECT" size="1" xsi:type="element" />
+  <data alias="cfg" type="num" name="nLOGMISC" size="1" xsi:type="element" />
+  <data alias="cfg" type="num" name="nLOGMOTION" size="1" xsi:type="element" />
+  <data alias="cfg" type="num" name="nLOGQUEUE" size="1" xsi:type="element" />
+  <data alias="cfg" type="num" name="nLog" size="1" xsi:type="element" />
+  <data alias="cfg" type="string" name="sPATHCONVEYOR" size="1" xsi:type="element" />
+  <data alias="cfg" type="string" name="sPATHDETECTION" size="1" xsi:type="element" />
+  <data alias="cfg" type="string" name="sPATHENCODER" size="1" xsi:type="element" />
+  <data alias="det" type="bool" name="bCalibrating" size="1" xsi:type="element" />
+  <data alias="det" type="bool" name="bTaskDetOK" size="1" xsi:type="element" />
+  <data alias="det" type="num" name="nMaxNumOfObject" size="1" xsi:type="element" />
+  <data alias="det" type="num" name="nNumOfPart" size="1" xsi:type="element" />
+  <data alias="enc" type="aio" name="aiEncCurrentPos" size="1" xsi:type="element" />
+  <data alias="enc" type="bool" name="bLatchEnabled" size="1" xsi:type="element" />
+  <data alias="enc" type="num" name="nMAXCOUNT" size="1" xsi:type="element" />
+  <data alias="enc" type="num" name="nMINCOUNT" size="1" xsi:type="element" />
+  <data alias="geometry" type="bool" name="bIsScara" size="1" xsi:type="element" />
+  <data alias="geometry" type="bool" name="bLinear" size="1" xsi:type="element" />
+  <data alias="swap" type="trsf" name="trWinCenter" size="1" xsi:type="element" />
+  <data alias="swap" type="trsf" name="trWinDown" size="2" xsi:type="array" />
+  <data alias="swap" type="trsf" name="trWinUp" size="2" xsi:type="array" />
+  <data alias="lang" type="string" name="sListOfMessage" size="72" xsi:type="array" />
+  <procedure>
+    <header>procedure ut:addStrToString(string x_sInString,string&amp; x_sOutString[1],string x_sDelimiter,string&amp; x_sSubString[1])</header>
+    <alias>ut</alias>
+  </procedure>
+  <procedure>
+    <header>procedure ut:addNumToString(string x_sInString,string&amp; x_sOutString[1],string x_sDelimiter,num&amp; x_nValue[1])</header>
+    <alias>ut</alias>
+  </procedure>
+  <procedure>
+    <header>procedure geometry:GetPoint(num x_nSelectData)</header>
+    <alias>geometry</alias>
+  </procedure>
+  <procedure>
+    <header>procedure geometry:BuildFrame(string x_sFrameName,frame&amp; x_fFrame[1],num&amp; x_nError[1])</header>
+    <alias>geometry</alias>
+  </procedure>
+  <procedure>
+    <header>procedure enc:setResolution(num x_nResolution)</header>
+    <alias>enc</alias>
+  </procedure>
+  <procedure>
+    <header>procedure enc:resetLatch()</header>
+    <alias>enc</alias>
+  </procedure>
+  <procedure>
+    <header>procedure enc:reset()</header>
+    <alias>enc</alias>
+  </procedure>
+  <procedure>
+    <header>procedure enc:kill()</header>
+    <alias>enc</alias>
+  </procedure>
+  <procedure>
+    <header>procedure enc:isLatched(bool&amp; x_bLatched[1])</header>
+    <alias>enc</alias>
+  </procedure>
+  <procedure>
+    <header>procedure enc:getValue(bool x_bUseLatch,num&amp; x_nEncValue[1])</header>
+    <alias>enc</alias>
+  </procedure>
+  <procedure>
+    <header>procedure enc:getStatus(num&amp; x_nStatus[1])</header>
+    <alias>enc</alias>
+  </procedure>
+  <procedure>
+    <header>procedure enc:getResolution(num&amp; x_nResolution[1])</header>
+    <alias>enc</alias>
+  </procedure>
+  <procedure>
+    <header>procedure enc:create(num x_nEncNum,string x_sTask)</header>
+    <alias>enc</alias>
+  </procedure>
+  <procedure>
+    <header>procedure det:resetTask()</header>
+    <alias>det</alias>
+  </procedure>
+  <procedure>
+    <header>procedure det:kill()</header>
+    <alias>det</alias>
+  </procedure>
+  <procedure>
+    <header>procedure det:isDetected(num&amp; x_nHowMany[1])</header>
+    <alias>det</alias>
+  </procedure>
+  <procedure>
+    <header>procedure det:getObjectLatch(num x_nIdx,num&amp; x_nLatchedVal[1])</header>
+    <alias>det</alias>
+  </procedure>
+  <procedure>
+    <header>procedure det:getObjectData(num x_nIdx,num&amp; x_nObjectID[1],trsf&amp; x_trObject[1])</header>
+    <alias>det</alias>
+  </procedure>
+  <procedure>
+    <header>procedure det:create(num x_nDetNum,string x_sTask)</header>
+    <alias>det</alias>
+  </procedure>
+</externList>

@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="moveC" access="public" >
+    <Description><![CDATA[Perform a circular motion synchronized with a conveyor]]></Description>
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1" >
+      <Parameter name="x_pInter" type="point" use="value" xsi:type="element" dimensions="1" />
+      <Parameter name="x_pLoc" type="point" use="value" xsi:type="element" dimensions="1" />
+      <Parameter name="x_tTool" type="tool" use="value" xsi:type="element" dimensions="1" />
+      <Parameter name="x_mDesc" type="mdesc" use="value" xsi:type="element" dimensions="1" />
+      <Parameter name="x_nMoveID" type="num" use="reference" xsi:type="element" dimensions="1" />
+      <Parameter name="x_nError" type="num" use="reference" xsi:type="array" dimensions="1" />
+    </Parameters>
+    <Locals>
+      <Local name="l_bLock" type="num" xsi:type="array" size="1" />
+      <Local name="l_bQuit" type="num" xsi:type="array" size="1" />
+      <Local name="l_nIdxInUse" type="num" xsi:type="array" size="1" />
+      <Local name="l_str" type="string" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+  // This program executes a motion in tracking mode
+  //
+  // Input Param
+  //  x_pInter  : Intermediate location of the circle
+  //  x_pLoc    : Location to reach
+  //  x_tTool   : Tool for motion
+  //  x_nMoveID : ID of the movement on the motion stack
+  //  x_mDesc   : Motion descriptor
+  //
+  // Output Param
+  //  x_nError  : Error code
+  //            = 0 : No error
+  //            = 1 : No object ID selected
+  //            = 3 : Bad conveyor number
+  //
+  //----------------------------------------------------------------
+  //
+  x_nError=0
+  call whichObjectUsed(nCnvSynch,l_nIdxInUse,x_nError)
+  if x_nError==0
+    // Check if an object is in use (user must have invoked getNextID)
+    if l_nIdxInUse!=-1
+      tTool.trsf=position(x_tTool,flange)
+      mTracking=x_mDesc
+      if mTracking.blend==joint
+        mTracking.blend=Cartesian
+      endIf
+      // Check robot type
+      if bIsScara
+        // Link locations to the mobile frame
+        link(pInterTrack_RS,fMobileFrame[nMobFrameSync])
+        pInterTrack_RS.trsf=position(x_pInter,fConveyor[nCnvSynch])
+        pInterTrack_RS.config=x_pInter.config
+        link(pTracking_RS,fMobileFrame[nMobFrameSync])
+        pTracking_RS.trsf=position(x_pLoc,fConveyor[nCnvSynch])
+        pTracking_RS.config=x_pLoc.config
+        x_nMoveID=$movect(pInterTrack_RS,pTracking_RS,tTool,mTracking)
+      else
+        // Link locations to the mobile frame
+        link(pInterTrack,fMobileFrame[nMobFrameSync])
+        pInterTrack.trsf=position(x_pInter,fConveyor[nCnvSynch])
+        pInterTrack.config=x_pInter.config
+        link(pTracking,fMobileFrame[nMobFrameSync])
+        pTracking.trsf=position(x_pLoc,fConveyor[nCnvSynch])
+        pTracking.config=x_pLoc.config
+        x_nMoveID=$movect(pInterTrack,pTracking,tTool,mTracking)
+      endIf
+      if bAnd(cfg:nLog,cfg:nLOGMOTION)==cfg:nLOGMOTION
+        ? "MOT(moveC)>>Synchronised motion requested"
+      endIf
+    else
+      if bAnd(cfg:nLog,cfg:nLOGMOTION)==cfg:nLOGMOTION
+        ? "MOT(moveC)>>No object selected from queue"
+      endIf
+      x_nError=1
+    endIf
+  else
+    if bAnd(cfg:nLog,cfg:nLOGMOTION)==cfg:nLOGMOTION
+      ? "MOT(moveC)>>Invalid conveyor number: "+toString("",nCnvSynch)
+    endIf
+    x_nError=3
+  endIf
+end]]></Code>
+  </Program>
+</Programs>

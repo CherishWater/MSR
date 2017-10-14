@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="checkTrackArea" access="public" >
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1" >
+      <Parameter name="x_tActivTool" type="tool" use="value" xsi:type="element" dimensions="1" />
+      <Parameter name="x_nWrkZone" type="num" use="reference" xsi:type="array" dimensions="1" />
+    </Parameters>
+    <Locals>
+      <Local name="l_trToolPos" type="trsf" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+  // This program checks if the robot is inside the Tracking window
+  //
+  // Input Param
+  // x_tActivTool  : TCP to ckeck position
+  //
+  // Output Param
+  // x_nWrkZone : real value
+  //          0 --> Beside conveyor
+  //          1 --> Upstream of the upstream end of the tracking window.
+  //          2 --> Within the tracking window
+  //          3 --> Downstream of the downstream end of the tracking window.
+  //
+  // Created 07-03-08                                   C.CURRIVAND
+  //----------------------------------------------------------------
+  //
+  l_trToolPos=position(here(x_tActivTool,fConveyor),fConveyor)
+  //
+  x_nWrkZone=0
+  //Check Z coordinate
+  if (abs(l_trToolPos.z)<nTrackWinHeight)
+    // ----- Check robot position against upstream end
+    // check Y coordinate
+    if (l_trToolPos.y>=trBoundaryUp[0].y) and (l_trToolPos.y<=trBoundaryUp[1].y)
+      // Y is OK, check X coordinate
+      if nA1==0
+        x_nWrkZone=sel(l_trToolPos.x>trBoundaryUp[0].x,2,1)
+      elseIf nA1>0
+        x_nWrkZone=sel(l_trToolPos.y<nA1*l_trToolPos.x+nB1,2,1)
+      elseIf nA1<0
+        x_nWrkZone=sel(l_trToolPos.y>nA1*l_trToolPos.x+nB1,2,1)
+      endIf
+    endIf
+    // Robot is downstream of upstream limit
+    //---- Check robot position against downstream end
+    if x_nWrkZone==2
+      // check Y coordinate
+      if (l_trToolPos.y>=trBoundaryDwn[0].y) and (l_trToolPos.y<=trBoundaryDwn[1].y)
+        // Y is OK, check X coordinate
+        if nA2==0
+          x_nWrkZone=sel(l_trToolPos.x<=trBoundaryDwn[0].x,2,3)
+        elseIf nA2>0
+          x_nWrkZone=sel(l_trToolPos.y>nA2*l_trToolPos.x+nB2,2,3)
+        elseIf nA2<0
+          x_nWrkZone=sel(l_trToolPos.y<nA2*l_trToolPos.x+nB2,2,3)
+        endIf
+      endIf
+    endIf
+  endIf
+end]]></Code>
+  </Program>
+</Programs>

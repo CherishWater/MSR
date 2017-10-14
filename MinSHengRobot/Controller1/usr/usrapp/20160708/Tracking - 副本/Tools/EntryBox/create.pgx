@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="create" access="public">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_sEntryBoxName" type="string" xsi:type="element" />
+      <Parameter name="x_sMenu" type="string" xsi:type="element" />
+      <Parameter name="x_nFocused" type="num" xsi:type="element" />
+      <Parameter name="x_nError" type="num" xsi:type="array" use="reference" />
+    </Parameters>
+    <Locals>
+      <Local name="l_i" type="num" xsi:type="array" size="1" />
+      <Local name="l_nPosX" type="num" xsi:type="array" size="1" />
+      <Local name="l_nPosY" type="num" xsi:type="array" size="1" />
+      <Local name="l_nError" type="num" xsi:type="array" size="1" />
+      <Local name="l_sCustomString" type="string" xsi:type="array" size="1" />
+      <Local name="l_sSubString" type="string" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[
+begin
+  // This program initializes all the required data to create an entryBox on the
+  // userPage
+  //
+  // Input Param
+  //  x_sEntryBoxName : Name of the page library to load
+  //  x_sMenu         : Menu to display at the bottom of the page.
+  //  If x_sMenu is empty, use default menu specified in library (variable sMenu)
+  //  x_nFocused : Item to be focused when page is first displayed
+  //
+  // Output Param
+  //  x_Error : Error code
+  //
+  //Created 21/12/05                              CCUR
+  //--------------------------------------------------------------
+  // Load page library
+  l_nError=pw:libLoad(x_sEntryBoxName)
+  if (l_nError==0) or (l_nError==11)
+    if len(x_sMenu)!=0
+      pw:sMenu=x_sMenu
+    endIf
+    nNumOfLabel=size(pw:sLabel)
+    nNumOfTxtBox=size(pw:sTxtBoxCaption)
+    call pw:init(l_nError)
+    if l_nError<0
+      // Any internal error of the definition library are reported with code -2
+      // However, a clear text is read an forwarded as an error of this library
+      x_nError=-2
+      // Prepare clear text error message
+      call pw:getErrorMessage(l_sCustomString)
+      l_sSubString=pw:libPath()
+      call ut:addStrToString(sErrMsgList[-x_nError],sErrorMessage,"",l_sSubString)
+      sErrorMessage=sErrorMessage+l_sCustomString
+    else
+      call _resizeData(nNumOfTxtBox,nNumOfLabel)
+      nFocused=x_nFocused
+    endIf
+  else
+    x_nError=1
+    // Prepare clear text error message
+    call ut:addStrToString(sErrMsgList[x_nError],sErrorMessage,"",x_sEntryBoxName)
+    call ut:addNumToString(sErrorMessage,sErrorMessage,"*",l_nError)
+  endIf
+end
+]]></Code>
+  </Program>
+</Programs>

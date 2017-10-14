@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="kill" access="public" >
+    <Locals>
+      <Local name="l_bMobFrInUse" type="bool" xsi:type="array" size="1" />
+      <Local name="l_i" type="num" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+  // This program stops all tracking tasks.
+  //
+  // Input Param
+  //  none       :
+  //
+  // Output param
+  //  none       :
+  //
+  //----------------------------------------------------------------
+  //
+  // Wait until all tracking movements are finished
+  do
+    l_bMobFrInUse=false
+    for l_i=0 to size(fMobileFrame)-1
+      l_bMobFrInUse=(!$setMobile(fMobileFrame[l_i],false) or l_bMobFrInUse)
+    endFor
+  until l_bMobFrInUse==false
+  //
+  // Stop task(s) created in this library
+  bStopAll=true
+  //
+  // Request to stop all task of the conveyor libraries
+  for l_i=0 to size(sConveyorList)-1
+    switch l_i
+      case 0
+        call cnv0:kill(0)
+        // Make sure tasks have been stopped
+        watch((taskStatus(sTASK[0]+toString("",0))!=1),2)
+      break
+      case 1
+        call cnv1:kill(1)
+        // Make sure tasks have been stopped
+        watch((taskStatus(sTASK[0]+toString("",1))!=1),2)
+      break
+    endSwitch
+  endFor
+end]]></Code>
+  </Program>
+</Programs>

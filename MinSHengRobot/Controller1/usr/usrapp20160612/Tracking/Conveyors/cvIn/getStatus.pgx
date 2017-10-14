@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="getStatus" access="public" >
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1" >
+      <Parameter name="x_nConvNum" type="num" use="value" xsi:type="element" dimensions="1" />
+      <Parameter name="x_nStatus" type="num" use="reference" xsi:type="array" dimensions="1" />
+    </Parameters>
+    <Locals>
+      <Local name="l_bLock" type="bool" xsi:type="array" size="1" />
+      <Local name="l_bQuit" type="bool" xsi:type="array" size="1" />
+      <Local name="l_i" type="num" xsi:type="array" size="1" />
+      <Local name="l_nStatus" type="num" xsi:type="array" size="1" />
+      <Local name="l_nStep" type="num" xsi:type="array" size="1" />
+      <Local name="l_sSubString" type="string" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+  // This program returns the status of the conveyor library
+  //
+  // Input Param
+  // x_nConvNum    : Conveyor Number
+  //
+  // Output Param
+  //  x_nStatus    : Status of the conveyor library
+  //
+  //Created 04-06-07                              C.CURRIVAND
+  //--------------------------------------------------------------
+  //
+  l_bQuit=false
+  do
+    switch l_nStep
+      // Check status of the encoder library
+      case 0
+        call enc:getStatus(l_nStatus)
+        if (l_nStatus!=0)
+          // Prepare clear text error message
+          call ut:addNumToString(sErrMsgList[7],sErrorMessage,"",l_nStatus)
+          l_bQuit=true
+        else
+          l_nStep=20
+        endIf
+      break
+      // Check status of the detection library.
+      case 10
+        //call det:getStatus(l_nStatus)
+        if (l_nStatus!=0)
+          // Prepare clear text error message
+          call ut:addNumToString(sErrMsgList[8],sErrorMessage,"",l_nStatus)
+          l_bQuit=true
+        else
+          l_nStep=20
+        endIf
+      break
+      // check status of the conveyor task
+      // sTASK[0]=conveyor
+      case 20
+        l_nStatus=taskStatus(sTASK[0]+toString("",x_nConvNum))
+        if (l_nStatus!=0) and (l_nStatus!=1)
+          // Prepare clear text error message
+          if l_nStatus==-1
+            // Task not created (yet !)
+            l_nStatus=2999
+          else
+            // Run-time error
+            l_nStatus=2000+l_nStatus
+          endIf
+          l_sSubString=sTASK[0]+toString("",x_nConvNum)
+          call ut:addStrToString(sErrMsgList[6],sErrorMessage,"",l_sSubString)
+          call ut:addNumToString(sErrorMessage,sErrorMessage,"*",l_nStatus)
+          l_bQuit=true
+        endIf
+        if (l_nStatus==0) or (l_nStatus==1)
+          l_nStatus=nStatus
+          nStatus=0
+        endIf
+        l_bQuit=true
+      break
+    endSwitch
+    delay(0)
+  until l_bQuit==true
+  x_nStatus=l_nStatus
+end]]></Code>
+  </Program>
+</Programs>

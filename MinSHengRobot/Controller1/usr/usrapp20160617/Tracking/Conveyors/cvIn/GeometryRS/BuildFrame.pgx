@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="BuildFrame" access="public" >
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1" >
+      <Parameter name="x_sFrameName" type="string" use="value" xsi:type="element" dimensions="1" />
+      <Parameter name="x_fFrame" type="frame" use="reference" xsi:type="array" dimensions="1" />
+      <Parameter name="x_nError" type="num" use="reference" xsi:type="array" dimensions="1" />
+    </Parameters>
+    <Locals>
+      <Local name="l_nRadius" type="num" xsi:type="array" size="1" />
+      <Local name="l_pCenter" type="point" xsi:type="array" size="1" />
+      <Local name="l_tfCenter" type="trsf" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+  // This program calculates the conveyor reference frame
+  // depending on the type of conveyor (linear or circular)
+  //
+  // Input Param
+  //
+  //
+  // Output Param
+  // x_fCOnveyor   : reference frame of conveyor
+  //
+  // Miscellaneous
+  //
+  // Created 23-02-05                                   C.CURRIVAND
+  //----------------------------------------------------------------
+  //
+  if x_sFrameName=="conveyor"
+    if bLinear
+      x_nError=setFrame(pWinUp[0],pWinDown[0],pWinUp[1],x_fFrame)
+    else
+      call ut:centerCircle(pWinUp[0],pWinMiddle,pWinDown[0],l_tfCenter,l_nRadius)
+      l_pCenter=pWinUp[0]
+      l_pCenter.trsf=l_tfCenter
+      x_nError=setFrame(l_pCenter,pWinUp[0],pWinDown[0],x_fFrame)
+    endIf
+  else
+    x_nError=setFrame(pVision[0],pVision[1],pVision[2],x_fFrame)
+  endIf
+end]]></Code>
+  </Program>
+</Programs>

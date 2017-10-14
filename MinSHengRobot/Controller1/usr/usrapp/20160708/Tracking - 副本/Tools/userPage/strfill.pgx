@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="strFill" access="public">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_sMessageIn" type="string" xsi:type="element" />
+      <Parameter name="x_nLenMessOut" type="num" xsi:type="element" />
+      <Parameter name="x_sMessageOut" type="string" xsi:type="array" use="reference" />
+    </Parameters>
+    <Locals>
+      <Local name="l_sEmpty" type="string" xsi:type="array" size="1" />
+      <Local name="l_nLen" type="num" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[
+begin
+  //-----------------------------------------------------------------------
+  //Header begin
+  //Description of program
+  //  To add spaces if the length of x_sMessageIn is less than the
+  //  x_nLenMessOut.If the length of x_sMessageIn is greater than
+  //  x_nLenMessOut it will be truncated.
+  //
+  //Input parameters
+  //  string x_sMessageIn :
+  //    role : Message that you want to display
+  //  num x_nLenMessOut :
+  //    role : Length of the message out
+  //
+  //Output parameters
+  //  string x_sMessageOut :
+  //    role : Message with spaces after or truncated if the length
+  //          x_sMessageIn is greater than x_nLenMessOut
+  //
+  //Example
+  //  call strFill("hello",20,l_sMessOut)
+  //
+  //History
+  //  Creation : 28-04-08 - f.Rob
+  //Header end
+  //-----------------------------------------------------------------------
+  //Look for asian message
+  if getDisplayLen(x_sMessageIn)<x_nLenMessOut
+    //Insert some spaces
+    l_sEmpty="                                        "
+    x_sMessageOut=x_sMessageIn
+    //Length of the spaces to add
+    l_nLen=(x_nLenMessOut-getDisplayLen(x_sMessageIn))
+    call midPos(l_sEmpty,l_nLen,0,x_sMessageIn)
+    x_sMessageOut=x_sMessageOut+x_sMessageIn
+  else
+    if getDisplayLen(x_sMessageIn)>x_nLenMessOut
+      //Divide the string
+      call midPos(x_sMessageIn,x_nLenMessOut,0,x_sMessageOut)
+    else
+      //They are the same
+      x_sMessageOut=x_sMessageIn
+    endIf
+  endIf
+end
+]]></Code>
+  </Program>
+</Programs>

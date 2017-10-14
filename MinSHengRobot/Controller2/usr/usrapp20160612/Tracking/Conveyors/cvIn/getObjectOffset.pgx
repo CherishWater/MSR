@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="getObjectOffset" access="public" >
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1" >
+      <Parameter name="x_nIdx" type="num" use="value" xsi:type="element" dimensions="1" />
+      <Parameter name="x_nObjectOffset" type="num" use="reference" xsi:type="array" dimensions="1" />
+      <Parameter name="x_nError" type="num" use="reference" xsi:type="array" dimensions="1" />
+    </Parameters>
+    <Locals>
+      <Local name="l_bFound" type="bool" xsi:type="array" size="1" />
+      <Local name="l_i" type="num" xsi:type="array" size="1" />
+      <Local name="l_nDistance" type="num" xsi:type="array" size="1" />
+      <Local name="l_nTravelDist" type="num" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+  // This program returns the distance between the instantaneous
+  // real object position and the static one.The static position is the
+  // position of the object in the conveyor frame.
+  //
+  // Input param
+  //  x_nIdx  : Index of the object in the queue
+  //
+  // Output param
+  //  x_nObjectOffset : Distance
+  //  x_nError: Error code
+  //    0 : No error
+  //    1 : No object selected
+  //    2 : Object with requested ID has not been calibrated
+  //
+  //
+  // Created 25-01-06                                   C.CURRIVAND
+  //----------------------------------------------------------------
+  //
+  //
+  x_nError=0
+  if nNumbOfUser[x_nIdx]>=0
+    call getTravelDist(x_nIdx,l_nTravelDist,x_nError)
+    // checks if a calibration distance is associated with the current object ID
+    l_i=0
+    do
+      l_bFound=(nCalibratedID[l_i]==nQueueID[x_nIdx])
+      l_i=l_i+1
+    until ((l_i>=size(nCalibratedID)) or (l_bFound==true))
+    l_nDistance=sel(l_bFound==true,nCalibratedDist[l_i-1],0)
+    //
+    x_nObjectOffset=l_nTravelDist-(nDetection2Rob+l_nDistance)
+  else
+    x_nError=1
+    if cfg:bLog==true
+      nErrVal[0]=x_nIdx
+      call ut:addNumToString(sConvNum+"(getObjecOffset)>>"+sErrMsgList[x_nError],sMsg,"*",nErrVal)
+      logMsg(sMsg)
+    endIf
+  endIf
+end]]></Code>
+  </Program>
+</Programs>

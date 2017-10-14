@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://www.staubli.com/robotics/VAL3/Project/3">
+  <Parameters version="s7.1" stackSize="5000" millimeterUnit="true" />
+  <Programs>
+    <Program file="_findBorders.pgx" />
+    <Program file="_GetUserInput.pgx" />
+    <Program file="_handleCounter.pgx" />
+    <Program file="_removeChar.pgx" />
+    <Program file="_resizeData.pgx" />
+    <Program file="_writeTxtBoxVal.pgx" />
+    <Program file="create.pgx" />
+    <Program file="display.pgx" />
+    <Program file="eraseField.pgx" />
+    <Program file="getCaption.pgx" />
+    <Program file="getErrorMessage.pgx" />
+    <Program file="getFieldValue.pgx" />
+    <Program file="handle.pgx" />
+    <Program file="handleBtype.pgx" />
+    <Program file="handleLtype.pgx" />
+    <Program file="handleNtype.pgx" />
+    <Program file="setFieldValue.pgx" />
+    <Program file="setListOfItems.pgx" />
+    <Program file="start.pgx" />
+    <Program file="stop.pgx" />
+  </Programs>
+  <Database>
+    <Data file="EntryBox.dtx" />
+  </Database>
+  <Libraries>
+    <Library alias="pw" path="Disk://Tracking/Templates/GenericPage/GenericPage.pjx" />
+    <Library alias="up" path="Disk://Tracking/Tools/userPage/userPage.pjx" />
+    <Library alias="ut" path="Disk://Tracking/Tools/util/util.pjx" />
+  </Libraries>
+</Project>

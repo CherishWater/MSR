@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="login" access="public">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_skSocketName" type="sio" xsi:type="array" use="reference" />
+      <Parameter name="user_" type="string" xsi:type="element" />
+      <Parameter name="password_" type="string" xsi:type="element" />
+      <Parameter name="handle_" type="num" xsi:type="array" use="reference" />
+      <Parameter name="result_" type="bool" xsi:type="array" use="reference" />
+    </Parameters>
+    <Locals>
+      <Local name="strMsg" type="string" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[
+begin
+  // login to camera via TCP/IP port 1023
+  // x_skSocketName   : CS8 client socket with
+  //                  IP address of camera
+  //                  Port = 1023
+  //                  Time Out = 0
+  //                  End of line Char = 13
+  //                  Nagle = On
+  // user_     : user name
+  // password_ : password for user user_
+  // handle_   : returns a handle to camera for further operations
+  // result_   : returns true if login succeeded
+  //
+  if bDebug
+    putln("cognex login")
+  endIf
+  errorCode[handle_]=1
+  nCommand[handle_]=coLO
+  nHandleCount=nHandleCount+1
+  handle_=nHandleCount
+  sioLink(sSocket[handle_],x_skSocketName)
+  // read welcome string
+  call readSocket(handle_,strMsg,result_)
+  // send user name
+  call readLogin(handle_,strMsg,result_)
+  call writeSocket(handle_,user_)
+  // send password
+  call readLogin(handle_,strMsg,result_)
+  call writeSocket(handle_,password_)
+  //
+  // read login result
+  call readSocket(handle_,strMsg,result_)
+  result_=find(strMsg,"User Logged In")!=-1
+  if !result_
+    errorCode[handle_]=-1
+    nHandleCount=nHandleCount-1
+  else
+  endIf
+  if bDebug and !result_
+    putln("login: login failed")
+  endIf
+end
+]]></Code>
+  </Program>
+</Programs>

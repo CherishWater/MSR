@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="writeStrValue" access="public">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="handle_" type="num" xsi:type="element" />
+      <Parameter name="col_" type="num" xsi:type="element" />
+      <Parameter name="row_" type="num" xsi:type="element" />
+      <Parameter name="value_" type="string" xsi:type="element" />
+      <Parameter name="result_" type="bool" xsi:type="array" use="reference" />
+    </Parameters>
+    <Locals>
+      <Local name="strCell" type="string" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[
+begin
+  // write a string value into a cell
+  nCommand[handle_]=coSS
+  call coord2Cell(col_,row_,strCell)
+  call sendCommand(handle_,"ss"+strCell+value_,result_)
+end
+]]></Code>
+  </Program>
+</Programs>

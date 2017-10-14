@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="COM" access="public">
+    <Description><![CDATA[Each bit is complemented: 1s become 0s and 0s become 1s.]]></Description>
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_value" type="num" xsi:type="array" use="reference" />
+    </Parameters>
+    <Locals>
+      <Local name="sBin" type="string" xsi:type="array" size="1" />
+      <Local name="l_idx" type="num" xsi:type="array" size="1" />
+      <Local name="sCom" type="string" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[
+begin
+  if bDebug
+    putln("COM()")
+  endIf
+  call decToBin(x_value,sBin)
+  sCom=""
+  for l_idx=0 to (len(sBin)-1)
+    if mid(sBin,1,l_idx)=="1"
+      sCom=sCom+"0"
+    else
+      sCom=sCom+"1"
+    endIf
+  endFor
+  call binToDec(sCom,x_value)
+end
+]]></Code>
+  </Program>
+</Programs>

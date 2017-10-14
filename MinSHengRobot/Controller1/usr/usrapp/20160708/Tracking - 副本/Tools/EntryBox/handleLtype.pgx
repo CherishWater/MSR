@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="handleLtype">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_sItemSelected" type="string" xsi:type="array" use="reference" />
+    </Parameters>
+    <Locals>
+      <Local name="l_i" type="num" xsi:type="array" size="1" />
+      <Local name="l_bQuit" type="bool" xsi:type="array" size="1" />
+      <Local name="l_nKeyPressed" type="num" xsi:type="array" size="1" />
+      <Local name="l_nRow" type="num" xsi:type="array" size="1" />
+      <Local name="l_nCol" type="num" xsi:type="array" size="1" />
+      <Local name="l_nWidth" type="num" xsi:type="array" size="1" />
+      <Local name="l_nHeight" type="num" xsi:type="array" size="1" />
+      <Local name="l_nSizeOfList" type="num" xsi:type="array" size="1" />
+      <Local name="l_nIdx" type="num" xsi:type="array" size="1" />
+      <Local name="l_sCommand" type="string" xsi:type="array" size="1" />
+      <Local name="l_sListName" type="string" xsi:type="array" size="1" />
+      <Local name="l_sItemSelected" type="string" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[
+begin
+  // Display the list object
+  //
+  // Input Param
+  // none
+  //
+  // Output Param
+  // x_sItemSelected  : Item selected by user in the list
+  //
+  // Comments:
+  //
+  // Created 21/02/08                              CCUR
+  //--------------------------------------------------------------
+  //Get position of the list on the screen
+  if (mid(pw:sTxtBoxType[nFocused],1,0)=="L") or (mid(pw:sTxtBoxType[nFocused],1,0)=="l")
+    call ut:extractPos(right(pw:sTxtBoxType[nFocused],len(pw:sTxtBoxType[nFocused])-1),";",l_nRow,l_nCol)
+  endIf
+  // Get width and height of the list to display
+  // format of sTxtBoxType is Lww;xx;yy;zz so remove Lxx;yy;
+  call ut:_decode(pw:sTxtBoxType[nFocused],l_sCommand,";",0)
+  call ut:_decode(l_sCommand,l_sCommand,";",0)
+  call ut:extractPos(l_sCommand,";",l_nWidth,l_nHeight)
+  l_nWidth=max(5,l_nWidth)
+  l_nHeight=max(2,l_nHeight)
+  //
+  l_sListName="pw:sListItem"+toString("",nFocused)
+  resize(sListItems,1,pw:nListSize[nFocused])
+  //
+  if getData(l_sListName,sListItems)>0
+    // Create the list of items
+    call up:listSetSize(l_nCol,l_nRow,l_nWidth,l_nHeight)
+    call up:listCreate("ItemList")
+    call up:listAdd(sListItems)
+    // Display list of items
+    call up:listUpdate(0)
+    //
+    // EVENT LOOP
+    l_bQuit=false
+    do
+      l_nKeyPressed=getKey()
+      call up:listEvent(l_nKeyPressed,l_nIdx,l_sItemSelected)
+      switch l_nKeyPressed
+        // Return
+        case 270
+          x_sItemSelected=l_sItemSelected
+          l_bQuit=true
+        break
+        // Escape
+        case 255
+          l_bQuit=true
+        break
+      endSwitch
+    until l_bQuit
+  else
+    // Error code please !!!
+  endIf
+end
+]]></Code>
+  </Program>
+</Programs>

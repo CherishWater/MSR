@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="detection">
+    <Locals>
+      <Local name="l_i" type="num" xsi:type="array" size="1" />
+      <Local name="l_nObjDetected" type="num" xsi:type="array" size="1" />
+      <Local name="l_nNumOfPart" type="num" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[
+begin
+  // This a sample program for the detection library to be used
+  // with VALTRACK software.
+  //
+  // Misc
+  // You can use this program "as is" if your detection device is a photocell
+  // in that case:
+  // - you will detect only one single object (l_nNumOfPart=1)
+  // - the object will have ID 1 (one)
+  // - the coordinate of the object must be defined in your main application
+  //
+  // In case you have a camera, you should comment or erase the Photocell section
+  // and use the camera section.
+  // write your own routines to get the necessary data from the camera.
+  //
+  // Created 23-02-05                                   C.CURRIVAND
+  // Updated 01-10-07
+  //----------------------------------------------------------------
+  //
+  // detection task running : unlock the task's conveyor when valtrack  begins
+  bTaskDetOK=true
+  //********** Photocell section
+  do
+    nObjectID[l_i]=1
+    trObjectPos[l_i]={0,0,0,0,0,0}
+    nNumOfPart=1
+    wait(nNumOfPart==-1)
+    delay(0)
+  until false
+  return
+  //********** end of Photocell section
+  //
+  //********** Camera section
+  //init cam
+  // detection task running : unlock the task's conveyor when valtrack  begins
+  //bTaskDetOK=true
+  do
+    // wait until camera has finished image treatment
+    // call WaitUntilCameraReady()
+    //
+    // Read how many object have been detected.
+    // Call myRoutineToReadNumberOfDetectedObject(l_nObjDetected)
+    //
+    l_nNumOfPart=0
+    for l_i=0 to l_nObjDetected-1
+      // Read data from your detection device:
+      // Call myRoutineToReadObjectData (nObjectID[l_nNumOfPart],trObjectPos[l_nNumOfPart])
+      //
+      // increment l_nNumOfPart only if you want to bufferize the object.
+      // For instance, you bufferize object only with:
+      //        - ID=1
+      //        - positive Y coordinate
+      //
+      //if (nObjectID[l_nNumOfPart]==1) and (trObjectPos[l_nNumOfPart].y)>0)
+      //  l_nNumOfPart=l_nNumOfPart+1
+      //endIf
+    endFor
+    //
+    // Set number of detected parts.
+    // nNumOfPart is watched by the conveyor library.
+    //  Once nNumOfPart is set, the conveyor library will access
+    //  the variables nObjectID[] and trObjectPos[].
+    //  They must be fully updated before nNumOfPart is set.
+    nNumOfPart=l_nNumOfPart
+    //
+    // Once data have been read by conveyor library
+    // nNumOfPart is set to value -1
+    wait(nNumOfPart==-1)
+    //
+    delay(0)
+  until false
+  //********** end of camera section
+end
+]]></Code>
+  </Program>
+</Programs>

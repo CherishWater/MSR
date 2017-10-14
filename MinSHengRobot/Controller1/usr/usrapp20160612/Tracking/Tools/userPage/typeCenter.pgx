@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="typeCenter" access="public">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_nY" type="num" xsi:type="element" />
+      <Parameter name="x_sMessage" type="string" xsi:type="array" use="reference" />
+      <Parameter name="x_nLength" type="num" xsi:type="element" />
+      <Parameter name="x_bShow" type="bool" xsi:type="element" />
+    </Parameters>
+    <Locals>
+      <Local name="l_nX" type="num" xsi:type="array" size="1" />
+      <Local name="l_nLenMess" type="num" xsi:type="array" size="1" />
+      <Local name="l_sMessage" type="string" xsi:type="array" size="1" />
+      <Local name="i" type="num" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[
+begin
+  //-----------------------------------------------------------------------
+  //Header begin
+  //Description of program
+  //  Displays one message in center and at the Y position of the userPage.
+  //  - If x_bShow is true : if the length of the message is greater than
+  //  x_nLength it will be truncated.
+  //  - If x_bShow is false : if the length of the message is less than
+  //  x_nLength,the characters are replaced by spaces otherwise the message
+  //  will be truncated.
+  //
+  //Input parameters
+  //  num x_nY :
+  //    role : cursor row
+  //  num x_nLength :
+  //    role : max lenght of the message
+  //  bool x_bShow :
+  //    role : set to true if you just want to display a message and false if
+  //    you want to add spaces before and after the message.
+  //
+  //Output parameters
+  //  string x_sMessage :
+  //    role : Message that you want to display. It can be modified by
+  //    the program when you want add spaces before and after the message
+  //
+  //Example
+  //  call typeCenter(5,"Hello",10,true) //Displays "Hello" in the middle of the line 5
+  //
+  //History
+  //  Creation : 28-04-08 - f.Rob
+  //Header end
+  //-----------------------------------------------------------------------
+  l_nLenMess=getDisplayLen(x_sMessage)
+  if (l_nLenMess>x_nLength)
+    //Comprime
+    call strlength(x_sMessage,x_nLength)
+    //Found the pos to start write
+    l_nX=20-(x_nLength/2)
+  else
+    //Found the pos to start write
+    l_nX=20-(l_nLenMess/2)
+  endIf
+  l_sMessage=x_sMessage
+  if x_bShow
+    //You want to display your message
+    call type(l_nX,x_nY,l_sMessage)
+  else
+    //Put spaces before the message
+    for i=0 to max(l_nX-(40-x_nLength)/2,0)-1
+      l_sMessage=" "+l_sMessage
+    endFor
+    //Put spaces after the message and give it
+    call strFill(l_sMessage,x_nLength,x_sMessage)
+  endIf
+end
+]]></Code>
+  </Program>
+</Programs>

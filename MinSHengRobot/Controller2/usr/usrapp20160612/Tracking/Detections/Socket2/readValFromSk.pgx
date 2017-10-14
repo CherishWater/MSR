@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="readValFromSk">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_sCharacter" type="string" xsi:type="element" />
+      <Parameter name="x_nValue" type="num" xsi:type="element" use="reference" />
+      <Parameter name="x_nError" type="num" xsi:type="element" />
+    </Parameters>
+    <Locals>
+      <Local name="l_nAsciiCode" type="num" xsi:type="array" size="1" />
+      <Local name="l_nNumCharRead" type="num" xsi:type="array" size="1" />
+      <Local name="l_sCharRead" type="string" xsi:type="array" size="1" />
+      <Local name="l_sStringRead" type="string" xsi:type="array" size="1" />
+      <Local name="l_nValueRead" type="num" xsi:type="array" size="1" />
+      <Local name="l_bResult" type="bool" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[
+begin
+  // This program reads character by character on the socket until
+  //  it finds a separator character. All the characters founded before
+  //  this separator character are transformed on an integer value.
+  //  The socket must be a socket server with timeout=0
+  //
+  // Input Param
+  //  x_sCharacter : Character to find
+  //
+  // Output Param
+  //  x_nValue     : Integer value read from the socket
+  //  x_nError     :
+  //             0 = No error
+  //            +1 = Not possible to convert the string read into
+  //                  a numerical value, or the string doesn't have
+  //                  the right format.
+  //
+  //----------------------------------------------------------------
+  //
+  l_sStringRead=""
+  l_sCharRead=""
+  //
+  // Read character by character until finds specific character.
+  while l_sCharRead!=x_sCharacter
+    // Reads one character from socket
+    sioGet(skFromRobot,l_nAsciiCode)
+    l_sCharRead=chr(l_nAsciiCode)
+    // If the character read is not the separator character, the 
+    //  character read will be added to the previous characters read.
+    if l_sCharRead!=x_sCharacter
+      l_sStringRead=l_sStringRead+l_sCharRead
+    endIf
+  endWhile
+  //
+  // Convert string to num
+  l_sStringRead=toNum(l_sStringRead,l_nValueRead,l_bResult)
+  // If convertion Ok, modify parameter.
+  if (l_sStringRead=="" and l_bResult==true)
+    x_nValue=l_nValueRead
+  else
+    x_nError=x_nError+1
+  endIf
+  //
+end
+]]></Code>
+  </Program>
+</Programs>

@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="getResolution" access="public">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_nResolution" type="num" xsi:type="array" use="reference" />
+    </Parameters>
+    <Code><![CDATA[
+begin
+  // This routine returns the encoder resolution
+  //
+  // Input Param
+  //
+  // Output Param
+  //  x_nEncResolution  : Encoder resolution. -1 is returned if not applicable
+  //
+  //
+  //----------------------------------------------------------------
+  //
+  if ioStatus(aoEncResolution)>=0
+    nEncResolution=aioGet(aoEncResolution)
+    x_nResolution=nEncResolution
+  else
+    x_nResolution=-1
+  endIf
+end
+]]></Code>
+  </Program>
+</Programs>

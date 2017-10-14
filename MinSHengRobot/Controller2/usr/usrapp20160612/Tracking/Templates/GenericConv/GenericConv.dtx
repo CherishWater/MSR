@@ -1,0 +1,145 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Database xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Data/2">
+  <Datas>
+    <Data name="bClockEnabled" access="private" xsi:type="array" type="bool" size="1" />
+    <Data name="bEnableQueuing" access="private" xsi:type="array" type="bool" size="1">
+      <Value key="0" value="true" />
+    </Data>
+    <Data name="bInit" access="private" xsi:type="array" type="bool" size="1" />
+    <Data name="bLOG" access="public" xsi:type="array" type="bool" size="1">
+      <Value key="0" value="true" />
+    </Data>
+    <Data name="bLinear" access="public" xsi:type="array" type="bool" size="1">
+      <Value key="0" value="true" />
+    </Data>
+    <Data name="bLockQueueAcces" access="private" xsi:type="array" type="bool" size="1" />
+    <Data name="bResetConv" access="private" xsi:type="array" type="bool" size="1" />
+    <Data name="bUseUserCenter" access="public" xsi:type="array" type="bool" size="1" />
+    <Data name="bUseUserLimit" access="public" xsi:type="array" type="bool" size="1" />
+    <Data name="doClock" access="private" xsi:type="array" type="dio" size="1" />
+    <Data name="fConveyor" access="public" xsi:type="array" type="frame" size="1">
+      <Value key="0" fatherId="world[0]" />
+    </Data>
+    <Data name="fDetection" access="public" xsi:type="array" type="frame" size="1">
+      <Value key="0" fatherId="world[0]" />
+    </Data>
+    <Data name="nA1" access="private" xsi:type="array" type="num" size="1">
+      <Value key="0" value="1" />
+    </Data>
+    <Data name="nA2" access="private" xsi:type="array" type="num" size="1">
+      <Value key="0" value="1" />
+    </Data>
+    <Data name="nAddedToQueue" access="private" xsi:type="array" type="num" size="1" />
+    <Data name="nB1" access="private" xsi:type="array" type="num" size="1">
+      <Value key="0" value="1" />
+    </Data>
+    <Data name="nB2" access="private" xsi:type="array" type="num" size="1">
+      <Value key="0" value="1" />
+    </Data>
+    <Data name="nBoundaryDwn" access="private" xsi:type="array" type="num" size="1" />
+    <Data name="nBoundaryUp" access="private" xsi:type="array" type="num" size="1" />
+    <Data name="nBufferSize" access="public" xsi:type="array" type="num" size="1">
+      <Value key="0" value="10" />
+    </Data>
+    <Data name="nCalibratedDist" access="public" xsi:type="array" type="num" size="1" />
+    <Data name="nCalibratedID" access="private" xsi:type="array" type="num" size="1">
+      <Value key="0" value="-99" />
+    </Data>
+    <Data name="nClockPeriod" access="public" xsi:type="array" type="num" size="1" />
+    <Data name="nConveyorSpeed" access="public" xsi:type="array" type="num" size="1" />
+    <Data name="nDEFAULTID" access="private" xsi:type="array" type="num" size="1">
+      <Value key="0" value="-99" />
+    </Data>
+    <Data name="nDETECT_OVR" access="private" xsi:type="array" type="num" size="1" />
+    <Data name="nDetection2Rob" access="public" xsi:type="array" type="num" size="1" />
+    <Data name="nENCRESOLUTION" access="public" xsi:type="array" type="num" size="1">
+      <Value key="0" value="1024" />
+    </Data>
+    <Data name="nENCSCALEFACTOR" access="public" xsi:type="array" type="num" size="1" />
+    <Data name="nEncLatchedVal" access="private" xsi:type="array" type="num" size="1" />
+    <Data name="nErrVal" access="private" xsi:type="array" type="num" size="4" />
+    <Data name="nFirDelay" access="public" xsi:type="array" type="num" size="1" />
+    <Data name="nFirOrdre" access="public" xsi:type="array" type="num" size="1">
+      <Value key="0" value="20" />
+    </Data>
+    <Data name="nFirTime" access="private" xsi:type="array" type="num" size="1" />
+    <Data name="nIdxCalib" access="private" xsi:type="array" type="num" size="1" />
+    <Data name="nIdxPull" access="private" xsi:type="array" type="num" size="1" />
+    <Data name="nIdxPush" access="private" xsi:type="array" type="num" size="1" />
+    <Data name="nLatchLockDist" access="public" xsi:type="array" type="num" size="1" />
+    <Data name="nNumbOfUser" access="private" xsi:type="array" type="num" size="1" />
+    <Data name="nPUSH_NEGATIVE" access="private" xsi:type="array" type="num" size="1" />
+    <Data name="nPosMatchTol" access="public" xsi:type="array" type="num" size="1">
+      <Value key="0" value="5" />
+    </Data>
+    <Data name="nQueueID" access="private" xsi:type="array" type="num" size="1">
+      <Value key="0" value="-1" />
+    </Data>
+    <Data name="nStatus" access="private" xsi:type="array" type="num" size="1">
+      <Value key="0" value="-1" />
+    </Data>
+    <Data name="nSysCycleTime" access="private" xsi:type="array" type="num" size="1">
+      <Value key="0" value="0.004" />
+    </Data>
+    <Data name="nTmpEncLatched" access="private" xsi:type="array" type="num" size="1" />
+    <Data name="nTmpID" access="private" xsi:type="array" type="num" size="1" />
+    <Data name="nTrackWinHeight" access="public" xsi:type="array" type="num" size="1">
+      <Value key="0" value="500" />
+    </Data>
+    <Data name="nWinDownStream" access="private" xsi:type="array" type="num" size="1" />
+    <Data name="nWinUpStream" access="private" xsi:type="array" type="num" size="1" />
+    <Data name="pObjectRS" access="private" xsi:type="array" type="pointRs" size="1">
+      <Value key="0" fatherId="world[0]" />
+    </Data>
+    <Data name="pObject" access="private" xsi:type="array" type="pointRx" size="1">
+      <Value key="0" fatherId="world[0]" />
+    </Data>
+    <Data name="sClockSigName" access="public" xsi:type="array" type="string" size="1">
+      <Value key="0" value="none" />
+    </Data>
+    <Data name="sConvNum" access="private" xsi:type="array" type="string" size="1" />
+    <Data name="sConveyorName" access="public" xsi:type="array" type="string" size="1">
+      <Value key="0" value="GenericConv" />
+    </Data>
+    <Data name="sDetectionLib" access="public" xsi:type="array" type="string" size="1">
+      <Value key="0" value="GenericDetect" />
+    </Data>
+    <Data name="sDwnLimSigName" access="public" xsi:type="array" type="string" size="1">
+      <Value key="0" value="none" />
+    </Data>
+    <Data name="sEncoderLib" access="public" xsi:type="array" type="string" size="1">
+      <Value key="0" value="GenericEnc" />
+    </Data>
+    <Data name="sErrMsgList" access="private" xsi:type="array" type="string" size="12">
+      <Value key="0" value="Success" />
+      <Value key="1" value="No object available (ID=*)" />
+      <Value key="3" value="The encoder library is not started yet." />
+      <Value key="4" value="The detection library is not started yet." />
+      <Value key="6" value="Run-time error from Conveyor library in task called *\../*. Error code is *" />
+      <Value key="7" value="Run-time error from Encoder library. Error code is *" />
+      <Value key="8" value="Run-time error from Detection library. Error code is *" />
+      <Value key="10" value="Warning, object with negative ID cannot be pushed into conveyor's queue" />
+      <Value key="11" value="Warning, detection overrun." />
+    </Data>
+    <Data name="sErrorMessage" access="private" xsi:type="array" type="string" size="1" />
+    <Data name="sGeometryLib" access="public" xsi:type="array" type="string" size="1">
+      <Value key="0" value="Geometry" />
+    </Data>
+    <Data name="sMsg" access="private" xsi:type="array" type="string" size="1" />
+    <Data name="sTASK" access="private" xsi:type="array" type="string" size="3">
+      <Value key="0" value="conveyor" />
+      <Value key="1" value="encoder" />
+      <Value key="2" value="detect" />
+    </Data>
+    <Data name="sUpLimSigName" access="public" xsi:type="array" type="string" size="1">
+      <Value key="0" value="none" />
+    </Data>
+    <Data name="trBoundaryDwn" access="private" xsi:type="array" type="trsf" size="2" />
+    <Data name="trBoundaryUp" access="private" xsi:type="array" type="trsf" size="2" />
+    <Data name="trDEFAULT" access="private" xsi:type="array" type="trsf" size="1">
+      <Value key="0" x="5" y="4" z="3" rx="2" ry="1" />
+    </Data>
+    <Data name="trDetectedCoord" access="private" xsi:type="array" type="trsf" size="1" />
+    <Data name="trTmp" access="private" xsi:type="array" type="trsf" size="1" />
+  </Datas>
+</Database>

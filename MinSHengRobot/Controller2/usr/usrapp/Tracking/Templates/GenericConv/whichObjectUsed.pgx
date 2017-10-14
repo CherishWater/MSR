@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="whichObjectUsed" access="public">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_nIdxInUse" type="num" xsi:type="array" use="reference" />
+    </Parameters>
+    <Code><![CDATA[
+begin
+  // This checks if the index pointed by nIdxPull activated
+  // It is activated when getNextID has been called once and
+  // there is an object in the queue
+  //
+  // Input param
+  //  none
+  //
+  // Output param
+  //  x_nIdxInUse : Index in the queue that is currently activated
+  //
+  // Created 25-01-06                                   C.CURRIVAND
+  //----------------------------------------------------------------
+  //
+  x_nIdxInUse=sel(nNumbOfUser[nIdxPull]>0,nIdxPull,-1)
+end
+]]></Code>
+  </Program>
+</Programs>

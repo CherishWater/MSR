@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Project xmlns="http://www.staubli.com/robotics/VAL3/Project/3" >
+  <Parameters version="s7.6.2" stackSize="5000" millimeterUnit="true" />
+  <Programs>
+    <Program file="checkTrackArea.pgx" />
+    <Program file="conveyor.pgx" />
+    <Program file="create.pgx" />
+    <Program file="disableQueue.pgx" />
+    <Program file="enableQueue.pgx" />
+    <Program file="fillQueue.pgx" />
+    <Program file="flushQueue.pgx" />
+    <Program file="getConvFrame.pgx" />
+    <Program file="getDetectDist.pgx" />
+    <Program file="getDetectFrame.pgx" />
+    <Program file="getDistance.pgx" />
+    <Program file="getErrorMessage.pgx" />
+    <Program file="getNextID.pgx" />
+    <Program file="getObjectData.pgx" />
+    <Program file="getObjectLatch.pgx" />
+    <Program file="getObjectOffset.pgx" />
+    <Program file="getObjectPos.pgx" />
+    <Program file="getStatus.pgx" />
+    <Program file="getTravelDist.pgx" />
+    <Program file="init.pgx" />
+    <Program file="kill.pgx" />
+    <Program file="releaseObject.pgx" />
+    <Program file="removePart.pgx" />
+    <Program file="reset.pgx" />
+    <Program file="setCalibrating.pgx" />
+    <Program file="setConveyor.pgx" />
+    <Program file="setObjectInUse.pgx" />
+    <Program file="start.pgx" />
+    <Program file="stop.pgx" />
+    <Program file="teach.pgx" />
+    <Program file="whichObjectUsed.pgx" />
+  </Programs>
+  <Database>
+    <Data file="cvIn.dtx" />
+  </Database>
+  <Libraries>
+    <Library alias="cfg" path="Disk://Tracking/config/config.pjx" autoload="true" password="" />
+    <Library alias="det" path="Disk://Tracking/Templates/GenericDetect/GenericDetect.pjx" autoload="false" password="" />
+    <Library alias="enc" path="Disk://Tracking/Templates/GenericEnc/GenericEnc.pjx" autoload="false" password="" />
+    <Library alias="geometry" path="Disk://Tracking/Templates/Geometry/Geometry.pjx" autoload="false" password="" />
+    <Library alias="swap" path="Disk://Tracking/Swap/Swap.pjx" autoload="true" password="" />
+    <Library alias="ut" path="Disk://Tracking/Tools/util/util.pjx" autoload="true" password="" />
+    <Library alias="lang" path="Disk://Tracking/language/english/english.pjx" autoload="true" password="" />
+    <Library alias="out" path="Disk://Tracking/io/outputs/outputs.pjx" autoload="true" password="" />
+  </Libraries>
+  <Types>
+  </Types>
+</Project>

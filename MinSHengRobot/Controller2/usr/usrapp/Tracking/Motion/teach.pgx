@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="teach" access="public" >
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1" >
+      <Parameter name="x_nConvNum" type="num" use="value" xsi:type="element" dimensions="1" />
+      <Parameter name="x_tTool" type="tool" use="value" xsi:type="element" dimensions="1" />
+      <Parameter name="x_fFrame" type="frame" use="value" xsi:type="element" dimensions="1" />
+      <Parameter name="x_pLoc" type="point" use="reference" xsi:type="array" dimensions="1" />
+      <Parameter name="x_nError" type="num" use="reference" xsi:type="array" dimensions="1" />
+    </Parameters>
+    <Code><![CDATA[begin
+  // This program returns the coordinates of a point, in the specified
+  //  frame, with respect to the instantaneous location of the conveyor.
+  //  It is usually used when the detection device doesn’t provide all
+  //  necessary information about the position of the object on the
+  //  conveyor like for instance a sensor. A specific procedure must
+  //  be performed to teach a location that way.
+  //
+  // Input Param
+  //  x_nConvNum      : Conveyor number
+  //  x_tTool         : Tool Center Point with which the location
+  //                     must be taught.
+  //  x_fFrame	      : The reference frame of the location to teach.
+  //
+  // Output param
+  //  x_pLoc          : The location to teach
+  //  x_nError        : Error code
+  //                0 = No error
+  //               -1 = No object detected, not possible to teach
+  //                     anything.
+  //
+  //----------------------------------------------------------------
+  //
+  switch x_nConvNum
+    case 0
+      call cnv0:teach(x_tTool,x_fFrame,x_pLoc,x_nError)
+    break
+    case 1
+      call cnv1:teach(x_tTool,x_fFrame,x_pLoc,x_nError)
+    break
+  endSwitch
+end]]></Code>
+  </Program>
+</Programs>

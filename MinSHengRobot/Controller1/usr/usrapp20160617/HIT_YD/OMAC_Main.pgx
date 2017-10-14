@@ -1,0 +1,158 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="OMAC_Main" access="private" >
+    <Code><![CDATA[begin
+  //  _nOmacStat
+  //1-Ready
+  //2-Starting
+  //3-Running
+  //4-Resetting
+  //5-Holding
+  //6-Held
+  //7-Un-Holding
+  //8-Stopping
+  //9-Stopped
+  //10-Aborting
+
+
+  // _nStateCmd
+  //1-Start
+  //2-Stop
+  //3-Reset
+  //4-Hold
+  //10-Abort
+
+  //机器人状态
+  _nOmacStat=9
+
+  _nLastStateCMD=0
+  //OMAC_init
+  call init()
+  do
+    switch _nOmacStat
+      //复位信号
+      case 1
+        call modbusSet(3)
+      break
+      //运行信号
+      case 3
+        call modbusSet(1)
+      break
+      //准备信号
+      case 4
+        call modbusSet(2)
+      break
+      //停止信号
+      case 9
+        call modbusSet(2)
+      break
+    endSwitch
+
+
+    //机器人状态输出
+    //call modbusSet(_nOmacStat)
+    //aioSet(aRbStatus,_nOmacStat)
+    //根据上位机按钮转换为指令num
+    //10-Abort
+    if esStatus()==2
+      _nStateCMD=10
+    else
+      //_nStateCMD=aioGet(aPlcCmd)
+      call modbusGet(_nStateCMD)
+    endIf
+
+    //根据指令num，触发相应动作
+    if _nStateCMD!=_nLastStateCMD
+      switch _nStateCMD
+        //Reset
+        case 3
+          //确认当前OMAC进程为stopped
+          if _nOmacStat==9
+
+            if taskStatus("Reset")>=0
+              taskKill("Reset")
+            endIf
+            wait(taskStatus("Reset")<0)
+            taskCreate "Reset",100,OMAC_Reset()
+
+          endIf
+        break
+
+        //Start
+        case 1
+          //确认当前OMAC进程为Ready
+          if _nOmacStat==1
+
+            if taskStatus("Start")>=0
+              taskKill("Start")
+            endIf
+            wait(taskStatus("Start")<0)
+            taskCreate "Start",100,OMAC_Start()
+
+          elseIf _nOmacStat==6
+            //确认当前OMAC进程为Held
+
+            if taskStatus("Unhold")>=0
+              taskKill("Unhold")
+            endIf
+            wait(taskStatus("Unhold")<0)
+            taskCreate "Unhold",100,OMAC_Unhold()
+          else
+            //call setAlarm(7)
+
+          endIf
+        break
+        //Hold
+        case 4
+          //确认当前OMAC进程为running
+          if _nOmacStat==3
+
+            if taskStatus("Hold")>=0
+              taskKill("Hold")
+            endIf
+            wait(taskStatus("Hold")<0)
+            taskCreate "Hold",100,OMAC_Hold()
+
+          endIf
+        break
+
+        //Unhold
+        case 7
+
+        break
+
+        //Stop
+        case 2
+          //确认当前OMAC进程不是停止
+          if _nOmacStat!=9
+            if taskStatus("Stop")>=0
+              taskKill("Stop")
+            endIf
+            wait(taskStatus("Stop")<0)
+            taskCreate "Stop",100,OMAC_Stop()
+          endIf
+        break
+
+        //Abort
+        case 10
+          // //确认当前OMAC进程不是停止
+          if _nOmacStat!=9
+            if taskStatus("Abort")>=0
+              taskKill("Abort")
+            endIf
+            wait(taskStatus("Abort")<0)
+            taskCreate "Abort",100,OMAC_Abort()
+          endIf
+        break
+
+      endSwitch
+    endIf
+    //记录上次指令
+    _nLastStateCMD=_nStateCMD
+    delay(0)
+  until false
+
+
+end]]></Code>
+  </Program>
+</Programs>

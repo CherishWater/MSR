@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="extractPos" access="public">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_sInString" type="string" xsi:type="element" />
+      <Parameter name="x_sBreakChar" type="string" xsi:type="element" />
+      <Parameter name="x_nVal1" type="num" xsi:type="array" use="reference" />
+      <Parameter name="x_nVal2" type="num" xsi:type="array" use="reference" />
+    </Parameters>
+    <Locals>
+      <Local name="l_bOk" type="bool" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[
+begin
+  // This program extracts 2 numerical values from the input string
+  //
+  // Input Param
+  //  x_sInstring     : Input string which contains the values to extract
+  //  x_sBreakChar    : Break character
+  //
+  // Output Param
+  //  x_nVal1                  : First numerical value
+  //  x_nVal2                  : Second numerical value
+  //
+  // Created 15/01/01                              C.CURRIVAND
+  //---------------------------------------------------------
+  x_sInString=toNum(x_sInString,x_nVal1,l_bOk)
+  x_sInString=toNum(x_sInString,x_nVal2,l_bOk)
+end
+]]></Code>
+  </Program>
+</Programs>

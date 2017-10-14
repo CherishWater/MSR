@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="display" access="public">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_nPosX" type="num" xsi:type="element" />
+      <Parameter name="x_nPosY" type="num" xsi:type="element" />
+      <Parameter name="x_bDrawFrame" type="bool" xsi:type="element" />
+    </Parameters>
+    <Locals>
+      <Local name="l_i" type="num" xsi:type="array" size="1" />
+      <Local name="l_x" type="num" xsi:type="array" size="1" />
+      <Local name="l_y" type="num" xsi:type="array" size="1" />
+      <Local name="l_nWidth" type="num" xsi:type="array" size="1" />
+      <Local name="l_nHeight" type="num" xsi:type="array" size="1" />
+      <Local name="l_offset" type="num" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[
+begin
+  // This program displays the EntryBox that has been created
+  // Input Param
+  //  x_nPosX       : Row number of the upper-left corner of the entryBox
+  //  x_nPosY       : Column number of the upper-left corner of the entryBox
+  //  x_bDrawFrame  : If this parameter is TRUE, the items of the EntryBox.
+  //                are displayed with a surrounding frame
+  //
+  //
+  //
+  //Created 21/12/05                              CCUR
+  //--------------------------------------------------------------
+  nPageUpCol=x_nPosY
+  nPageUpRow=x_nPosX
+  bDrawFrame=x_bDrawFrame
+  //cls()
+  if bDrawFrame
+    // Define page dimensions according to the positions
+    // of the labels and textboxes defined in the definition library
+    call _findBorders(l_nWidth,l_nHeight)
+    call up:listFrame(pw:sTitle,x_nPosX,x_nPosY,l_nWidth,l_nHeight)
+    // When drawing a frame, items must be shifted by 1 in row and col
+    l_offset=1
+  else
+    l_offset=0
+  endIf
+  for l_i=0 to nNumOfLabel-1
+    //Get labels position
+    call ut:extractPos(pw:sLabelPos[l_i],";",l_x,l_y)
+    nLblPosX[l_i]=x_nPosX+l_x+l_offset
+    nLblPosY[l_i]=x_nPosY+l_y+l_offset
+    //
+    // Display labels
+    gotoxy(nLblPosX[l_i],nLblPosY[l_i])
+    put(pw:sLabel[l_i])
+    //
+  endFor
+  for l_i=0 to nNumOfTxtBox-1
+    if (asc(pw:sTxtBoxType[l_i],0)!=asc("H",0)) and (asc(pw:sTxtBoxType[l_i],0)!=asc("h",0))
+      //Get textboxes position
+      call ut:extractPos(pw:sTxtBoxPos[l_i],";",l_x,l_y)
+      nTxtPosX[l_i]=x_nPosX+l_x+l_offset
+      nTxtPosY[l_i]=x_nPosY+l_y+l_offset
+      //
+      // Display textboxes
+      gotoxy(nTxtPosX[l_i],nTxtPosY[l_i])
+      put(pw:sTxtBoxCaption[l_i])
+      if l_i==nFocused
+        call _writeTxtBoxVal(l_i,nVIDEOINVERSED,"R")
+      else
+        call _writeTxtBoxVal(l_i,nVIDEONORMAL,"R")
+      endIf
+      //
+      // Get range of value for textboxes (to check numerical value)
+      call ut:extractPos(pw:sTxtBoxRange[l_i],";",nTxtMinVal[l_i],nTxtMaxVal[l_i])
+    endIf
+  endFor
+  //
+  call up:displayMenu(pw:sMenu)
+end
+]]></Code>
+  </Program>
+</Programs>

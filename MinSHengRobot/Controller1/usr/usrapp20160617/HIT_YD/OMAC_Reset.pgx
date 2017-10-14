@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="OMAC_Reset" access="private" >
+    <Locals>
+      <Local name="l_jHere" type="joint" xsi:type="array" size="1" />
+      <Local name="l_nKey" type="num" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+
+  //OMAC进程:resetting
+  _nOmacStat=4
+  logMsg("上位机手动操作：复位")
+
+  call sendInfo2Camera()
+  //
+  // Reset conveyor speed
+  //  call setConvSpeed(0,0)
+  //
+  // Variable initializing
+  call init()
+  call trackErr_init()
+  // Launch Tracking
+  call initTracking()
+  if !isInRange(herej())
+    aioSet(aRbAlarm,20)
+    call setAlarm(1)
+    popUpMsg("机器人关节超限!")
+    taskCreate "Abort",100,OMAC_Abort()
+    return
+  endIf
+  //
+  resetMotion()
+  // Enables arm power
+  while !isPowered()
+    enablePower()
+    delay(1)
+  endWhile
+  _bSentToHome=true
+  // Send robot to home position
+  l_jHere=herej()
+  l_jHere.j3=jHome.j3
+  movej(l_jHere,tGripper,mSlow)
+  movej(jHome,tGripper,mSlow)
+  //
+  //
+  // Init user screen
+  cls()
+  gotoxy(0,4)
+  put("Cycle Time (Last):    ")
+  gotoxy(0,6)
+  put("Cycle Time (Average): ")
+  gotoxy(0,8)
+  put("Cycle Time (Best):    ")
+  gotoxy(0,10)
+  put("      Pick                Place         ")
+  gotoxy(0,11)
+  put("  Done   Transfer      Done   ")
+
+
+  //Launch queue transfer tasks
+  if bTransferData[0]
+    if taskStatus("TransferQueue1")>=0
+      taskKill("TransferQueue1")
+    endIf
+    taskCreate "TransferQueue1",100,transferQueue(0)
+    wait(taskStatus("TransferQueue1")==1)
+  endIf
+
+  // Task to remove picking positions that have pass the downstream limit while the robot is placing a part.
+  if taskStatus("overflowPick")>=0
+    taskKill("overflowPick")
+  endIf
+  taskCreate "overflowPick",100,overflowPick()
+  wait(taskStatus("overflowPick")==1)
+
+  //OMAC进程:ready
+  _nOmacStat=1
+  delay(0)
+end]]></Code>
+  </Program>
+</Programs>

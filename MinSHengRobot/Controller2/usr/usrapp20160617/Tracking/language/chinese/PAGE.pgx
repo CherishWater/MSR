@@ -1,0 +1,631 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="Page" access="public">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_nPageNum" type="num" xsi:type="element" />
+      <Parameter name="x_sCustomTxt" type="string" xsi:type="array" use="reference" />
+      <Parameter name="x_nMenu" type="num" xsi:type="element" />
+      <Parameter name="x_bRefresh" type="bool" xsi:type="element" />
+      <Parameter name="x_nSelectedMenu" type="num" xsi:type="array" use="reference" />
+    </Parameters>
+    <Locals>
+      <Local name="l_nMenu" type="num" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+  // This program displays the different pages of the user interface
+  //
+  // Input param
+  //  x_nPageNum  : Number of the page to display
+  //  x_sCustomTxt : Custom text to display
+  //
+  // Output param
+  //  x_nMenu         : Number of the menu list to display
+  //  x_nSelectedMenu : Number of the function key pressed by user
+  //
+  //----------------------------------------------------------------
+  //
+  //-----------------
+  //  DISPLAY SECTION
+  //-----------------
+  //
+  switch x_nPageNum
+    case -1
+    break
+    // ****************************************
+    // *****        Help screens          *****
+    // ****************************************
+    //
+    //  Conveyor overview
+    //
+    case 0
+      if x_bRefresh
+        cls()
+        call BuildTitle(sListOfMessage[4],"")
+        call up:type(4,1,"┌──────P0x................xP3───┐")
+        call up:type(4,2,"│        ^Y+              .     │")
+        call up:type(4,3,"│ ───>   │                .     │")
+        call up:type(4,4,"│        │                .     │")
+        call up:type(4,5,"└──────P1x--->X+..........xP2───┘")
+        call up:type(1,8,"...  : 工作窗口")
+        call up:type(1,9,"───> : 传送带前进方向")
+        call up:type(1,10,"P1   : 传送带坐标系原点")
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    //
+    // Define Encoder Scale Factor
+    // Teach upstream location
+    //
+    case 10
+      if x_bRefresh==true
+        cls()
+        call BuildTitle(sListOfMessage[3]+" 1/6",sOptionTitle)
+        call up:type(0,0,"把校准目标放在传送带上游,")
+        call up:type(0,1,"机器人能达到的最远位置.")
+        call up:type(0,3,"把工具尖点校准到校准目标上,")
+        call up:type(0,4,"点击 下步 记录这个位置,并继续")
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+      call up:type(0,7,"机器人位置:")
+      call up:DisplayPt(trTrsf[0],8)
+      call up:type(0,10,"编码器值: "+x_sCustomTxt[0])
+    break
+    //
+    // Define Encoder Scale Factor
+    // Move target to downstream limit
+    //
+    case 11
+      if x_bRefresh==true
+        cls()
+        call BuildTitle(sListOfMessage[3]+" 2/6",sOptionTitle)
+        call up:type(0,0,"提高工具,远离目标.确保在传送带")
+        call up:type(0,1,"启动和停止时,目标不会相对滑动.")
+        call up:type(0,2,"然后启动传送带,当物件到达机器人")
+        call up:type(0,3,"工作范围的下游时,停止传送带.")
+        
+        call up:type(0,9,"点击 下步 继续")
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    //
+    // Define Encoder Scale Factor
+    // Teach upstream location
+    //
+    case 12
+      if x_bRefresh==true
+        cls()
+        call BuildTitle(sListOfMessage[3]+" 3/6",sOptionTitle)
+        call up:type(0,0,"确定目标在传送带上没有滑动,再次")
+        call up:type(0,1,"把工具尖点校准到目标上.")
+        call up:type(0,3,"点击 下步 来记录这个位置,并继续")
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+      call up:type(0,7,"机器人位置:")
+      call up:DisplayPt(trTrsf[0],8)
+      call up:type(0,10,"编码器值 : "+x_sCustomTxt[0])
+    break
+    //
+    // Define Encoder Scale Factor
+    // Perform computation
+    //
+    case 13
+      if x_bRefresh==true
+        cls()
+        call BuildTitle(sListOfMessage[3]+" 4/6",sOptionTitle)
+        call up:type(0,0,"编码器比例因数计算结果:")
+        call up:type(0,3,"编码器比例因数 : "+x_sCustomTxt[0])
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    //
+    // Define Encoder Scale Factor
+    // Display error message
+    //
+    case 14
+      if x_bRefresh==true
+        cls()
+        call BuildTitle(sListOfMessage[3]+" 5/6",sOptionTitle)
+        call up:type(0,0,"在编码器比例因数校准过程中,")
+        call up:type(0,1,"发生如下错误: 没有检测到传")
+        call up:type(0,2,"送带运动,编码器值没有变化")
+        call up:type(0,4,"请注意:当校准过程进入2/6步时,")
+        call up:type(0,5,"再启动传送带运动")
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    //
+    // Define Encoder Scale Factor
+    // Store calibration data
+    //
+    case 15
+      if x_bRefresh==true
+        call BuildTitle(sListOfMessage[3]+" 6/6",sOptionTitle)
+        call up:type(0,0,"选择文件来保存传送带数据")
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    // ****************************************
+    // *****  Define Conveyor geometry    *****
+    // ****************************************
+    // Teach upstream end p0 of the tracking window
+    case 20
+      if x_bRefresh==true
+        cls()
+        call BuildTitle(sListOfMessage[1]+" 1/8",sOptionTitle)
+        call up:type(0,0,"把校准目标固定在传动带上的")
+        call up:type(0,1,"p0位置,并试教这个点.")
+        call up:type(0,3,"点击 帮助 来查看帮助图表")
+        call up:type(0,4,"点击 记录 来记录当前位置")
+        call up:type(0,5,"完成后,点击 下步 ")
+        call up:type(0,7,"当前 p0 位置: ")
+        call up:DisplayPt(trTrsf[0],8)
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    // Teach upstream end (p1) of the tracking window
+    case 21
+      if x_bRefresh==true
+        cls()
+        call BuildTitle(sListOfMessage[1]+" 2/8",sOptionTitle)
+        call up:type(0,0,"把校准目标固定在传动带上")
+        call up:type(0,1,"的p1位置,并示教这个点.")
+        call up:type(0,3,"点击 帮助 来查看帮助图表")
+        call up:type(0,4,"点击 记录 来记录当前位置")
+        call up:type(0,5,"完成后,点击 下步 ")
+        call up:type(0,7,"当前 p1 位置: ")
+        call up:DisplayPt(trTrsf[0],8)
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+      if x_sCustomTxt[0]!=""
+        call up:type(0,10,"当前编码器值: "+x_sCustomTxt[1])
+      endIf
+    break
+    call up:type(0,10,"当前编码器值: ")
+    //
+    // Move target to downstream limit
+    //
+    case 22
+      if x_bRefresh==true
+        cls()
+        call BuildTitle(sListOfMessage[1]+" 3/8",sOptionTitle)
+        call up:type(0,0,"提高工具,远离目标.确保在传送带")
+        call up:type(0,1,"启动和停止时,目标不会相对滑动.")
+        call up:type(0,2,"然后启动传送带,当物件到达机器人")
+        call up:type(0,3,"工作范围的下游时,停止传送带.")
+        call up:type(0,9,"点击 下步 继续")
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    //
+    // Define Conveyor geometry
+    // Teach downstream end of the tracking window
+    //
+    case 23
+      if x_bRefresh==true
+        cls()
+        call BuildTitle(sListOfMessage[1]+" 4/8",sOptionTitle)
+        call up:type(0,0,"确定目标在传送带上没有滑动,再次")
+        call up:type(0,1,"把尖点校准到目标上,来示教 p2 ")
+        call up:type(0,3,"点击 帮助 来查看帮助图表")
+        call up:type(0,4,"点击 记录 来记录当前位置")
+        call up:type(0,5,"完成后,点击 下步 ")
+        call up:type(0,7,"当前 p2 位置:")
+        call up:DisplayPt(trTrsf[0],8)
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+      if x_sCustomTxt[0]!=""
+        call up:type(0,10,"当前编码器值 : "+x_sCustomTxt[1])
+      endIf
+    break
+    //
+    // Define Conveyor geometry
+    // Teach downstream end p4 of the tracking window
+    //
+    case 24
+      if x_bRefresh==true
+        cls()
+        call BuildTitle(sListOfMessage[1]+" 5/8",sOptionTitle)
+        call up:type(0,0,"把校准目标固定在传动带上的")
+        call up:type(0,1,"p3 位置,并试教这个点.")
+        call up:type(0,3,"点击 帮助 来查看帮助图表")
+        call up:type(0,4,"点击 记录 来记录当前位置")
+        call up:type(0,5,"完成后,点击 下步 ")
+        call up:type(0,7,"当前 p3 位置: ")
+        call up:DisplayPt(trTrsf[0],8)
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    //
+    // Define Conveyor geometry
+    // Teach custom origin of the conveyor's frame
+    //
+    case 25
+      if x_bRefresh==true
+        cls()
+        call BuildTitle(sListOfMessage[1]+" 6/8",sOptionTitle)
+        call up:type(0,0,"把校准目标固定在传动带上的")
+        call up:type(0,1,"p4位置,并试教这个点.")
+        call up:type(0,1,"这将定义传送带坐标系的新原点")     
+        call up:type(0,3,"点击 帮助 来查看帮助图表")
+        call up:type(0,4,"点击 记录 来记录当前位置")
+        call up:type(0,5,"完成后,点击 下步 ")
+        call up:type(0,7,"当前 原点 位置: ")
+        call up:DisplayPt(trTrsf[0],8)
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    //
+    // Define Conveyor geometry
+    // Check Conveyor frame
+    //
+    case 26
+      if x_bRefresh==true
+        cls()
+        call BuildTitle(sListOfMessage[1]+" 7/8",sOptionTitle)
+        call up:type(0,0,"在X、Y、Z方向上移动机器人")
+        call up:type(0,1,"检查其移动方向是否正确.")
+        call up:type(0,2,"X+ 为传送带前进方向")
+        call up:type(0,3,"Y+ 垂直传送带前进方向")
+
+        call up:type(0,6,"完成后，点击 下步 ")
+        call up:type(0,8,"当前坐标:")
+        call up:DisplayPt(trTrsf[0],9)
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    //
+    // Define Conveyor geometry
+    // Store conveyor's data
+    //
+    case 27
+      if x_bRefresh==true
+        cls()
+        call BuildTitle(sListOfMessage[1]+" 8/8",sOptionTitle)
+        call up:type(0,0,"选择文件来保存传送带数据")
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    //
+    // Define conveyor geometry
+    // Adjust conveyor's frame alignment
+    //
+    case 28
+      if x_bRefresh==true
+        cls()
+        call BuildTitle(sListOfMessage[1]+" 6/8",sOptionTitle)
+        call up:type(0,0,"警告：传送带坐标系与机器人")
+        call up:type(0,1,"基础坐标系不平行.")
+        call up:type(0,3,"若调整坐标系，请点击 调整 ")
+        call up:type(0,4,"若忽略这个警告，请点击 下步 ")
+        call up:type(0,7,"传送带坐标系位置:")
+        call up:DisplayPt(trTrsf[0],8)
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    //
+    case 29
+      if x_bRefresh==true
+        cls()
+        call BuildTitle(sListOfMessage[1]+" 6/8",sOptionTitle)
+        call up:type(0,0,"这个调整将使你所有示教点的Z向")
+        call up:type(0,1,"高度相同。")
+        call up:type(0,3,"点击：选择，可将所选择点的Z值")
+        call up:type(3,4,"复制给其他三个点。")
+        call up:type(0,5,"点击：平均，可将四个点的Z值平")
+        call up:type(3,6,"均值复制给四个点。")
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    //
+    // ************************************
+    // *****  Define Sensor distance  *****
+    // ************************************
+    //
+    case 30
+      if x_bRefresh==true
+        cls()
+        call BuildTitle(sListOfMessage[2],sOptionTitle)
+        call up:type(0,0,"1.-把校准目标放在传送带上，检测")
+        call up:type(0,1,"   设备下。")
+        call up:type(0,2,"2.-触发机器人/视觉锁定。")
+        call up:type(0,3,"   确保拍到一张照片，且锁定的编")
+        call up:type(0,4,"   码值与编码器值相等。(见下面)")
+        call up:type(0,5,"3.-校准视觉系统。")
+        call up:type(0,7,"4.-点击 下步 继续")
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    //
+    // Define Frame for Vision
+    // Display data
+    //
+    case 31
+      call up:type(0,10,"编码器值 : "+x_sCustomTxt)
+    break
+    case 32
+      call up:type(0,11,"锁定值   : "+x_sCustomTxt)
+    break
+    case 33
+      if x_bRefresh==true
+        cls()
+        call up:type(0,1,"5.-启动传送带，当校准目标到达")
+        call up:type(0,2,"本机器人工作区域内时停止。")
+        call up:type(0,4,"注意：若多台机器人同时校准，当")
+        call up:type(0,5,"校准网格未到达本机器人工作区域时，")
+        call up:type(0,6,"请继续等待，直到校准网格到达本")
+        call up:type(0,7,"机器人工作区域。")
+        call up:type(0,9,"6.-再点击 下步 继续")
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    case 34
+      if x_bRefresh==true
+        cls()
+        call BuildTitle(sListOfMessage[2],sOptionTitle)
+        call up:type(0,0,"示教坐标系原点")
+        call up:type(0,3,"点击 记录 来记录当前位置")
+        call up:type(0,4,"点击 下步 继续")
+        call up:type(0,7,"当前原点位置:")
+        call up:DisplayPt(trTrsf[0],8)
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    case 35
+      if x_bRefresh==true
+        cls()
+        call BuildTitle(sListOfMessage[2],sOptionTitle)
+        call up:type(0,0,"示教坐标系X+方向")
+        call up:type(0,3,"点击 记录 来记录当前位置")
+        call up:type(0,4,"点击 下步 继续")
+        call up:type(0,7,"当前X+方向位置:")
+        call up:DisplayPt(trTrsf[0],8)
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    case 36
+      if x_bRefresh==true
+        cls()
+        call BuildTitle(sListOfMessage[2],sOptionTitle)
+        call up:type(0,0,"示教坐标系Y+方向")
+        call up:type(0,3,"点击 记录 来记录当前位置")
+        call up:type(0,4,"点击 下步 继续")
+        call up:type(0,7,"当前Y+方向位置:")
+        call up:DisplayPt(trTrsf[0],8)
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    case 37
+      if x_bRefresh==true
+        cls()
+        call BuildTitle(sListOfMessage[2],sOptionTitle)
+        call up:type(0,1,"没有检测到传送带移动")
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    case 38
+      if x_bRefresh==true
+        cls()
+        call BuildTitle(sListOfMessage[2],sOptionTitle)
+        call up:type(0,0,"计算出的视觉到机器人工作")
+        call up:type(0,1,"区域的距离是 : "+x_sCustomTxt[0])
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    case 39
+      if x_bRefresh==true
+        cls()
+        call BuildTitle(sListOfMessage[2],sOptionTitle)
+        call up:type(0,0,"选择文件来保存传送带数据")
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    //
+    // Tracking Diagnostic
+    //
+    case 40
+      if x_bRefresh==true
+        cls()
+        call BuildTitle(sListOfMessage[3],sOptionTitle)
+        call up:type(0,0,"  ID  State  Ltchd Offs")
+        call up:type(30,0,"Encod val")
+        call up:type(30,3,"Fltrd val")
+        call up:type(30,6,"Conv speed")
+        call up:type(30,9,"Idx Push")
+        call up:type(30,11,"Idx Pull")
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    case 41
+      cls()
+      call BuildTitle(sListOfMessage[3],sOptionTitle)
+      call up:type(0,5,"Track. Parts : ")
+      call up:type(0,6,"Encoder OVFL : ")
+      call up:type(0,7,"Encoder UDFL : ")
+      call up:type(0,8,"Encoder counts: ")
+      call up:type(0,9,"Conveyor speed: ")
+      call up:displayMenu(sMenu[x_nMenu])
+    break
+    case 42
+      call up:type(0,8,"Part in Window: "+x_sCustomTxt)
+    break
+    // ****************************************
+    // *****  Setup parameter for the     *****
+    // *****     libraries                *****
+    // ****************************************
+    //
+    //  General parameter
+    case 50
+      cls()
+      call BuildTitle(sListOfMessage[5],"")
+    break
+    //
+    // Encoder library
+    //
+    case 51
+      cls()
+      call BuildTitle(sListOfMessage[6],"")
+    break
+    //
+    // Detection library
+    //
+    case 52
+      cls()
+      call BuildTitle(sListOfMessage[7],"")
+    break
+    //
+    // Conveyor library
+    //
+    case 53
+      cls()
+      call BuildTitle(sListOfMessage[8],"")
+    break
+    //
+    // Load a calibration file
+    //
+    case 60
+      if x_bRefresh==true
+        cls()
+        call up:type(0,0,"新建/选择 一个传送带库")
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    //
+    // Select an encoder library
+    //
+    case 70
+      if x_bRefresh==true
+        cls()
+        //title(sListOfMessage[6]+" (1/1)")
+        call up:type(0,0,"选择一个编码器库")
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    //
+    // Select a detection library
+    //
+    case 71
+      if x_bRefresh==true
+        cls()
+        //title(sListOfMessage[6]+" (1/1)")
+        call up:type(0,0,"选择一个检测设备库")
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    //
+    // Select the conveyor type
+    //
+    case 72
+      if x_bRefresh==true
+        cls()
+        //title(sListOfMessage[6]+" (1/1)")
+        call up:type(0,0,"选择传送带类型")
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    // ****************************************
+    // *****  Define Conveyor geometry    *****
+    // *****     CIRCULAR CONVEYOR        *****
+    // ****************************************
+    // Teach upstream end of the tracking window
+    case 90
+      if x_bRefresh==true
+        cls()
+        call BuildTitle(sListOfMessage[1]+" 1/8",sOptionTitle)
+        call up:type(0,0,"把校准目标放在传送带上，")
+        call up:type(0,1,"将尖点对准目标，")
+        call up:type(0,2,"示教第一个位置.")
+        call up:type(0,4,"点击 记录 来记录当前位置")
+        call up:type(0,5,"记录后，点击 下步 继续")
+        call up:type(0,6,"当前对应的上游位置 : ")
+        call up:DisplayPt(trTrsf[0],7)
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    //
+    // Teach middle location
+    case 91
+      if x_bRefresh==true
+        cls()
+        call BuildTitle(sListOfMessage[1]+" 2/8",sOptionTitle)
+        call up:type(0,0,"把机器人工具离开传送带.")
+        call up:type(0,2,"运行传送带，直到校准目标")
+        call up:type(0,3,"到达第二个位置.")
+        call up:type(0,5,"确保在传送带启动和停止过")
+        call up:type(0,6,"程中，目标没有相对滑动.")
+        call up:type(0,7,"点击 下步 继续")
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    //
+    case 92
+      if x_bRefresh==true
+        cls()
+        call BuildTitle(sListOfMessage[1]+" 3/8",sOptionTitle)
+        call up:type(0,0,"确定目标没有滑动，再次将")
+        call up:type(0,1,"尖点对准目标，示教该位置.")
+        call up:type(0,3,"点击 记录 来记录当前位置")
+        call up:type(0,4,"记录后，点击 下步 继续")
+        call up:type(0,6,"当前对应的中间位置 ")
+        call up:DisplayPt(trTrsf[0],7)
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    //
+    //
+    case 93
+      if x_bRefresh==true
+        cls()
+        call BuildTitle(sListOfMessage[1]+" 4/8",sOptionTitle)
+        call up:type(0,0,"把机器人工具离开传送带.")
+        call up:type(0,2,"运行传送带，直到校准目标")
+        call up:type(0,3,"到达第三个位置.")
+        call up:type(0,5,"确保在传送带启动和停止过")
+        call up:type(0,6,"程中，目标没有相对滑动.")
+        call up:type(0,7,"点击 下步 继续")
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    //
+    // Teach downstream end of the tracking window
+    case 94
+      if x_bRefresh==true
+        cls()
+        call BuildTitle(sListOfMessage[1]+" 5/8",sOptionTitle)
+        call up:type(0,0,"确定目标没有滑动，再次将")
+        call up:type(0,1,"尖点对准目标，示教该位置.")
+        call up:type(0,3,"点击 记录 来记录当前位置")
+        call up:type(0,4,"记录后，点击 下步 继续")
+        call up:type(0,6,"当前对应的中间位置 ")
+        call up:DisplayPt(trTrsf[0],7)
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    //
+    // Teach downstream location
+    case 95
+      if x_bRefresh==true
+        cls()
+        call BuildTitle(sListOfMessage[1]+" 6/8",sOptionTitle)
+        call up:type(0,0,"不要移动校准目标，将尖")
+        call up:type(0,1,"点对准目标，示教该位置.")
+        call up:type(0,3,"点击 记录 来记录当前位置")
+        call up:type(0,4,"记录后，点击 下步 继续")
+        call up:type(0,6,"当前对应的下游位置 ")
+        call up:DisplayPt(trTrsf[0],7)
+        call up:displayMenu(sMenu[x_nMenu])
+      endIf
+    break
+    default
+    break
+  endSwitch
+  //
+  //-----------------
+  //  EVENT SECTION
+  //-----------------
+  //
+  if x_nMenu>0
+    call up:GetFKey(sMenu[x_nMenu],x_nSelectedMenu)
+  endIf
+end]]></Code>
+  </Program>
+</Programs>

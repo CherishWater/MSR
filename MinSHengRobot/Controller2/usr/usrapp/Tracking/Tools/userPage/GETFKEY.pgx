@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="GetFKey" access="public">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_sMenu" type="string" xsi:type="element" />
+      <Parameter name="x_nSelect" type="num" xsi:type="array" use="reference" />
+    </Parameters>
+    <Locals>
+      <Local name="l_sMenuItm" type="string" xsi:type="array" size="8" />
+      <Local name="l_nKey" type="num" xsi:type="array" size="1" />
+      <Local name="l_bStop" type="bool" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[
+begin
+  // This routine returns the number of the function key pressed by the user
+  // A menu item must be attached to the keypressed otherwise the routine
+  // loops.
+  //Convertion
+  call _str2Array(x_sMenu," ",l_sMenuItm)
+  l_nKey=getKey()
+  // Function key has been pressed
+  if (l_nKey>=271) and (l_nKey<=278)
+    l_nKey=l_nKey-270
+    l_nKey=sel(l_sMenuItm[l_nKey-1]!="",l_nKey,-1)
+  endIf
+  x_nSelect=l_nKey
+end
+]]></Code>
+  </Program>
+</Programs>

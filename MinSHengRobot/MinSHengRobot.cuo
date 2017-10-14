@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CellUserOptions>
+  <Option Name="SynchronizerMode">
+    <Synchronizers>
+      <Synchronizer Controller="Controller1" Mode="Emulator" />
+      <Synchronizer Controller="Controller2" Mode="Emulator" />
+    </Synchronizers>
+  </Option>
+  <Option Name="3DView">
+    <_3DView Visible="false" />
+  </Option>
+  <Option Name="DataTreeView">
+    <Nodes>
+      <Node Path="MinSHengRobot" IsExpanded="true" />
+      <Node Path="MinSHengRobot\Controller1" IsExpanded="true" />
+      <Node Path="MinSHengRobot\Controller2" IsExpanded="true" />
+    </Nodes>
+  </Option>
+  <Option Name="CellExplorer">
+    <Nodes>
+      <Node Path="MinSHengRobot" IsExpanded="true" />
+      <Node Path="MinSHengRobot\Controller1" IsExpanded="true" />
+      <Node Path="MinSHengRobot\Controller2" IsExpanded="true" />
+    </Nodes>
+  </Option>
+  <Option Name="GeometryView" />
+</CellUserOptions>

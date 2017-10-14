@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RecorderList>
+   <Recorder name="controller">
+      <Record name="record" index="0" description="Optimize Lab">
+         <String name="path" value="OptimizeLab_c"/>
+         <Float name="duration" value="120"/>
+         <Float name="frequency" value="100"/>
+         <StringList name="variables">
+            <String index="0" value="jntCmdPos"/>
+            <String index="1" value="moveType"/>
+            <String index="2" value="moveId"/>
+         </StringList>
+      </Record>
+   </Recorder>
+   <Recorder name="drive">
+      <Record name="record" index="0" description="Optimize Lab">
+         <String name="path" value="OptimizeLab_d"/>
+         <Float name="duration" value="120"/>
+         <Float name="frequency" value="5"/>
+         <StringList name="variables">
+            <String index="0" value="pcmd1"/>
+            <String index="1" value="pcmd2"/>
+            <String index="2" value="pcmd3"/>
+            <String index="3" value="pcmd4"/>
+            <String index="4" value="pfbk1"/>
+            <String index="5" value="pfbk2"/>
+            <String index="6" value="pfbk3"/>
+            <String index="7" value="pfbk4"/>
+            <String index="8" value="icmd1"/>
+            <String index="9" value="icmd2"/>
+            <String index="10" value="icmd3"/>
+            <String index="11" value="icmd4"/>
+            <String index="12" value="iphA1"/>
+            <String index="13" value="iphA2"/>
+            <String index="14" value="iphA3"/>
+            <String index="15" value="iphA4"/>
+            <String index="16" value="iphC1"/>
+            <String index="17" value="iphC2"/>
+            <String index="18" value="iphC3"/>
+            <String index="19" value="iphC4"/>
+         </StringList>
+      </Record>
+   </Recorder>
+</RecorderList>

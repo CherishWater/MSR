@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="start">
+    <Locals>
+      <Local name="result" type="bool" xsi:type="array" size="1" />
+      <Local name="msg" type="string" xsi:type="array" size="1" />
+      <Local name="value" type="num" xsi:type="array" size="1" />
+      <Local name="TRSF" type="trsf" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[
+begin
+  call init()
+  call login(skCamera,"admin","",nHandleCount,result)
+  if result
+    putln("OK")
+  endIf
+  call readNumValue(nHandleCount,"C",3,value,result)
+  putln(value)
+  call readTrsf(nHandleCount,"C",3,TRSF,result)
+  if !result
+    call getErrorMessage(nHandleCount,msg)
+    put(msg)
+  endIf
+  //? result
+  //? TRSF
+end
+]]></Code>
+  </Program>
+</Programs>

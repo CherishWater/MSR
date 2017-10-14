@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="handle" access="public">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_nKey" type="num" xsi:type="array" use="reference" />
+    </Parameters>
+    <Locals>
+      <Local name="l_bExit" type="bool" xsi:type="array" size="1" />
+      <Local name="l_bIsNumeric" type="bool" xsi:type="array" size="1" />
+      <Local name="l_nKey" type="num" xsi:type="array" size="1" />
+      <Local name="l_sMenuItm" type="string" xsi:type="array" size="8" />
+      <Local name="l_sItemSelected" type="string" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[
+begin
+  // Management of a EntryBox object
+  //
+  // Input Param
+  // x_num           : Identification number of the page object
+  // x_key           : Key code to manage
+  //
+  // comments:
+  // Up/Down arrows are used to move focus to next/previous item
+  // TAB is used to move focus to the next item
+  // RETURN is used to edit the focused item
+  // Alphanumeric keys are used to change the content of the selected item. For restricted
+  // character list, see definition of the items in the page library(sTxtBoxAuthord[])
+  //
+  //Created 21/12/05                              CCUR
+  //--------------------------------------------------------------
+  l_bExit=false
+  call ut:_str2Array(pw:sMenu," ",l_sMenuItm)
+  do
+    l_nKey=getKey()
+    switch l_nKey
+      // ESCape
+      case 255
+        x_nKey=l_nKey
+        l_bExit=true
+      break
+      // Arrow up(261) or SHIFT+TAB(260)
+      case 261,260
+        call _writeTxtBoxVal(nFocused,nVIDEONORMAL,"R")
+        // look for the next item which type is not D(isplay)
+        do
+          call _handleCounter(l_nKey,nFocused,0,nNumOfTxtBox-1,true)
+        until (pw:sTxtBoxType[nFocused]!="D") and (pw:sTxtBoxType[nFocused]!="H")
+        call _writeTxtBoxVal(nFocused,nVIDEOINVERSED,"R")
+      break
+      // Arrow Down or TAB(259)
+      case 266,259
+        call _writeTxtBoxVal(nFocused,nVIDEONORMAL,"R")
+        // look for the next item which type is not D(isplay)
+        do
+          call _handleCounter(l_nKey,nFocused,0,nNumOfTxtBox-1,true)
+        until (pw:sTxtBoxType[nFocused]!="D") and (pw:sTxtBoxType[nFocused]!="H")
+        //
+        call _writeTxtBoxVal(nFocused,nVIDEOINVERSED,"R")
+      break
+      //Arrow left
+      case 264
+      break
+      //Arrow right
+      case 268
+      break
+      //Return
+      case 270
+        // Erase menu of the page
+        call up:type(0,13,"                                        ")
+        switch mid(pw:sTxtBoxType[nFocused],1,0)
+          case "B","b"
+            call handleBtype()
+          break
+          case "N","n"
+            call handleNtype()
+          break
+          case "L","l"
+            l_sItemSelected=pw:sTxtBoxVal[nFocused]
+            call handleLtype(l_sItemSelected)
+            pw:sTxtBoxVal[nFocused]=l_sItemSelected
+            cls()
+            call display(nPageUpRow,nPageUpCol,bDrawFrame)
+          break
+        endSwitch
+        // Display menu again
+        call up:displayMenu(pw:sMenu)
+      break
+      default
+        if (l_nKey>=271) and (l_nKey<=278)
+          l_nKey=l_nKey-270
+          x_nKey=sel(l_sMenuItm[l_nKey-1]!="",l_nKey,-1)
+          l_bExit=(x_nKey!=-1)
+        endIf
+      break
+    endSwitch
+    delay(0)
+  until l_bExit
+end
+]]></Code>
+  </Program>
+</Programs>

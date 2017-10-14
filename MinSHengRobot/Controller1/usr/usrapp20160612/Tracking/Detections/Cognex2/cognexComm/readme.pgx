@@ -1,0 +1,109 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="readme">
+    <Code><![CDATA[
+begin
+  // TCP/IP communication driver for Cognex Insight System, version 0.3
+  // staubli 2004, volker drewer-gutland
+  // volker.drewer-gutland@staeubli.de
+  //
+  // This library enables communication with a cognex camera through TCP/IP
+  // using native cognex commands.
+  // Following variables need to be defined in the control panel:
+  // a client socket for each camera with
+  //                   IP address of camera
+  //                   time out = 5
+  //                   port = 23
+  //                   line end char = 13
+  //
+  // Routines:
+  //  Every listed routine has at least a parameter result which indicates if the operation
+  //  was successfull. If result returns false the operation has failed.
+  //  Check the errorcode stored in errorCode[num handle_] and use
+  //  getErrorMessage(num handle) to get a clear text message.
+  //
+  //
+  //
+  // login(sio socket, string user, string password, num& handle, bool& result)
+  //        Function:
+  //        Log in to camera using socket with user, password pair (usually "admin" and "")
+  //        Returns a handle of type num for further communication with the camera
+  //
+  // trigger(num handle, bool& result)
+  //        Function:
+  //        Acquire a new image and evaluate image on the camera that is attached
+  //        to handle
+  //
+  // setOnline(num handle, bool online, bool& result)
+  //        Function:
+  //        Put camera attached to handle into online or offline mode
+  //
+  // getErrorMessage(num handle, string& msg)
+  //        Function:
+  //        Returns a clear text error message in msg of the last operation
+  //        executed (trigger(), readIntValue(), etc).
+  //
+  // readStrValue(num handle, num col, num row, string& value, bool& result)
+  //        Function:
+  //        Read contents of a cell addressed by col and row from camera attached to handle.
+  //        Returns the contents in value of type string.
+  //
+  // readIntValue(num handle, num col, num row, num& value, bool& result)
+  //        Function:
+  //        Read contents of a cell addressed by col and row from camera attached to handle.
+  //        Returns the contents in value of type num.
+  //
+  // writeIntValue(num handle, num col, num row, num value, bool& result)
+  //        Function:
+  //        Write a num value as integer to the cell addressed by col and row to camera
+  //        attached to handle.
+  //
+  // writeFloatValue(num handle, num col, num row, num value, bool& result)
+  //        Function:
+  //        Write a num value as float to the cell addressed by col and row to camera
+  //        attached to handle.
+  //
+  // writeStrValue(num handle, num col, num row, string value, bool& result)
+  //        Function:
+  //        Write a string value to the cell addressed by col and row to camera
+  //        attached to handle.
+  //
+  // setEventAndWait(num handle, num event, bool& result)
+  //        Function:
+  //        Set event and wait until spreadsheet has been updated
+  //
+  // setEventNoWait(num handle, num event, bool& result)
+  //        Function:
+  //        Set event without waiting for processing
+  //
+  // readTrsf(num handle, num col, num row, trsf& value, bool& result)
+  //        Function:
+  //        Read x, y, rz values cells addressed by col and row from camera attached to handle.
+  //        x, y and rz must be stored in three consecutive cells starting from col,row
+  //        e.g.: x in B2, y in C2 and rz in D2
+  //
+  // readRect(num handle, num col, num row, trsf& origin, trsf& size, bool& result)
+  //        Function:
+  //        Read rectangle information from cells addressed by col and row from camera attached to handle.
+  //        Information must be stored in five consecutive cells
+  //        in a row starting from col,row:    x, y, width, height and rz
+  //        x, y and rz describe the position and rotation of the rectangle and are returned in origin
+  //        width and height describe the size of the rectangle and are returned in size
+  //
+  // loadJob(num handle, string value, bool& result)
+  //        Function:
+  //        Load a job from the flash of the camera attached to handle
+  //        Value contains the file name of the job, e.g. "Camera1.job"
+  //
+  // getActiveJob(num handle, string& value, bool& result)
+  //        Function:
+  //        Returns the current active job in value of the camera attached to handle
+  //
+  // saveJob(num handle, string value, bool& result)
+  //        Function:
+  //        Save the current job to the flash of the camera attached to handle
+  //        Value contains the file name of the job, e.g. "Camera1.job"
+end
+]]></Code>
+  </Program>
+</Programs>

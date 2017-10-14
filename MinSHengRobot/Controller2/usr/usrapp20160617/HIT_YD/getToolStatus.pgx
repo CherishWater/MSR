@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="getToolStatus" access="private" >
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1" >
+      <Parameter name="x_sStatus" type="string" use="reference" xsi:type="element" dimensions="1" />
+    </Parameters>
+    <Code><![CDATA[begin
+  // This program returns the status of the tool
+  //
+  // Input parameters
+  //  None            :
+  //
+  // Output parameters
+  //  x_sStatus       : Status of the tool
+  //     "Part_taken" = There is a part on the tool
+  //         "Vacuum" = Vacuum is on
+  //           "Blow" = Blow is on
+  //            "Off" = The tool is not activated
+  //
+  //----------------------------------------------------------------
+  //
+  if dBlow==false and dVacuum==true and dPartInTool==true
+    x_sStatus="PartInTool"
+  elseIf dBlow==false and dVacuum==true
+    x_sStatus="Vacuum"
+  elseIf dBlow==true
+    x_sStatus="Blow"
+  elseIf dBlow==false and dVacuum==false
+    x_sStatus="Off"
+  else
+    //default reset to off
+    x_sStatus="off"
+    dVacuum=false
+    dBlow=false
+  endIf
+end]]></Code>
+  </Program>
+</Programs>

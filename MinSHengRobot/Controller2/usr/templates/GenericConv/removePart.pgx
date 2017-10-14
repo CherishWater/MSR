@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="removePart" access="public">
+    <Code><![CDATA[
+begin
+  setMutex(bLockQueueAcces)
+  //
+  if bAnd(cfg:nLog,cfg:nLOGMOTION)==cfg:nLOGMOTION
+    ? sConvNum+"(removePart)>>Request to remove object @ position "+toString("",nIdxPull)+" Push: "+toString("",nIdxPush)
+  endIf
+  //
+  if nIdxPull!=nIdxPush
+    call releaseObject(nIdxPull)
+    nIdxPull=(nIdxPull+1)%nBufferSize
+  endIf
+  //
+  bLockQueueAcces=false
+end
+]]></Code>
+  </Program>
+</Programs>

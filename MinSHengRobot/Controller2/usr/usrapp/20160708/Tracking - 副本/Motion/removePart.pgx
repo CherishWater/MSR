@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="removePart" access="public" >
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1" >
+      <Parameter name="x_nConvNum" type="num" use="value" xsi:type="element" dimensions="1" />
+    </Parameters>
+    <Code><![CDATA[begin
+  // This program deletes the first object in the queue. The part will
+  //  not be deleted until all command tracking movements associated
+  //  to this part have been executed by the robot arm.
+  //
+  // Input Param
+  //  x_nConvNum : Conveyor number
+  //
+  // Output param
+  //  none       :
+  //
+  //----------------------------------------------------------------
+  //
+  if cfg:bLog
+    logMsg("MOT(removePart)>>Request to remove part from queue of conveyor "+toString("",x_nConvNum))
+  endIf
+  switch x_nConvNum
+    case 0
+      call cnv0:removePart()
+    break
+    case 1
+      call cnv1:removePart()
+    break
+  endSwitch
+end]]></Code>
+  </Program>
+</Programs>

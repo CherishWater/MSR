@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Project xmlns="http://www.staubli.com/robotics/VAL3/Project/3" >
+  <Parameters version="s7.6" stackSize="5000" millimeterUnit="true" />
+  <Programs>
+    <Program file="create.pgx" />
+    <Program file="detection.pgx" />
+    <Program file="getMaxNumOfPart.pgx" />
+    <Program file="getObjectData.pgx" />
+    <Program file="getObjectLatch.pgx" />
+    <Program file="init.pgx" />
+    <Program file="initvis.pgx" />
+    <Program file="isDetected.pgx" />
+    <Program file="kill.pgx" />
+    <Program file="resetTask.pgx" />
+    <Program file="sortObjects.pgx" />
+    <Program file="start.pgx" />
+    <Program file="stop.pgx" />
+  </Programs>
+  <Database>
+    <Data file="Cognex1.dtx" />
+  </Database>
+  <Libraries>
+    <Library alias="ut" path="Disk://Tracking/Tools/util/util.pjx" autoload="true" password="" />
+    <Library alias="cam" path="./cognexComm/cognexComm.pjx" autoload="true" password="" />
+    <Library alias="sck" path="Disk://Tracking/io/sockets/sockets.pjx" autoload="true" password="" />
+  </Libraries>
+  <Types>
+    <Type name="object" path="Disk://Tracking/Templates/object/object.pjx" />
+  </Types>
+</Project>

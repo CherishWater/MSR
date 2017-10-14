@@ -1,0 +1,401 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Database xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Data/2">
+  <Datas>
+    <Data name="bClockEnabled" access="private" xsi:type="array" type="bool" size="1">
+    </Data>
+    <Data name="bEnableQueuing" access="private" xsi:type="array" type="bool" size="1">
+      <Value key="0" value="true" />
+    </Data>
+    <Data name="bInit" access="private" xsi:type="array" type="bool" size="1">
+      <Value key="0" value="true" />
+    </Data>
+    <Data name="bLOG" access="public" xsi:type="array" type="bool" size="1">
+      <Value key="0" value="true" />
+    </Data>
+    <Data name="bLinear" access="public" xsi:type="array" type="bool" size="1">
+      <Value key="0" value="true" />
+    </Data>
+    <Data name="bLockQueueAcces" access="private" xsi:type="array" type="bool" size="1">
+    </Data>
+    <Data name="bResetConv" access="private" xsi:type="array" type="bool" size="1">
+    </Data>
+    <Data name="bUseUserCenter" access="public" xsi:type="array" type="bool" size="1">
+    </Data>
+    <Data name="bUseUserLimit" access="public" xsi:type="array" type="bool" size="1">
+    </Data>
+    <Data name="doClock" access="private" xsi:type="array" type="dio" size="1">
+      <Value key="0" link="BasicIO-1\%Q0" />
+    </Data>
+    <Data name="fConveyor" access="public" xsi:type="array" type="frame" size="1">
+      <Value key="0" x="690.465999" y="-334.533545" z="-72.519533" rx="0.736674" ry="-0.299775" rz="179.886741" fatherId="world[0]" />
+    </Data>
+    <Data name="fDetection" access="public" xsi:type="array" type="frame" size="1">
+      <Value key="0" x="319.933347" y="-456.969728" z="-77.119399" rx="1.134288" ry="-0.307561" rz="179.705392" fatherId="world[0]" />
+    </Data>
+    <Data name="nA1" access="private" xsi:type="array" type="num" size="1">
+      <Value key="0" value="1.575761" />
+    </Data>
+    <Data name="nA2" access="private" xsi:type="array" type="num" size="1">
+      <Value key="0" value="1.579801" />
+    </Data>
+    <Data name="nAddedToQueue" access="private" xsi:type="array" type="num" size="1">
+    </Data>
+    <Data name="nB1" access="private" xsi:type="array" type="num" size="1">
+      <Value key="0" value="-1.749446e-13" />
+    </Data>
+    <Data name="nB2" access="private" xsi:type="array" type="num" size="1">
+      <Value key="0" value="-587.755317" />
+    </Data>
+    <Data name="nBoundaryDwn" access="private" xsi:type="array" type="num" size="1">
+    </Data>
+    <Data name="nBoundaryUp" access="private" xsi:type="array" type="num" size="1">
+    </Data>
+    <Data name="nBufferSize" access="public" xsi:type="array" type="num" size="1">
+      <Value key="0" value="100" />
+    </Data>
+    <Data name="nCalibratedDist" access="public" xsi:type="array" type="num" size="1">
+    </Data>
+    <Data name="nCalibratedID" access="private" xsi:type="array" type="num" size="1">
+      <Value key="0" value="-99" />
+    </Data>
+    <Data name="nClockPeriod" access="public" xsi:type="array" type="num" size="1">
+    </Data>
+    <Data name="nConveyorSpeed" access="public" xsi:type="array" type="num" size="1">
+      <Value key="0" value="40.760003" />
+    </Data>
+    <Data name="nDEFAULTID" access="private" xsi:type="array" type="num" size="1">
+      <Value key="0" value="-99" />
+    </Data>
+    <Data name="nDETECT_OVR" access="private" xsi:type="array" type="num" size="1">
+      <Value key="0" value="11" />
+    </Data>
+    <Data name="nDetection2Rob" access="public" xsi:type="array" type="num" size="1">
+      <Value key="0" value="1883.36736" />
+    </Data>
+    <Data name="nENCRESOLUTION" access="public" xsi:type="array" type="num" size="1">
+      <Value key="0" value="2000" />
+    </Data>
+    <Data name="nENCSCALEFACTOR" access="public" xsi:type="array" type="num" size="1">
+      <Value key="0" value="0.721" />
+    </Data>
+    <Data name="nEncLatchedVal" access="private" xsi:type="array" type="num" size="100">
+    </Data>
+    <Data name="nErrVal" access="private" xsi:type="array" type="num" size="4">
+    </Data>
+    <Data name="nFirDelay" access="public" xsi:type="array" type="num" size="1">
+      <Value key="0" value="0.004" />
+    </Data>
+    <Data name="nFirOrdre" access="public" xsi:type="array" type="num" size="1">
+      <Value key="0" value="20" />
+    </Data>
+    <Data name="nFirTime" access="private" xsi:type="array" type="num" size="1">
+      <Value key="0" value="0.04" />
+    </Data>
+    <Data name="nIdxCalib" access="private" xsi:type="array" type="num" size="1">
+    </Data>
+    <Data name="nIdxPull" access="private" xsi:type="array" type="num" size="1">
+    </Data>
+    <Data name="nIdxPush" access="private" xsi:type="array" type="num" size="1">
+    </Data>
+    <Data name="nLatchLockDist" access="public" xsi:type="array" type="num" size="1">
+    </Data>
+    <Data name="nNumbOfUser" access="private" xsi:type="array" type="num" size="100">
+    </Data>
+    <Data name="nPUSH_NEGATIVE" access="private" xsi:type="array" type="num" size="1">
+      <Value key="0" value="10" />
+    </Data>
+    <Data name="nPosMatchTol" access="public" xsi:type="array" type="num" size="1">
+      <Value key="0" value="100" />
+    </Data>
+    <Data name="nQueueID" access="private" xsi:type="array" type="num" size="100">
+      <Value key="0" value="-99" />
+      <Value key="1" value="-99" />
+      <Value key="2" value="-99" />
+      <Value key="3" value="-99" />
+      <Value key="4" value="-99" />
+      <Value key="5" value="-99" />
+      <Value key="6" value="-99" />
+      <Value key="7" value="-99" />
+      <Value key="8" value="-99" />
+      <Value key="9" value="-99" />
+      <Value key="10" value="-99" />
+      <Value key="11" value="-99" />
+      <Value key="12" value="-99" />
+      <Value key="13" value="-99" />
+      <Value key="14" value="-99" />
+      <Value key="15" value="-99" />
+      <Value key="16" value="-99" />
+      <Value key="17" value="-99" />
+      <Value key="18" value="-99" />
+      <Value key="19" value="-99" />
+      <Value key="20" value="-99" />
+      <Value key="21" value="-99" />
+      <Value key="22" value="-99" />
+      <Value key="23" value="-99" />
+      <Value key="24" value="-99" />
+      <Value key="25" value="-99" />
+      <Value key="26" value="-99" />
+      <Value key="27" value="-99" />
+      <Value key="28" value="-99" />
+      <Value key="29" value="-99" />
+      <Value key="30" value="-99" />
+      <Value key="31" value="-99" />
+      <Value key="32" value="-99" />
+      <Value key="33" value="-99" />
+      <Value key="34" value="-99" />
+      <Value key="35" value="-99" />
+      <Value key="36" value="-99" />
+      <Value key="37" value="-99" />
+      <Value key="38" value="-99" />
+      <Value key="39" value="-99" />
+      <Value key="40" value="-99" />
+      <Value key="41" value="-99" />
+      <Value key="42" value="-99" />
+      <Value key="43" value="-99" />
+      <Value key="44" value="-99" />
+      <Value key="45" value="-99" />
+      <Value key="46" value="-99" />
+      <Value key="47" value="-99" />
+      <Value key="48" value="-99" />
+      <Value key="49" value="-99" />
+      <Value key="50" value="-99" />
+      <Value key="51" value="-99" />
+      <Value key="52" value="-99" />
+      <Value key="53" value="-99" />
+      <Value key="54" value="-99" />
+      <Value key="55" value="-99" />
+      <Value key="56" value="-99" />
+      <Value key="57" value="-99" />
+      <Value key="58" value="-99" />
+      <Value key="59" value="-99" />
+      <Value key="60" value="-99" />
+      <Value key="61" value="-99" />
+      <Value key="62" value="-99" />
+      <Value key="63" value="-99" />
+      <Value key="64" value="-99" />
+      <Value key="65" value="-99" />
+      <Value key="66" value="-99" />
+      <Value key="67" value="-99" />
+      <Value key="68" value="-99" />
+      <Value key="69" value="-99" />
+      <Value key="70" value="-99" />
+      <Value key="71" value="-99" />
+      <Value key="72" value="-99" />
+      <Value key="73" value="-99" />
+      <Value key="74" value="-99" />
+      <Value key="75" value="-99" />
+      <Value key="76" value="-99" />
+      <Value key="77" value="-99" />
+      <Value key="78" value="-99" />
+      <Value key="79" value="-99" />
+      <Value key="80" value="-99" />
+      <Value key="81" value="-99" />
+      <Value key="82" value="-99" />
+      <Value key="83" value="-99" />
+      <Value key="84" value="-99" />
+      <Value key="85" value="-99" />
+      <Value key="86" value="-99" />
+      <Value key="87" value="-99" />
+      <Value key="88" value="-99" />
+      <Value key="89" value="-99" />
+      <Value key="90" value="-99" />
+      <Value key="91" value="-99" />
+      <Value key="92" value="-99" />
+      <Value key="93" value="-99" />
+      <Value key="94" value="-99" />
+      <Value key="95" value="-99" />
+      <Value key="96" value="-99" />
+      <Value key="97" value="-99" />
+      <Value key="98" value="-99" />
+      <Value key="99" value="-99" />
+    </Data>
+    <Data name="nStatus" access="private" xsi:type="array" type="num" size="1">
+    </Data>
+    <Data name="nSysCycleTime" access="private" xsi:type="array" type="num" size="1">
+      <Value key="0" value="0.002" />
+    </Data>
+    <Data name="nTmpEncLatched" access="private" xsi:type="array" type="num" size="10">
+      <Value key="0" value="22838.085" />
+      <Value key="1" value="5476.41" />
+    </Data>
+    <Data name="nTmpID" access="private" xsi:type="array" type="num" size="10">
+      <Value key="0" value="1" />
+      <Value key="1" value="1" />
+    </Data>
+    <Data name="nTrackWinHeight" access="public" xsi:type="array" type="num" size="1">
+      <Value key="0" value="500" />
+    </Data>
+    <Data name="nWinDownStream" access="private" xsi:type="array" type="num" size="1">
+    </Data>
+    <Data name="nWinUpStream" access="private" xsi:type="array" type="num" size="1">
+    </Data>
+    <Data name="pObjectRS" access="private" xsi:type="array" type="pointRs" size="1">
+      <Value key="0" fatherId="world[0]" />
+    </Data>
+    <Data name="pObject" access="private" xsi:type="array" type="pointRx" size="1">
+      <Value key="0" fatherId="world[0]" />
+    </Data>
+    <Data name="sClockSigName" access="public" xsi:type="array" type="string" size="1">
+      <Value key="0" value="none" />
+    </Data>
+    <Data name="sConvNum" access="private" xsi:type="array" type="string" size="1">
+      <Value key="0" value="CNV0" />
+    </Data>
+    <Data name="sConveyorName" access="public" xsi:type="array" type="string" size="1">
+      <Value key="0" value="cvIn" />
+    </Data>
+    <Data name="sDetectionLib" access="public" xsi:type="array" type="string" size="1">
+      <Value key="0" value="Socket1" />
+    </Data>
+    <Data name="sDwnLimSigName" access="public" xsi:type="array" type="string" size="1">
+      <Value key="0" value="none" />
+    </Data>
+    <Data name="sEncoderLib" access="public" xsi:type="array" type="string" size="1">
+      <Value key="0" value="D_ABZ_00" />
+    </Data>
+    <Data name="sErrMsgList" access="private" xsi:type="array" type="string" size="12">
+      <Value key="0" value="Success" />
+      <Value key="1" value="No object available (ID=*)" />
+      <Value key="3" value="The encoder library is not started yet." />
+      <Value key="4" value="The detection library is not started yet." />
+      <Value key="6" value="Run-time error from Conveyor library in task called *\../*. Error code is *" />
+      <Value key="7" value="Run-time error from Encoder library. Error code is *" />
+      <Value key="8" value="Run-time error from Detection library. Error code is *" />
+      <Value key="10" value="Warning, object with negative ID cannot be pushed into conveyor&apos;s queue" />
+      <Value key="11" value="Warning, detection overrun." />
+    </Data>
+    <Data name="sErrorMessage" access="private" xsi:type="array" type="string" size="1">
+      <Value key="0" value="No message pending" />
+    </Data>
+    <Data name="sGeometryLib" access="public" xsi:type="array" type="string" size="1">
+      <Value key="0" value="GeometryRS" />
+    </Data>
+    <Data name="sMsg" access="private" xsi:type="array" type="string" size="1">
+    </Data>
+    <Data name="sTASK" access="private" xsi:type="array" type="string" size="3">
+      <Value key="0" value="conveyor" />
+      <Value key="1" value="encoder" />
+      <Value key="2" value="detect" />
+    </Data>
+    <Data name="sUpLimSigName" access="public" xsi:type="array" type="string" size="1">
+      <Value key="0" value="none" />
+    </Data>
+    <Data name="trBoundaryDwn" access="private" xsi:type="array" type="trsf" size="2">
+      <Value key="0" x="372.043836" y="0" rx="0.737275" ry="179.701706" rz="-57.301058" />
+      <Value key="1" x="532.395137" y="253.323185" z="-0.119602" rx="0.737275" ry="179.701706" rz="-35.279791" />
+    </Data>
+    <Data name="trBoundaryUp" access="private" xsi:type="array" type="trsf" size="2">
+      <Value key="0" x="0" y="0" rx="-179.262725" ry="0.298294" rz="89.22112" />
+      <Value key="1" x="160.762475" y="253.323185" rx="0.737275" ry="179.701706" rz="-72.124581" />
+    </Data>
+    <Data name="trDEFAULT" access="private" xsi:type="array" type="trsf" size="1">
+      <Value key="0" x="5" y="4" z="3" rx="2" ry="1" />
+    </Data>
+    <Data name="trDetectedCoord" access="private" xsi:type="array" type="trsf" size="100">
+      <Value key="0" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="1" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="2" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="3" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="4" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="5" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="6" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="7" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="8" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="9" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="10" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="11" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="12" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="13" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="14" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="15" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="16" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="17" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="18" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="19" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="20" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="21" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="22" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="23" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="24" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="25" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="26" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="27" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="28" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="29" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="30" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="31" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="32" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="33" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="34" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="35" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="36" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="37" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="38" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="39" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="40" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="41" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="42" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="43" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="44" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="45" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="46" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="47" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="48" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="49" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="50" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="51" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="52" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="53" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="54" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="55" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="56" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="57" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="58" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="59" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="60" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="61" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="62" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="63" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="64" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="65" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="66" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="67" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="68" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="69" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="70" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="71" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="72" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="73" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="74" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="75" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="76" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="77" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="78" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="79" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="80" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="81" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="82" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="83" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="84" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="85" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="86" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="87" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="88" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="89" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="90" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="91" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="92" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="93" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="94" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="95" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="96" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="97" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="98" x="5" y="4" z="3" rx="2" ry="1" />
+      <Value key="99" x="5" y="4" z="3" rx="2" ry="1" />
+    </Data>
+    <Data name="trTmp" access="private" xsi:type="array" type="trsf" size="10">
+      <Value key="0" x="-0.9" y="-14.8" rz="45.9" />
+      <Value key="1" x="-143" y="74.9" rz="28" />
+    </Data>
+  </Datas>
+</Database>

@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="setConvSpeed" access="private" >
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1" >
+      <Parameter name="x_nConvNum" type="num" use="value" xsi:type="element" dimensions="1" />
+      <Parameter name="x_nConvSpeed" type="num" use="value" xsi:type="element" dimensions="1" />
+    </Parameters>
+    <Locals>
+      <Local name="l_nRatio" type="num" xsi:type="array" size="2" />
+    </Locals>
+    <Code><![CDATA[begin
+  // This programs sets, by an analog output, the speed of the 
+  //  conveyor. The program takes as an input parameter the speed in
+  //  mm/s, then it will convert it to the corresponding value that
+  //  has to be actually written into the analog output. The local
+  //  variable l_nRatio has to be adapted to match the hardware.
+  //
+  // Input parameters
+  //  x_nConvNum      : Conveyor number
+  //  x_nConvSpeed    : Conveyor speed in mm/s
+  //
+  // Output parameters
+  //  None            :
+  //
+  //----------------------------------------------------------------
+  //
+  l_nRatio[0]=35
+  //
+  if ioStatus(aConvSpeed[x_nConvNum])>=0
+    aioSet(aConvSpeed[x_nConvNum],x_nConvSpeed*l_nRatio[x_nConvNum])
+  endIf
+  //
+end]]></Code>
+  </Program>
+</Programs>

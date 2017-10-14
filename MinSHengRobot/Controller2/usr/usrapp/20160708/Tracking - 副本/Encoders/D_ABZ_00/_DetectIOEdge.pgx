@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="_DetectIOEdge" access="private" >
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1" >
+      <Parameter name="x_bInput" type="bool" use="value" xsi:type="element" dimensions="1" />
+      <Parameter name="x_bMemoState" type="bool" use="reference" xsi:type="array" dimensions="1" />
+      <Parameter name="x_bRisingEdge" type="bool" use="reference" xsi:type="array" dimensions="1" />
+    </Parameters>
+    <Code><![CDATA[begin
+  // ABSTRACT
+  // This program checks if a transition from TRUE to FALSE
+  // occured on the boolean expression passed as parameter. This routine is usually
+  // used to detect rising/falling edge on digital inputs.
+  //
+  // Input Param
+  //x_bInput    : Boolean expression to evaluate
+  //
+  // Output Param
+  //x_bMemoState    : Memory of the boolean expression value
+  //x_bEdgeDetected : True if transition from TRUE to FALSE occured
+  //
+  // Comments : Ladder diagram
+  //Raising Edge
+  //|---[x_bInput]---[/x_bMemoState]---(x_bRaisEdge)--|
+  //
+  //|---[x_bInput]--------------------(x_bMemoState)--|
+  //
+  x_bRisingEdge=(x_bInput) and !x_bMemoState
+  //x_bFallEdge=!x_bInput and (x_bMemoState)
+  x_bMemoState=(x_bInput)
+end]]></Code>
+  </Program>
+</Programs>

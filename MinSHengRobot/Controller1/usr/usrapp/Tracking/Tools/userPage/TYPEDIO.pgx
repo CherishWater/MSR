@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="typeDio" access="public">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="pX" type="num" xsi:type="element" />
+      <Parameter name="pY" type="num" xsi:type="element" />
+      <Parameter name="pTest" type="bool" xsi:type="element" />
+    </Parameters>
+    <Code><![CDATA[
+begin
+  //---------------------------------
+  //  S H O W   S T A T U S   D I O
+  //---------------------------------
+  // Display the status of pTest
+  //
+  //  = true   "[x]"
+  //  = false "[ ]"
+  // See type()
+  //---------------------------------
+  // Staubli copyright 2003
+  //                By CDIA 13 11 18
+  //[Public]-------------------------
+  //
+  if (pTest==true)
+    call type(pX,pY,"[x]")
+  else
+    call type(pX,pY,"[ ]")
+  endIf
+end
+]]></Code>
+  </Program>
+</Programs>

@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="padding">
+    <Description><![CDATA[pad both strings with leading "0" to equal length]]></Description>
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_value1" type="num" xsi:type="element" />
+      <Parameter name="x_value2" type="num" xsi:type="element" />
+      <Parameter name="x_return1" type="string" xsi:type="array" use="reference" />
+      <Parameter name="x_return2" type="string" xsi:type="array" use="reference" />
+    </Parameters>
+    <Locals>
+      <Local name="l_padding" type="string" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[
+begin
+  call decToBin(roundDown(x_value1),x_return1)
+  call decToBin(roundDown(x_value2),x_return2)
+  if bDebug
+    putln("padding(): "+x_return1+", "+x_return2)
+  endIf
+  l_padding=""
+  call fillStr("0",abs(len(x_return1)-len(x_return2)),l_padding)
+  if len(x_return1)<len(x_return2)
+    x_return1=l_padding+x_return1
+  endIf
+  if len(x_return2)<len(x_return1)
+    x_return2=l_padding+x_return2
+  endIf
+  if bDebug
+    putln("padding(): "+x_return1+", "+x_return2)
+  endIf
+end
+]]></Code>
+  </Program>
+</Programs>

@@ -1,0 +1,146 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="convSelect" access="private" >
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1" >
+      <Parameter name="x_sFileName" type="string" use="reference" xsi:type="array" dimensions="1" />
+      <Parameter name="x_nError" type="num" use="reference" xsi:type="array" dimensions="1" />
+      <Parameter name="x_bQuit" type="bool" use="reference" xsi:type="array" dimensions="1" />
+    </Parameters>
+    <Locals>
+      <Local name="l_bIsInList" type="bool" xsi:type="array" size="1" />
+      <Local name="l_bQuit" type="bool" xsi:type="array" size="1" />
+      <Local name="l_bRefresh" type="bool" xsi:type="array" size="1" />
+      <Local name="l_nError" type="num" xsi:type="array" size="1" />
+      <Local name="l_nIdx" type="num" xsi:type="array" size="1" />
+      <Local name="l_nKeyPressed" type="num" xsi:type="array" size="1" />
+      <Local name="l_sEmpty" type="string" xsi:type="array" size="1" />
+      <Local name="l_sFileName" type="string" xsi:type="array" size="1" />
+      <Local name="l_sNewFileName" type="string" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+  // This program allows the user to select a conveyor calibration
+  // file from a list or to enter a new calibration filename.
+  // The selected file is loaded into the memory
+  //
+  //----------------------------------------------------------------
+  //
+  //**************************
+  //***** INITALIZATIONS *****
+  //**************************
+  l_bQuit=false
+  l_nError=-1
+  l_bRefresh=true
+  x_nError=0
+  x_bQuit=false
+  libList(cfg:sPATHCONVEYOR,sItemList)
+  l_sEmpty=""
+  //
+  //**************************
+  //***** EVENT SECTION  *****
+  //**************************
+  do
+    // Display page and list existing conveyor libraries
+    call lang:Page(60,l_sEmpty,sel(len(sItemList[0])!=0,10,11),l_bRefresh,l_nKeyPressed)
+    if l_bRefresh==true
+      call _displayList(cfg:sPATHCONVEYOR,lang:sListOfMessage[9],22,2,15,7)
+      l_bRefresh=false
+    endIf
+    //
+    call up:listEvent(l_nKeyPressed,l_nIdx,l_sFileName)
+    switch l_nKeyPressed
+      // New
+      case 2
+        call convGetName(l_sNewFileName)
+        l_sFileName=l_sNewFileName
+        // Check file name
+        if len(l_sFileName)!=0
+          call isInList(l_sFileName,sItemList,l_bIsInList)
+          if !l_bIsInList
+            // Load conveyor template
+            l_nError=cnv:libLoad(cfg:sPATHTEMPLATE+cfg:sGENERICCONV)
+            // Select Encoder Lib,Detection Lib etc...
+            call convConfig(l_nError)
+            switch l_nError
+              // All right
+              case 0
+                // Create conveyor
+                call convCreate(l_sFileName,l_nError)
+                if l_nError==0
+                  call convLoad(l_sFileName,l_nError)
+                  if l_nError==0
+                    x_sFileName=l_sFileName
+                  endIf
+                else
+                  x_nError=l_nError
+                endIf
+                l_bQuit=true
+              break
+              case -1
+                // Operation canceled by user
+                l_bRefresh=true
+              break
+              default
+                //call up:msgBox(sErrorMessage,36,lang:sMenu[1],l_nKeyPressed)
+                x_nError=l_nError
+                l_bQuit=true
+              break
+            endSwitch
+          endIf
+        else
+          l_bRefresh=true
+        endIf
+      break
+      // Duplicate
+      case 3
+        call convLoad(l_sFileName,l_nError)
+        if l_nError==0
+          // display library list again
+          call lang:Page(60,l_sEmpty,sel(len(sItemList[0])!=0,10,11),true,l_nKeyPressed)
+          call _displayList(cfg:sPATHCONVEYOR,lang:sListOfMessage[9],22,2,15,7)
+          call convGetName(l_sNewFileName)
+          l_sFileName=l_sNewFileName
+          if len(l_sFileName)!=0
+            call convCreate(l_sFileName,l_nError)
+            if l_nError!=0
+              call up:msgBox(lang:sListOfMessage[36],36,lang:sMenu[1],l_nKeyPressed)
+            endIf
+          endIf
+        else
+          l_bQuit=true
+          x_nError=l_nError
+        endIf
+        l_bRefresh=true
+      break
+      // Select or Return
+      case 4,270
+        call convLoad(l_sFileName,x_nError)
+        if x_nError==0
+          x_sFileName=l_sFileName
+        else
+        endIf
+        l_bQuit=true
+      break
+      // Delete
+      case 6
+        call ut:addStrToString(lang:sListOfMessage[16],sErrorMessage,"",l_sFileName)
+        call up:msgBox(sErrorMessage,36,lang:sMenu[21],l_nKeyPressed)
+        if l_nKeyPressed==3
+          // Answer is Yes
+          l_nError=libDelete(cfg:sPATHCONVEYOR+l_sFileName)
+          libList(cfg:sPATHCONVEYOR,sItemList)
+        else
+        endIf
+        l_bRefresh=true
+      break
+      // Cancel
+      case 8
+        l_bQuit=true
+        x_bQuit=true
+      break
+    endSwitch
+    delay(0)
+  until (l_bQuit==true)
+  cls()
+end]]></Code>
+  </Program>
+</Programs>

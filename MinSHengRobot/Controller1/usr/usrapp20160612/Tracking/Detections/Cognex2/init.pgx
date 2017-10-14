@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="init" access="public">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_nDetNum" type="num" xsi:type="element" />
+      <Parameter name="x_sTask" type="string" xsi:type="element" />
+    </Parameters>
+    <Locals>
+      <Local name="l_i" type="num" xsi:type="array" size="1" />
+      <Local name="l_bReport" type="bool" xsi:type="array" size="1" />
+      <Local name="l_nLibNum" type="num" xsi:type="array" size="1" />
+      <Local name="l_nSocketIndex" type="num" xsi:type="array" size="1" />
+      <Local name="l_sLibName" type="string" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[
+begin
+  //***** Customizable section
+  //
+  //***** end of customizable section
+  // ************************
+  // do not change anything beyond this line
+  //
+  //***************************
+  //********* Strings *********
+  //***************************
+  sTASK=x_sTask+toString("",x_nDetNum)
+  sDetNum="DET"+toString("",x_nDetNum)
+  //
+  //***************************
+  //*****   Numerics     ******
+  //***************************
+  // Number of detected objects
+  nNumOfPart=-1
+  //
+  // Resize buffers
+  resize(nObjectID,1,nMaxNumOfObject)
+  resize(nLatchedValue,1,nMaxNumOfObject)
+  resize(trObjectPos,1,nMaxNumOfObject)
+  resize(oTempQueue,1,nMaxNumOfObject)
+  //
+  // Initialize ID buffer
+  for l_i=0 to size(nObjectID)-1
+    nObjectID[l_i]=-1
+  endFor
+  //
+  // Initialize Latched Encoder Value buffer
+  for l_i=0 to size(nLatchedValue)-1
+    nLatchedValue[l_i]=0
+  endFor
+  //
+  // Initialize TRSF buffer
+  for l_i=0 to size(trObjectPos)-1
+    trObjectPos[l_i]={0,0,0,0,0,0}
+  endFor
+  //
+  //***************************
+  //*****   Booleans     ******
+  //***************************
+  // Detection library in calibration mode.
+  //  Only used by the detection library "Socket".
+  bCalibrating=false
+  //
+  //***************************
+  //********* Sockets *********
+  //***************************
+  // Read the number of the library (ex. Cognex1 or Cognex2)
+  call ut:getLibName(libPath(),l_sLibName)
+  toNum(delete(l_sLibName,6,0),l_nLibNum,l_bReport)
+  if !l_bReport
+    l_nLibNum=1
+  endIf
+  l_nSocketIndex=l_nLibNum-1
+  // Link socket
+  sioLink(skVision,sck:skCognex[l_nSocketIndex])
+  //
+end
+]]></Code>
+  </Program>
+</Programs>

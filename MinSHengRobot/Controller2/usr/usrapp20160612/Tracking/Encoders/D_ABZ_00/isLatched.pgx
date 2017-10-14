@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="isLatched" access="public" >
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1" >
+      <Parameter name="x_bLatched" type="bool" use="reference" xsi:type="array" dimensions="1" />
+    </Parameters>
+    <Code><![CDATA[begin
+  // This program checks if the number of latch for
+  // the part detection has been reached
+  //
+  //
+  // Output Param
+  // x_bLatched  : If true, a part has been detected
+  //
+  //----------------------------------------------------------------
+  //
+  if bPartLatched==true
+    x_bLatched=true
+  else
+    x_bLatched=false
+  endIf
+end]]></Code>
+  </Program>
+</Programs>

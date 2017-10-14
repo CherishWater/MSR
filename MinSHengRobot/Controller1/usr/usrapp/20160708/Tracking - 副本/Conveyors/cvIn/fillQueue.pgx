@@ -1,0 +1,176 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="fillQueue" access="private" >
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1" >
+      <Parameter name="x_nNumOfObject" type="num" use="value" xsi:type="element" dimensions="1" />
+      <Parameter name="x_nEncLatchVal" type="num" use="value" xsi:type="element" dimensions="1" />
+    </Parameters>
+    <Locals>
+      <Local name="l_bIsAlreadyInQ" type="bool" xsi:type="array" size="1" />
+      <Local name="l_bQueueOverflo" type="bool" xsi:type="array" size="1" />
+      <Local name="l_bQuit" type="bool" xsi:type="array" size="1" />
+      <Local name="l_nDeltaEnc" type="num" xsi:type="array" size="1" />
+      <Local name="l_nDeltaTrsf" type="num" xsi:type="array" size="1" />
+      <Local name="l_nIdxTemp" type="num" xsi:type="array" size="1" />
+      <Local name="l_nIsSameObject" type="bool" xsi:type="array" size="1" />
+      <Local name="l_nMax" type="num" xsi:type="array" size="1" />
+      <Local name="l_nQueue" type="num" xsi:type="array" size="1" />
+      <Local name="l_nQueueIdx" type="num" xsi:type="array" size="1" />
+      <Local name="l_pChkDist" type="point" xsi:type="array" size="2" />
+      <Local name="l_sData" type="string" xsi:type="array" size="1" />
+      <Local name="l_sMessage" type="string" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+  // This program add some new data in the conveyor queue
+  //
+  // Input Param
+  //  x_nNumOfobject : Number of element to push into conveyor queue
+  //  x_nEncLatchVal : Encoder value to store in the queue
+  //
+  //----------------------------------------------------------------
+  //
+  // ***** Get data from detection library
+  // Avoid accessing array with index higher than array's size
+  l_nMax=min(x_nNumOfObject-1,size(nTmpEncLatched)-1)
+  if bAnd(cfg:nLog,cfg:nLOGDETECT)==cfg:nLOGDETECT and bLOG
+    ? sConvNum+"(fillQueue)>> Number of detected objects:"+toString("",x_nNumOfObject)
+    ? sConvNum+"(fillQueue)>> Number of objects to process:"+toString("",l_nMax+1)
+  endIf
+  for l_nIdxTemp=0 to l_nMax
+    // Latched Encoder Value
+    if left(sDetectionLib,6)=="Socket" and !det:bCalibrating
+      call det:getObjectLatch(l_nIdxTemp,nTmpEncLatched[l_nIdxTemp])
+    else
+      nTmpEncLatched[l_nIdxTemp]=x_nEncLatchVal
+    endIf
+    //
+    // TRSF and ID
+    call det:getObjectData(l_nIdxTemp,nTmpID[l_nIdxTemp],trTmp[l_nIdxTemp])
+  endFor
+  //
+  // Detection device (like vision) may have detected the same object twice
+  // if the frequency of image acquisition is higher than the conveyor speed.
+  // The following code filters these objects based on the encoder data associated
+  // with each one of them.
+  //
+  l_nIdxTemp=0
+  l_bQueueOverflo=false
+  l_pChkDist[0]=l_pChkDist[1]=here(flange,fConveyor)
+  do
+    if bAnd(cfg:nLog,cfg:nLOGDETECT)==cfg:nLOGDETECT and bLOG
+      ? sConvNum+"(fillQueue)>>Processing detected object num. "+toString("",l_nIdxTemp+1)
+    endIf
+    // Check if buffer is not full
+    if ((nIdxPush+1)%nBufferSize)!=nIdxPull
+      l_nQueueIdx=nIdxPull
+      l_bIsAlreadyInQ=false
+      // Position of the detected object in reference to the conveyor frame
+      l_pChkDist[0].trsf=position(fDetection,fConveyor)*trTmp[l_nIdxTemp]
+      // Search if the detected object is already in the queue of the conveyor
+      // Buffer is considered as empty when nIdxPush=nIdxPull
+      // if empty, object are queued immediately.
+      while ((l_nQueueIdx!=nIdxPush) and (l_bIsAlreadyInQ==false))
+        if bAnd(cfg:nLog,cfg:nLOGDETECT)==cfg:nLOGDETECT and bLOG
+          ? sConvNum+"(fillQueue)>>nIdxPush "+toString(".2",nIdxPush)+" nIdxPull:"+toString(".2",nIdxPull)
+        endIf
+        // Position of the queued object in reference to the conveyor frame.
+        l_pChkDist[1].trsf=position(fDetection,fConveyor)*trDetectedCoord[l_nQueueIdx]
+        // Distance that the queued object has travel (test encoder roll over)
+        if nTmpEncLatched[l_nIdxTemp]<nEncLatchedVal[l_nQueueIdx]
+          // roll over
+          l_nDeltaEnc=nENCSCALEFACTOR*(enc:nMAXCOUNT-nEncLatchedVal[l_nQueueIdx]+nTmpEncLatched[l_nIdxTemp]-enc:nMINCOUNT)
+        else
+          // No roll over
+          l_nDeltaEnc=nENCSCALEFACTOR*(nTmpEncLatched[l_nIdxTemp]-nEncLatchedVal[l_nQueueIdx])
+        endIf
+        // Shift queued object in reference to the conveyor as per traveled distance.
+        if bLinear
+          l_pChkDist[1]=compose(l_pChkDist[1],fConveyor,{l_nDeltaEnc,0,0,0,0,0})
+        endIf
+        // Distance in between the detected object and the queued object.
+        l_nDeltaTrsf=distance(l_pChkDist[0].trsf,l_pChkDist[1].trsf)
+        //
+        if bAnd(cfg:nLog,cfg:nLOGDETECT)==cfg:nLOGDETECT and bLOG
+          ? sConvNum+"(fillQueue)>> Compared to object in queue @ position "+toString(".2",l_nQueueIdx)
+          ? sConvNum+"(fillQueue)DeltaEnc: "+toString(".2",l_nDeltaEnc)+" DeltaTRSF: "+toString(".2",l_nDeltaTrsf)
+          ? sConvNum+"(fillQueue)QueueID: "+toString(".2",nQueueID[l_nQueueIdx])+" DetectedID: "+toString(".2",nTmpID[l_nIdxTemp])
+        endIf
+        // Same object if : same ID and
+        //                  the distance in between the two objects is smaller than « position match »
+        l_nIsSameObject=(round(nQueueID[l_nQueueIdx])==round(nTmpID[l_nIdxTemp])) and (l_nDeltaTrsf<nPosMatchTol)
+        if l_nIsSameObject==true
+          if bAnd(cfg:nLog,cfg:nLOGDETECT)==cfg:nLOGDETECT and bLOG
+            ? sConvNum+"(fillQueue)>>Detected object already in queue @ position "+toString("",l_nQueueIdx)
+          endIf
+          l_bIsAlreadyInQ=true
+        else
+          if bAnd(cfg:nLog,cfg:nLOGDETECT)==cfg:nLOGDETECT and bLOG
+            ? sConvNum+"(fillQueue)>>Detected object doesn't match object in queue @ position "+toString("",l_nQueueIdx)
+          endIf
+          l_nQueueIdx=(l_nQueueIdx+1)%nBufferSize
+        endIf
+      endWhile
+      //
+      // Object not in queue, add it. ObjectID MUST be >=0
+      if l_bIsAlreadyInQ==false and nTmpID[l_nIdxTemp]>=0
+        // Encoder offset
+        nEncLatchedVal[nIdxPush]=nTmpEncLatched[l_nIdxTemp]
+        // ID
+        nQueueID[nIdxPush]=round(nTmpID[l_nIdxTemp])
+        // TRSF
+        trDetectedCoord[nIdxPush]=trTmp[l_nIdxTemp]
+        //
+        if bAnd(cfg:nLog,cfg:nLOGDETECT)==cfg:nLOGDETECT and bLOG
+          l_sData=" X="+toString(".2",trTmp[l_nIdxTemp].x)+" Y="+toString(".2",trTmp[l_nIdxTemp].y)+" Z="+toString(".2",trTmp[l_nIdxTemp].z)
+          l_sData=l_sData+" RX="+toString(".2",trTmp[l_nIdxTemp].rx)+" RY="+toString(".2",trTmp[l_nIdxTemp].ry)+" RZ="+toString(".2",trTmp[l_nIdxTemp].rz)
+          l_sData=sConvNum+"(fillQueue)>>Object data: "+l_sData
+          ? sConvNum+"(fillQueue)>>Add object num. "+toString("",l_nIdxTemp+1)+" in queue @ position "+toString("",nIdxPush)
+          ? l_sData
+          l_sData=" EncLatched="+toString(".2",nTmpEncLatched[l_nIdxTemp])+" ID="+toString("",nTmpID[l_nIdxTemp])
+          l_sData=sConvNum+"(fillQueue)>>Object data: "+l_sData
+          ? l_sData
+        endIf
+        //
+        if bAnd(cfg:nLog,cfg:nLOGQUEUE)==cfg:nLOGQUEUE and bLOG
+          ? sConvNum+"(fillQueue)>>"
+          ? "------------------------Insert Part--------------------------"
+          ? "|Index|  ID |  latch value |     x    |     y    |    rz    |"
+          ? "-------------------------------------------------------------"
+          for l_nQueue=0 to nBufferSize-1
+            if nQueueID[l_nQueue]>=0
+              l_sMessage="| "+toString("3.0",l_nQueue)+" | "+toString("3.0",nQueueID[l_nQueue])+" | "+toString("12.2",nEncLatchedVal[l_nQueue])+" | "
+              l_sMessage=l_sMessage+toString("8.2",trDetectedCoord[l_nQueue].x)+" | "+toString("8.2",trDetectedCoord[l_nQueue].y)+" | "+toString("8.2",trDetectedCoord[l_nQueue].rz)+" |"
+              ? l_sMessage
+            endIf
+          endFor
+          ? "------------------------------------------------------------"
+          ? ""
+        endIf
+        //
+        nIdxPush=(nIdxPush+1)%nBufferSize
+      endIf
+      //
+      //ObjectID <0
+      if nTmpID[l_nIdxTemp]<0
+        // Object ID is <0, do not push into queue
+        nStatus=1
+        sErrorMessage=sErrMsgList[nPUSH_NEGATIVE]
+        if bAnd(cfg:nLog,cfg:nLOGDETECT)==cfg:nLOGDETECT and bLOG
+          ? sConvNum+"(fillQueue)>>Negative ID detected( "+toString("",nTmpID[l_nIdxTemp])+"), Object not pushed into queue"
+        endIf
+      endIf
+      //
+      l_nIdxTemp=l_nIdxTemp+1
+    else
+      l_bQueueOverflo=true
+    endIf
+    l_bQuit=(l_nIdxTemp>=x_nNumOfObject) or (l_bQueueOverflo==true)
+  until l_bQuit
+  if (l_bQueueOverflo==true)
+    if bAnd(cfg:nLog,cfg:nLOGDETECT)==cfg:nLOGDETECT and bLOG
+      ? sConvNum+"(fillQueue)>>Buffer overflow, object(s) might have been missed"
+    endIf
+  endIf
+end]]></Code>
+  </Program>
+</Programs>

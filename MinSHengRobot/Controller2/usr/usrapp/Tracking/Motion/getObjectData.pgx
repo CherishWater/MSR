@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="getObjectData" access="public" >
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1" >
+      <Parameter name="x_nConvNum" type="num" use="value" xsi:type="element" dimensions="1" />
+      <Parameter name="x_trObject" type="trsf" use="reference" xsi:type="array" dimensions="1" />
+      <Parameter name="x_nError" type="num" use="reference" xsi:type="array" dimensions="1" />
+    </Parameters>
+    <Locals>
+      <Local name="l_pPoint" type="point" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+  // This program returns the coordinates of the object
+  // that have been pushed into the buffer by the detection lib
+  // of the specified conveyor.
+  // This function is usefull when an advanced detection device
+  // (e.g vision system) is in use.
+  //
+  // Input Param
+  //  x_nConvNum  : Conveyor number
+  //
+  // Output Param
+  //  x_trObject  : coordinates of the object
+  //  x_nError    : Error code
+  //    0 : No error
+  //    1 : No data available
+  //
+  //----------------------------------------------------------------
+  //
+  switch x_nConvNum
+    case 0
+      call cnv0:getObjectData(x_trObject,x_nError)
+    break
+    case 1
+      call cnv1:getObjectData(x_trObject,x_nError)
+    break
+  endSwitch
+end]]></Code>
+  </Program>
+</Programs>

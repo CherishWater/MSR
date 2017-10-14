@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="DisplayPt" access="public">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_trLoc" type="trsf" xsi:type="element" />
+      <Parameter name="x_nRaw" type="num" xsi:type="element" />
+    </Parameters>
+    <Locals>
+      <Local name="l_trLoc" type="trsf" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[
+begin
+  // This program display the coordinates of a location on the userPage
+  //
+  // Input Param
+  //  x_pLoc  : Location to display
+  //  x_nRaw  : Raw on which the coordinates must be displayed
+  //
+  // Output param
+  //
+  call type(4,x_nRaw,"X Y Z :")
+  call type(12,x_nRaw,toString(".2",x_trLoc.x))
+  call type(21,x_nRaw,toString(".2",x_trLoc.y))
+  call type(30,x_nRaw,toString(".2",x_trLoc.z))
+  call type(4,x_nRaw+1,"RxRyRz:")
+  call type(12,x_nRaw+1,toString(".2",x_trLoc.rx))
+  call type(21,x_nRaw+1,toString(".2",x_trLoc.ry))
+  call type(30,x_nRaw+1,toString(".2",x_trLoc.rz))
+end
+]]></Code>
+  </Program>
+</Programs>

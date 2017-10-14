@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="getConvFrame" access="public" >
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1" >
+      <Parameter name="x_nConvNum" type="num" use="value" xsi:type="element" dimensions="1" />
+      <Parameter name="x_fConveyor" type="frame" use="reference" xsi:type="element" dimensions="1" />
+      <Parameter name="x_fRefFrame" type="frame" use="value" xsi:type="element" dimensions="1" />
+      <Parameter name="x_nError" type="num" use="reference" xsi:type="element" dimensions="1" />
+    </Parameters>
+    <Code><![CDATA[begin
+  // This program returns the position and orientation of the conveyor
+  //  frame in reference to the frame x_fRefFrame.
+  //
+  // Input Param
+  //  x_nConvNum : Conveyor number
+  //  x_fRefFrame: Reference frame from which the coordinates of
+  //                x_fConveyor should be returned. 
+  //
+  // Output param
+  //  x_fConveyor: Coordinates of the conveyor’s frame that have been
+  //                taught during calibration.
+  //  x_nError   : Error code
+  //    0    --> No error
+  //    14   --> Conveyor library not started, the frame cannot be computed.
+  //
+  //----------------------------------------------------------------
+  //  
+  switch x_nConvNum
+    case 0
+      if cnv0:libExist("getConvFrame()")
+        call cnv0:getConvFrame(x_fConveyor,x_fRefFrame,x_nError)
+        if x_nError!=0
+          call cnv0:getErrorMessage(sErrorMessage)
+        endIf
+      else
+        nStatus=-1
+      endIf
+    break
+    case 1
+      if cnv1:libExist("getConvFrame()")
+        call cnv1:getConvFrame(x_fConveyor,x_fRefFrame,x_nError)
+        if x_nError!=0
+          call cnv1:getErrorMessage(sErrorMessage)
+        endIf
+      else
+        nStatus=-1
+      endIf
+    break
+  endSwitch
+end]]></Code>
+  </Program>
+</Programs>

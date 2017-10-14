@@ -1,0 +1,122 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="read" access="public">
+    <Description><![CDATA[Read one string from the pX column and pY line]]></Description>
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_nX" type="num" xsi:type="element" />
+      <Parameter name="x_nY" type="num" xsi:type="element" />
+      <Parameter name="x_sMsg" type="string" xsi:type="array" use="reference" />
+      <Parameter name="x_nLength" type="num" xsi:type="element" />
+      <Parameter name="x_bCrypt" type="bool" xsi:type="element" />
+    </Parameters>
+    <Locals>
+      <Local name="l_nLength" type="num" xsi:type="array" size="1" />
+      <Local name="l_bExit" type="bool" xsi:type="array" size="1" />
+      <Local name="l_bBlk" type="bool" xsi:type="array" size="1" />
+      <Local name="i" type="num" xsi:type="array" size="1" />
+      <Local name="l_nMsgLen" type="num" xsi:type="array" size="1" />
+      <Local name="l_nKey" type="num" xsi:type="array" size="1" />
+      <Local name="l_nTps" type="num" xsi:type="array" size="1" />
+      <Local name="l_sMsg" type="string" xsi:type="array" size="1" />
+      <Local name="l_sView" type="string" xsi:type="array" size="1" />
+      <Local name="l_sStr" type="string" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[
+begin
+  //-----------------------------------------------------------------------
+  //Header begin
+  //Description of program
+  //  Get a message limited to x_nLength and write it on the pX column
+  //  and pY line.
+  //  If x_bCrypt is true all the characters displayed will be replaced by "*",
+  //  otherwise by the corresponding characters.
+  //  The message is validate by "ENTER" key. "ESC" or "F1 to F8"
+  //  keys cancel value, the message will resume this initial value.
+  //
+  //Input parameters
+  //  num x_nX :
+  //    role : Cursor column
+  //    possible values : 0 to 39
+  //  num x_nY :
+  //    role : Cursor row
+  //    possible values : 0 to 13
+  //  num x_nLength :
+  //    role : limit the lenght of the message
+  //  bool x_bCrypt :
+  //    role : crypt the message that you are seized
+  //    possibles values : true => crypt the message
+  //                       false => writing normal
+  //
+  //Output parameters
+  //  string x_sMsg :
+  //    role : Message reading
+  //
+  //Example
+  //  call read(15,7,l_sItem,10,false)
+  //
+  //History
+  //  Creation : 28-04-08 - f.Rob
+  //Header end
+  //-----------------------------------------------------------------------
+  l_nTps=clock()
+  l_sMsg=x_sMsg
+  l_nMsgLen=len(l_sMsg)
+  //Cryptage
+  if x_bCrypt
+    do
+      i=len(l_sMsg)
+      l_nKey=getKey()
+      if ((clock()-l_nTps)>=0.5)
+        if l_bBlk==true
+          l_bBlk=false
+        else
+          l_bBlk=true
+        endIf
+        l_nTps=clock()
+      endIf
+      if (l_nKey>=32) and (l_nKey<=126)
+        if ((len(l_sMsg)+1)<=x_nLength)
+          l_sMsg=l_sMsg+chr(l_nKey)
+        endIf
+      else
+        //Backspace
+        if (l_nKey==263) and (len(l_sMsg)>0)
+          l_sMsg=mid(l_sMsg,len(l_sMsg)-1,0)
+        endIf
+      endIf
+      if (l_sStr!=l_sMsg)
+        call strFillChr(l_sMsg,l_sView,"*")
+        l_sStr=l_sMsg
+      endIf
+      if l_bBlk==true
+        call typeLen(x_nX,x_nY,l_sView+"|",x_nLength+1)
+      else
+        call typeLen(x_nX,x_nY,l_sView+" ",x_nLength+1)
+      endIf
+      //Release the resource
+      delay(0)
+    until (l_nKey==270) or (l_nKey==255)
+  else
+    //Normal read
+    //Delete the old value
+    setTextMode(0)
+    call strFillChr(l_sMsg,l_sView," ")
+    call typeLen(x_nX,x_nY,l_sView,40-x_nX-1)
+    //Read the new one
+    gotoxy(x_nX,x_nY)
+    get(l_sMsg)
+  endIf
+  //Save the escape key pressure
+  if isKeyPressed(255)
+    bUseEscape=true
+  else
+    bUseEscape=false
+  endIf
+  //Result
+  if (isKeyPressed(270) or l_nKey==270 or l_sMsg!=x_sMsg) and !bUseEscape
+    x_sMsg=l_sMsg
+  endIf
+end
+]]></Code>
+  </Program>
+</Programs>

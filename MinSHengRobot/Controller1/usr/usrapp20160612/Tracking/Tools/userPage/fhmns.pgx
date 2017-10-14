@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="fhmns" access="public">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_nSec" type="num" xsi:type="element" />
+      <Parameter name="x_sHMinSec" type="string" xsi:type="array" use="reference" />
+    </Parameters>
+    <Locals>
+      <Local name="l_nHour" type="num" xsi:type="array" size="1" />
+      <Local name="l_nMin" type="num" xsi:type="array" size="1" />
+      <Local name="l_nSec" type="num" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[
+begin
+  //-----------------------------------------------------------------------
+  //Header begin
+  //Description of program
+  //  Convert a num seconds in string hour : "xx h xx mn xx s".
+  //
+  //Input parameters
+  //  num x_nSec :
+  //    role : put a numerical expression that you want to convert in Hmns
+  //
+  //Output parameters
+  //  string x_sHMinSec :
+  //    role : string hour correspond of your numerical expression
+  //
+  //Example
+  //  call hmns(l_nSecond,l_sHMinSec)
+  //
+  //History
+  //  Creation : 28-04-08 - f.Rob
+  //Header end
+  //-----------------------------------------------------------------------
+  l_nHour=roundDown(x_nSec/3600)
+  l_nMin=roundDown((x_nSec%3600)/60)
+  l_nSec=roundDown(x_nSec-l_nHour*3600-l_nMin*60)
+  x_sHMinSec=toString("3.0",l_nHour)+" h "+toString("2.0",l_nMin)+" mn "+toString("2.0",l_nSec)+" s"
+end
+]]></Code>
+  </Program>
+</Programs>

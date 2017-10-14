@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sio>
+  <serialPort>
+    <String name="name" value="portSerial1" />
+    <Uint name="channel" value="0" />
+    <Uint name="baudRate" value="9600" />
+    <Uint name="byteSize" value="8" />
+    <String name="parity" value="none" />
+    <Uint name="nbStopBit" value="2" />
+    <Int name="endOfString" value="13" />
+    <Float name="timeOut" value="5" />
+    <String name="comMode" value="RS232" />
+    <String name="flowControl" value="none" />
+  </serialPort>
+  <serialPort>
+    <String name="name" value="portSerial2" />
+    <Uint name="channel" value="1" />
+    <Uint name="baudRate" value="9600" />
+    <Uint name="byteSize" value="8" />
+    <String name="parity" value="none" />
+    <Uint name="nbStopBit" value="2" />
+    <Int name="endOfString" value="13" />
+    <Float name="timeOut" value="5" />
+    <String name="comMode" value="RS232" />
+    <String name="flowControl" value="none" />
+  </serialPort>
+  <socketClt>
+    <String name="name" value="toCvIn" />
+    <String name="desc" value="" />
+    <Inet name="serverIp" value="172.31.0.1" />
+    <Uint name="portNumber" value="1001" />
+    <Int name="endOfString" value="13" />
+    <Float name="timeOut" value="0" />
+    <Bool name="nagle" value="false" />
+  </socketClt>
+  <socketClt>
+    <String name="name" value="PointGrey" />
+    <String name="desc" value="" />
+    <Inet name="serverIp" value="172.168.0.10" />
+    <Uint name="portNumber" value="1003" />
+    <Int name="endOfString" value="36" />
+    <Float name="timeOut" value="0" />
+    <Bool name="nagle" value="true" />
+  </socketClt>
+  <socketClt>
+    <String name="name" value="toRobot_sk1" />
+    <String name="desc" value="" />
+    <Inet name="serverIp" value="172.168.0.21" />
+    <Uint name="portNumber" value="1002" />
+    <Int name="endOfString" value="36" />
+    <Float name="timeOut" value="0" />
+    <Bool name="nagle" value="true" />
+  </socketClt>
+  <socketClt>
+    <String name="name" value="toPC" />
+    <String name="desc" value="" />
+    <Inet name="serverIp" value="172.168.0.10" />
+    <Uint name="portNumber" value="1010" />
+    <Int name="endOfString" value="36" />
+    <Float name="timeOut" value="0" />
+    <Bool name="nagle" value="true" />
+  </socketClt>
+  <socketSrv>
+    <String name="name" value="fromRobot_sk1" />
+    <String name="desc" value="" />
+    <Uint name="portNumber" value="1001" />
+    <Int name="endOfString" value="13" />
+    <Float name="timeOut" value="0" />
+    <Bool name="nagle" value="false" />
+  </socketSrv>
+  <socketSrv>
+    <String name="name" value="synRobot1" />
+    <String name="desc" value="" />
+    <Uint name="portNumber" value="1005" />
+    <Int name="endOfString" value="13" />
+    <Float name="timeOut" value="0" />
+    <Bool name="nagle" value="true" />
+  </socketSrv>
+</sio>

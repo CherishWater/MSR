@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="init" access="private" >
+    <Locals>
+      <Local name="l_nI" type="num" xsi:type="array" size="1" />
+      <Local name="l_nJ" type="num" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+  // This program initialize all variables
+  //
+  // Input parameters
+  //  None            :
+  //
+  // Output parameters
+  //  None            :
+  //
+  //----------------------------------------------------------------
+  //
+  //che add
+  nPlaceNum=3
+  sDataPC="stop"
+
+
+  // Booleans
+  _bSentToHome=false
+  _bMutexCnvQueue[0]=false
+  _bIsPicking=false
+  _bIsPlacing=false
+  _bConvExist=false
+  _bEndCycle=false
+  //
+
+  //
+  // Numerical
+  _nBlowDelay=0
+  _nID[0]=-1
+  _nCntBypassed[0]=0
+  //_nCntBypassed[0]=nBypass[0]
+  _nCntTransfered[0]=0
+
+  _nPushIndexTQ[0]=0
+  _nPullIndexTQ[0]=0
+  _nTimer=0
+
+  resize(_nCycleTime,1,4)
+  for _nCycleTimeIndx=0 to size(_nCycleTime)-1
+    _nCycleTime[_nCycleTimeIndx]=0
+  endFor
+  _nCycleTimeIndx=0
+
+  //dio
+  dPlaceDone[0]=false
+  dPlaceDone[1]=false
+  dPlaceDone[2]=false
+  dPlaceDone[3]=false
+
+  // aio
+  aioSet(aRbAlarm,0)
+  //call setAlarm(0)
+  clearBuffer(synServer)
+  // Points
+  pPick.trsf={0,0,0,0,0,0}
+
+  //
+
+  //
+  // Transfer Queues
+  for l_nI=0 to size(_oTransferQueue,2)-1
+    _oTransferQueue[0,l_nI].nID=-1
+    _oTransferQueue[0,l_nI].trTrsf={0,0,0,0,0,0}
+    _oTransferQueue[0,l_nI].nLatchedValue=0
+  endFor
+  //
+  // Strings
+  _sCycleStatus=""
+end]]></Code>
+  </Program>
+</Programs>

@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="stop" access="private" >
+    <Locals>
+      <Local name="l_jHere" type="joint" xsi:type="array" size="1" />
+      <Local name="l_sToolStatus" type="string" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[begin
+  //
+  l_sToolStatus=""
+  //
+  cls()
+  gotoxy(10,6)
+  put("Application Ending")
+  //
+  stopMove()
+  resetMotion()
+  disablePower()
+  // Stop all tasks
+  taskKill("TransferQueue1")
+  taskKill("overflowPick")
+  taskKill("productionCycle")
+  taskKill("blow")
+  taskKill("changePallet")
+  taskKill("isInSafetyArea")
+  taskKill("robot2PLC")
+
+  if _bConvExist
+    call mot:kill()
+  endIf
+
+  //
+  // Stop conveyor speed
+  call setConvSpeed(0,0)
+  //
+  // Reset triggers
+  //  dioSet(dTrigger,0)
+  //
+  resetMotion()
+  //
+  //
+  // Move up axis 3
+  l_jHere=herej()
+  l_jHere.j3=90
+  //movej(l_jHere,flange,mSlow)
+  //
+  // Drop the part on the tool
+  if bPickDetection
+    call getToolStatus(l_sToolStatus)
+  endIf
+  if l_sToolStatus=="PartInTool" or !bPickDetection
+    //movej(jDropPart,flange,mSlow)
+    //waitEndMove()
+    dBlow=true
+    dVacuum=false
+    delay(0.5)
+    dBlow=false
+  else
+    dVacuum=false
+    dBlow=false
+  endIf
+  //
+  // Go to park position
+  //movej(jPark,flange,mSlow)
+  //waitEndMove()
+  disablePower()
+  //
+  cls()
+  gotoxy(10,6)
+  put("Application Ended")
+  //  
+end]]></Code>
+  </Program>
+</Programs>

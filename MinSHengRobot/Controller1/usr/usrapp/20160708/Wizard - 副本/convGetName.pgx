@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="convGetName" access="private" >
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1" >
+      <Parameter name="x_sFileName" type="string" use="reference" xsi:type="array" dimensions="1" />
+    </Parameters>
+    <Code><![CDATA[begin
+  // This program asks the user to enter a name for
+  // a new conveyor calibration data file and
+  // store it onto the flashdisk.
+  //
+  //
+  // Created 23-02-05                                   C.CURRIVAND
+  //----------------------------------------------------------------
+  //
+  call up:type(0,12,lang:sListOfMessage[21])
+  call up:read(len(lang:sListOfMessage[21]),12,x_sFileName,8,false)
+  call up:clear(0,12)
+end]]></Code>
+  </Program>
+</Programs>

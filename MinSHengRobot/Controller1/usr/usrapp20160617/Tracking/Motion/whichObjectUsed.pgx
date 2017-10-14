@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="whichObjectUsed" access="private" >
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1" >
+      <Parameter name="x_nConvNum" type="num" use="value" xsi:type="element" dimensions="1" />
+      <Parameter name="x_nInUse" type="num" use="reference" xsi:type="array" dimensions="1" />
+      <Parameter name="x_nError" type="num" use="reference" xsi:type="array" dimensions="1" />
+    </Parameters>
+    <Code><![CDATA[begin
+  // This program checks if there is an object in the queue of the
+  // conveyor number passed as parameter
+  //
+  // Input Param
+  //  x_nConvNum   : Conveyor number
+  //
+  // Output Param
+  //  x_nInUse     : value of the next available object ID in the queue
+  //        -1 --> No Part Available
+  //      0..n --> ID of the object
+  //
+  //  x_nError      : Error code
+  //      0    --> No error
+  //      3    --> Invalid conveyor number
+  // 
+  //----------------------------------------------------------------
+  //
+  x_nError=0
+  switch x_nConvNum
+    case 0
+      call cnv0:whichObjectUsed(x_nInUse)
+    break
+    case 1
+      call cnv1:whichObjectUsed(x_nInUse)
+    break
+    default
+      x_nError=3
+    break
+  endSwitch
+end]]></Code>
+  </Program>
+</Programs>

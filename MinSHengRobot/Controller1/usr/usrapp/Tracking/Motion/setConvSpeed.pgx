@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="setConvSpeed" access="private" >
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1" >
+      <Parameter name="x_nConvNum" type="num" use="value" xsi:type="element" dimensions="1" />
+      <Parameter name="x_nError" type="num" use="reference" xsi:type="array" dimensions="1" />
+    </Parameters>
+    <Code><![CDATA[begin
+  // This program updates the speed of the conveyor on the conveyor library
+  //
+  // Input Param
+  //  x_nConvNum  : Conveyor number
+  //
+  // Output Param
+  //  x_nError    : Error code
+  //    0    --> No error
+  //    3    --> Invalid conveyor number
+  //
+  //----------------------------------------------------------------
+  //
+  x_nError=0
+  switch x_nConvNum
+    case 0
+      cnv0:nConveyorSpeed=nConveyorSpeed[x_nConvNum]
+    break
+    case 1
+      cnv1:nConveyorSpeed=nConveyorSpeed[x_nConvNum]
+    break
+    default
+      x_nError=3
+    break
+  endSwitch
+end]]></Code>
+  </Program>
+</Programs>

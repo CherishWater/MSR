@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="_getVersion" access="public">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_nVersion" type="num" xsi:type="array" use="reference" />
+      <Parameter name="x_nRevision" type="num" xsi:type="array" use="reference" />
+      <Parameter name="x_nEdit" type="num" xsi:type="array" use="reference" />
+      <Parameter name="x_nError" type="num" xsi:type="array" use="reference" />
+    </Parameters>
+    <Locals>
+      <Local name="l_bOk" type="bool" xsi:type="array" size="1" />
+      <Local name="l_i" type="num" xsi:type="array" size="1" />
+      <Local name="l_nBreakCharPos" type="num" xsi:type="array" size="1" />
+      <Local name="l_sInfo" type="string" xsi:type="array" size="1" />
+      <Local name="l_sFullInfo" type="string" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[
+begin
+  // This program returns informations concerning the val3 version
+  // currently intalled.
+  // Input Param
+  //
+  // Output Param
+  //  x_nVersion  : Version number
+  //  x_nRevision : Revision number
+  //  x_nEdit     : Edit number
+  //  x_nError    : Error code
+  //            =0: No error
+  //            =1: One item could not be defined successfully
+  //            =2: Is not a serial version
+  //
+  // Created 16-04-07                                   C.CURRIVAND
+  //----------------------------------------------------------------
+  // Initialize parameters with default values
+  x_nVersion=-1
+  x_nRevision=-1
+  x_nEdit=-1
+  x_nError=0
+  l_bOk=false
+  l_sFullInfo=getVersion("VAL3")
+  l_sFullInfo=mid(l_sFullInfo,find(l_sFullInfo," "),0)
+  // The first char must be "s" for serial
+  if left(l_sFullInfo,1)=="s"
+    //delete "s" char from string
+    l_sInfo=delete(l_sFullInfo,1,0)
+    while find(l_sInfo,".")!=-1
+      l_sInfo=replace(l_sInfo," ",1,find(l_sInfo,"."))
+    endWhile
+    // Get version number
+    l_sInfo=toNum(l_sInfo,x_nVersion,l_bOk)
+    if l_bOk==true
+      // Get Revision number
+      l_sInfo=toNum(l_sInfo,x_nRevision,l_bOk)
+    endIf
+    if l_bOk==true
+      // Get edit number
+      if len(l_sInfo)!=0
+        l_sInfo=toNum(l_sInfo,x_nEdit,l_bOk)
+      else
+        x_nEdit=0
+      endIf
+    endIf
+    x_nError=sel(l_bOk,0,1)
+  else
+    x_nError=2
+  endIf
+end
+]]></Code>
+  </Program>
+</Programs>

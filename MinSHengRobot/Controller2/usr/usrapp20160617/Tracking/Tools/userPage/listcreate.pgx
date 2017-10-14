@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="listCreate" access="public">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_sTitle" type="string" xsi:type="element" />
+    </Parameters>
+    <Code><![CDATA[
+begin
+  //-----------------------------------------------------------------------
+  //Header begin
+  //Description of program
+  //  Create a list of data, displays the title x_sTitle,and draw
+  //  the list from nTopX and nTopY position of the userPage (),
+  //  of nBottomX length and height nListHeight.
+  //
+  //Input parameters
+  //  string x_Title :
+  //    role : Title that you want for the list of data
+  //
+  //Example
+  //  Before using listCreate you can use setSizeList for defines all the
+  //  parameters of position and size of the menu.
+  //  call setSizeList(20,0,18,11)
+  //  call listCreate("UserPage")
+  //
+  //History
+  //  Creation : 28-04-08 - f.Rob
+  //Header end
+  //-----------------------------------------------------------------------
+  sTitle=x_sTitle
+  //Creation list of data
+  call listFrame(sTitle,nTopX,nTopY,nBottomX,nListHeight)
+  call listEmpty()
+end
+]]></Code>
+  </Program>
+</Programs>

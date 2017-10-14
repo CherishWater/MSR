@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="setListOfItems" access="public">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_nListNumber" type="num" xsi:type="element" />
+      <Parameter name="x_sItemList" type="string" xsi:type="array" use="reference" />
+      <Parameter name="x_nError" type="num" xsi:type="array" use="reference" />
+    </Parameters>
+    <Code><![CDATA[
+begin
+  // This program fills a list object with items
+  //
+  // Input Param
+  //  x_nListNumber  : list number to fill
+  //  x_sItemList    : Items to push into the List object
+  //
+  // Output Param
+  //  x_Error : Error code
+  //          = 3    : Variable pw:sListItemX doesn't exist (from listFilling)
+  //
+  //--------------------------------------------------------------
+  //
+  x_nError=0
+  call pw:listFilling(x_nListNumber,x_sItemList,x_nError)
+  if x_nError==0
+    if size(pw:nListSize)<x_nListNumber+1
+      resize(pw:nListSize,1,x_nListNumber+1)
+    endIf
+    pw:nListSize[x_nListNumber]=size(x_sItemList)
+  else
+    // Prepare clear text error message
+    call ut:addNumToString(sErrMsgList[x_nError],sErrorMessage,"*",x_nListNumber)
+  endIf
+end
+]]></Code>
+  </Program>
+</Programs>

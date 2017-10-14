@@ -1,0 +1,121 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="_GetUserInput">
+    <Parameters xmlns="http://www.staubli.com/robotics/VAL3/Param/1">
+      <Parameter name="x_sInString" type="string" xsi:type="array" use="reference" />
+    </Parameters>
+    <Locals>
+      <Local name="l_nKeypressed" type="num" xsi:type="array" size="1" />
+      <Local name="l_nFieldLength" type="num" xsi:type="array" size="1" />
+      <Local name="l_nColumn" type="num" xsi:type="array" size="1" />
+      <Local name="l_nCharPointer" type="num" xsi:type="array" size="1" />
+      <Local name="l_bOk" type="bool" xsi:type="array" size="1" />
+      <Local name="l_bExit" type="bool" xsi:type="array" size="1" />
+      <Local name="l_bFirstDisplay" type="bool" xsi:type="array" size="1" />
+      <Local name="l_sDisplay" type="string" xsi:type="array" size="1" />
+      <Local name="l_sMemoInString" type="string" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[
+begin
+  // Initialize local variable
+  l_nColumn=nTxtPosX[nFocused]+len(pw:sTxtBoxCaption[nFocused])
+  //
+  // Erase field to edit value
+  call eraseField(l_nColumn)
+  //
+  l_bFirstDisplay=true
+  l_sDisplay=x_sInString+" "
+  l_nCharPointer=len(l_sDisplay)-1
+  l_sMemoInString=x_sInString
+  // Display Textbox to change in normal video
+  setTextMode(1)
+  gotoxy(l_nColumn,nTxtPosY[nFocused])
+  put(l_sDisplay)
+  setTextMode(1)
+  gotoxy(l_nColumn+l_nCharPointer,nTxtPosY[nFocused])
+  put(mid(l_sDisplay,1,l_nCharPointer))
+  setTextMode(0)
+  toNum(pw:sTxtBoxLen[nFocused],l_nFieldLength,l_bOk)
+  l_bExit=false
+  do
+    // Get user input
+    l_nKeypressed=getKey()
+    if l_nKeypressed!=-1
+      // Printable char
+      if (l_nKeypressed>=32) and (l_nKeypressed<=126)
+        // Check that character is authorized
+        if find(pw:sTxtBoxAuthord[nFocused],chr(l_nKeypressed))!=-1
+          if l_bFirstDisplay==true
+            // Erase field to edit value
+            call eraseField(l_nColumn)
+            x_sInString=chr(l_nKeypressed)
+            l_nCharPointer=1
+            l_bFirstDisplay=false
+          else
+            if (len(x_sInString)<l_nFieldLength)
+              x_sInString=insert(x_sInString,chr(l_nKeypressed),l_nCharPointer)
+              l_nCharPointer=l_nCharPointer+1
+            endIf
+          endIf
+        endIf
+      else
+        // Non printable char
+        switch l_nKeypressed
+          // Escape
+          case 255
+            x_sInString=l_sMemoInString
+            l_bExit=true
+          break
+          //Backspace
+          case 263
+            if l_bFirstDisplay==true
+              // Erase field to edit value
+              call eraseField(l_nColumn)
+              x_sInString=""
+              l_nCharPointer=0
+              l_bFirstDisplay=false
+            else
+              if l_nCharPointer>0
+                gotoxy(l_nColumn+l_nCharPointer,nTxtPosY[nFocused])
+                put(" ")
+                l_nCharPointer=l_nCharPointer-1
+                x_sInString=delete(x_sInString,1,l_nCharPointer)
+              endIf
+            endIf
+          break
+          // Return
+          case 270
+            if l_nKeypressed==270
+              l_bExit=true
+            endIf
+          break
+          // Arrow left,right
+          case 264,268
+            if l_bFirstDisplay==true
+              l_bFirstDisplay=false
+            else
+              call _handleCounter(l_nKeypressed,l_nCharPointer,0,len(x_sInString),false)
+            endIf
+          break
+        endSwitch
+      endIf
+      l_sDisplay=x_sInString+" "
+      setTextMode(0)
+      gotoxy(l_nColumn,nTxtPosY[nFocused])
+      put(l_sDisplay)
+      //? "display:"+l_sDisplay+"-"
+      setTextMode(1)
+      gotoxy(l_nColumn+l_nCharPointer,nTxtPosY[nFocused])
+      put(mid(l_sDisplay,1,l_nCharPointer))
+      setTextMode(0)
+    endIf
+  until l_bExit==true
+  setTextMode(1)
+  gotoxy(l_nColumn,nTxtPosY[nFocused])
+  put(x_sInString)
+  setTextMode(0)
+  put(" ")
+end
+]]></Code>
+  </Program>
+</Programs>

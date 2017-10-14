@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<externList>
+  <procedure>
+    <header>procedure mot:trackOnJ(num x_nConvNum,point x_pLoc,tool x_tTool,joint x_jConfig,mdesc x_mDesc,num&amp; x_nMoveID,num&amp; x_nError[1])</header>
+    <alias>mot</alias>
+  </procedure>
+  <procedure>
+    <header>procedure mot:trackOn(num x_nConvNum,point x_pLoc,tool x_tTool,mdesc x_mDesc,num&amp; x_nMoveID,num&amp; x_nError[1])</header>
+    <alias>mot</alias>
+  </procedure>
+  <procedure>
+    <header>procedure mot:trackOffJ(joint x_jLoc,tool x_tTool,mdesc x_mDesc,num&amp; x_nMoveID,num&amp; x_nError[1])</header>
+    <alias>mot</alias>
+  </procedure>
+  <procedure>
+    <header>procedure mot:trackOff(point x_pLoc,tool x_tTool,mdesc x_mDesc,num&amp; x_nMoveID,num&amp; x_nError[1])</header>
+    <alias>mot</alias>
+  </procedure>
+  <procedure>
+    <header>procedure mot:sendToNextRobot(sio x_sSocketClient,num x_nTimeOut,num x_nID,trsf x_trObjectPos,num x_nLatchedValue,num&amp; x_nError)</header>
+    <alias>mot</alias>
+  </procedure>
+  <procedure>
+    <header>procedure mot:removePart(num x_nConvNum)</header>
+    <alias>mot</alias>
+  </procedure>
+  <procedure>
+    <header>procedure mot:kill()</header>
+    <alias>mot</alias>
+  </procedure>
+  <procedure>
+    <header>procedure mot:getTrackStatus(num&amp; x_nTrackStatus[1])</header>
+    <alias>mot</alias>
+  </procedure>
+  <procedure>
+    <header>procedure mot:getStatus(num x_nConvNum,num&amp; x_nStatus[1])</header>
+    <alias>mot</alias>
+  </procedure>
+  <procedure>
+    <header>procedure mot:getObjectLatch(num x_nConvNum,num&amp; x_nLatchedValue[1],num&amp; x_nError[1])</header>
+    <alias>mot</alias>
+  </procedure>
+  <procedure>
+    <header>procedure mot:getObjectData(num x_nConvNum,trsf&amp; x_trObject[1],num&amp; x_nError[1])</header>
+    <alias>mot</alias>
+  </procedure>
+  <procedure>
+    <header>procedure mot:getNextID(num x_nConvNum,num&amp; x_nNextID[1])</header>
+    <alias>mot</alias>
+  </procedure>
+  <procedure>
+    <header>procedure mot:getErrorMessage(string&amp; x_sMessage[1])</header>
+    <alias>mot</alias>
+  </procedure>
+  <procedure>
+    <header>procedure mot:getDistance(num x_nConvNum,point x_pLoc,num x_nTime,num&amp; x_nDist2Up[1],num&amp; x_nDist2Down[1],num&amp; x_nError[1])</header>
+    <alias>mot</alias>
+  </procedure>
+  <procedure>
+    <header>procedure mot:getDetectFrame(num x_nConvNum,frame&amp; x_fDetectFrame,frame x_fRefFrame,num&amp; x_nError)</header>
+    <alias>mot</alias>
+  </procedure>
+  <procedure>
+    <header>procedure mot:getConvSpeed(num x_nConvNum,num&amp; x_nSpeed[1],num&amp; x_nError[1])</header>
+    <alias>mot</alias>
+  </procedure>
+  <procedure>
+    <header>procedure mot:getConvFrame(num x_nConvNum,frame&amp; x_fConveyor,frame x_fRefFrame,num&amp; x_nError)</header>
+    <alias>mot</alias>
+  </procedure>
+  <procedure>
+    <header>procedure mot:create(string&amp; x_sConveyorList[1])</header>
+    <alias>mot</alias>
+  </procedure>
+</externList>

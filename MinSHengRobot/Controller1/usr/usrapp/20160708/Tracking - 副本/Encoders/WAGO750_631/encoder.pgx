@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2">
+  <Program name="encoder">
+    <Locals>
+      <Local name="l_bRisenEdge" type="bool" xsi:type="array" size="1" />
+      <Local name="l_nTriggerCount" type="num" xsi:type="array" size="1" />
+    </Locals>
+    <Code><![CDATA[
+begin
+  // This routine manages the encoder input of the Wago Module 750-631
+  //
+  //
+  //----------------------------------------------------------------
+  //
+  l_nTriggerCount=0
+  do
+    // Read current encoder position
+    nEncValue=aioGet(aiEncCurrentPos)
+    //
+    // Re-enable the latch feature
+    if (bLatchEnabled==true) and (diEncLatched==false)
+      doEnableLatch=true
+    endIf
+    //
+    // Check if latch feature is enabled by conveyor library
+    if bLatchEnabled==true
+      // check for rising edge on the Latch Input
+      call _DetectIOEdge((diEncLatched==true),bMemoLatchState,l_bRisenEdge)
+      //
+      if l_bRisenEdge==true
+        // Check number of latch for part detection
+        l_nTriggerCount=l_nTriggerCount+1
+        if l_nTriggerCount>=nLatchPeriod
+          // Compute Latched value
+          nEncLatchedVal=aioGet(aiEncLatchedPos)
+          bPartLatched=true
+          l_nTriggerCount=0
+        endIf
+        doEnableLatch=false
+      endIf
+    endIf
+    //
+    delay(0)
+  until false
+end
+]]></Code>
+  </Program>
+</Programs>

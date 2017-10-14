@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Database xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Data/2">
+  <Datas>
+    <Data name="nSyncDist" access="public" xsi:type="array" type="num" size="1">
+      <Value key="0" value="1" />
+    </Data>
+    <Data name="nWinDownStream" access="public" xsi:type="array" type="num" size="1" />
+    <Data name="nWinUpStream" access="public" xsi:type="array" type="num" size="1" />
+    <Data name="bIsScara" access="public" xsi:type="array" type="bool" size="1" />
+    <Data name="bLinear" access="public" xsi:type="array" type="bool" size="1" />
+    <Data name="bUseUserCenter" access="public" xsi:type="array" type="bool" size="1" />
+    <Data name="bUseUserLimit" access="public" xsi:type="array" type="bool" size="1">
+      <Value key="0" value="true" />
+    </Data>
+    <Data name="pVision" access="private" xsi:type="array" type="pointRs" size="3">
+      <Value key="0" fatherId="world[0]" />
+      <Value key="1" fatherId="world[0]" />
+      <Value key="2" fatherId="world[0]" />
+    </Data>
+    <Data name="pWinCenter" access="private" xsi:type="array" type="pointRs" size="1">
+      <Value key="0" fatherId="world[0]" />
+    </Data>
+    <Data name="pWinDown" access="private" xsi:type="array" type="pointRs" size="2">
+      <Value key="0" fatherId="world[0]" />
+      <Value key="1" fatherId="world[0]" />
+    </Data>
+    <Data name="pWinMiddle" access="private" xsi:type="array" type="pointRs" size="1">
+      <Value key="0" fatherId="world[0]" />
+    </Data>
+    <Data name="pWinUp" access="private" xsi:type="array" type="pointRs" size="2">
+      <Value key="0" fatherId="world[0]" />
+      <Value key="1" fatherId="world[0]" />
+    </Data>
+    <Data name="pointer" access="private" xsi:type="array" type="tool" size="1">
+      <Value key="0" z="100" fatherId="flange[0]" ioLink="valve1" />
+    </Data>
+  </Datas>
+</Database>

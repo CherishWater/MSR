@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Programs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.staubli.com/robotics/VAL3/Program/2" >
+  <Program name="start" access="private" >
+    <Code><![CDATA[begin
+  //
+  cls()
+  userPage()
+  put("Running...")
+  //
+  //1.-  Make sure that the hardware is working: 
+  //     a)  The encoder counts are increasing when the conveyor is moving forward.
+  //     b)  The controller trigger output is seen by the encoder input interface (exxLatchSig input on a Dual ABZ board) and by the vision system.
+  //2.-  Define TCP Sockets:
+  //     a)  TCP Client “cognex1”  (port 1023 to camera's IP address)
+  //     b)  TCP Client “toRobot_sk1” (port 1001 to next robot IP address)
+  //     c)  TCP Client “toRobot_sk2” (port 1002 to next robot IP address)
+  //     d)  TCP Server “fromRobot_sk1” (port 1001)
+  //     e)  TCP Server “fromRobot_sk2” (port 1002)
+  //3.-  Use the Wizard to create two new conveyors library (F6)
+  //4.-  Use the Wizard to define the settings for the conveyors libraries (F7)
+  //5.-  Use the Wizard to define the scale factor and the conveyor geometry of each conveyor(F1)
+  //6.-  Use the Wizard to calibrate the vision frame of each conveyor (F4)
+  //7.-  Check that the program detection() from the library Tracking\Detections\Cognex search the results on the right cell of the cognex spreadsheet
+  //8.-  Enter the name of you conveyors libraries in the sConveyorList string variable.
+  //9.-  Define your tool and teach the jDropPart, jHome, jPark positions. 
+  //10.- Run the application.
+  //
+  //
+  userPage(bLockPage)
+  call init()
+
+  // General managment 
+  taskCreate "isInSafetyArea",100,isInSafetyArea()
+  call OMAC_Main()
+end]]></Code>
+  </Program>
+</Programs>

@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://www.staubli.com/robotics/VAL3/Project/3">
+  <Parameters version="s7.3" stackSize="5000" millimeterUnit="true" />
+  <Programs>
+    <Program file="_DetectIOEdge.pgx" />
+    <Program file="create.pgx" />
+    <Program file="enableLatch.pgx" />
+    <Program file="encoder.pgx" />
+    <Program file="getResolution.pgx" />
+    <Program file="getStatus.pgx" />
+    <Program file="getValue.pgx" />
+    <Program file="init.pgx" />
+    <Program file="isLatched.pgx" />
+    <Program file="kill.pgx" />
+    <Program file="reset.pgx" />
+    <Program file="resetLatch.pgx" />
+    <Program file="setResolution.pgx" />
+    <Program file="start.pgx" />
+    <Program file="stop.pgx" />
+  </Programs>
+  <Database>
+    <Data file="WAGO750_631.dtx" />
+  </Database>
+  <Libraries />
+</Project>
